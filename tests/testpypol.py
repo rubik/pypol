@@ -3,6 +3,7 @@
 
 import unittest
 import operator
+import copy
 import pypol
 
 class PypolTestCase(unittest.TestCase):
@@ -64,7 +65,8 @@ class PypolTestCase(unittest.TestCase):
         self.assertFalse(self.b.iscomplete('x'))
 
     def testUpdate(self):
-        pass
+        self.d.update('3x - y + 2')
+        self.assertEqual(pypol.polynomial('3x - y + 2'), self.d)
 
     def testEq(self):
         self.assertTrue(pypol.polynomial('x^3 - 2^x + x - 5'))
@@ -93,13 +95,16 @@ class PypolTestCase(unittest.TestCase):
         self.assertFalse((1, {'x': 5}) in self.a)
 
     def testGetitem(self):
-        pass
+        self.assertEqual((1, {'a': 1}), self.d[0])
+        self.assertRaises(IndexError, lambda x: self.d[x], 2)
 
     def testSetitem(self):
-        pass
+        self.a[2] = (3, {'x': 3, 'y': 4})
+        self.assertEqual(pypol.polynomial('x^3 - 2x^2 + 3x^3y^4 -5'), self.a)
 
     def testDelitem(self):
-        pass
+        del self.a[1:3]
+        self.assertEqual(pypol.polynomial('x^3 - 5'), self.a)
 
 
 if __name__ == '__main__':

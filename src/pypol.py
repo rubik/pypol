@@ -488,10 +488,10 @@ class Polynomial(object):
         return other in self._monomials
 
     def __copy__(self):
-        return copy.copy(self._monomials)
+        return Polynomial(self._monomials)
 
     def __deepcopy__(self):
-        return copy.deepcopy(self._monomials)
+        return Polynomial(self._monomials)
 
     def __getitem__(self, b):
         return self._monomials[b]
