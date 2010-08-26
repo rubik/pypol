@@ -4,13 +4,12 @@ h1. Pypol - A Python library for manupulate polynomials
     See LICENSE file
 
 h2. How to use it
+
 If you want to use this library you only need to put it in a directory that is in
 your PYTHONPATH.
 Then you can import it normally:
-<pre>
->>> import pypol
->>> 
-</pre>
+<pre>>>> import pypol
+>>> </pre>
 
 For examples see the github wiki:
-<a href='http://wiki.github.com/rubik/pypol/'></a>
+<a href="http://wiki.github.com/rubik/pypol/"></a>
