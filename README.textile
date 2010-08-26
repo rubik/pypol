@@ -1,0 +1,16 @@
+h1. Pypol - A Python library for manupulate polynomials
+
+© Copyrigth 2010 Michele Lacchia alias (rubik, Python, python, Pythoner, x-reynik-x)
+    See LICENSE file
+
+h2. How to use it
+If you want to use this library you only need to put it in a directory that is in
+your PYTHONPATH.
+Then you can import it normally:
+<pre>
+>>> import pypol
+>>> 
+</pre>
+
+For examples see the github wiki:
+<a href='http://wiki.github.com/rubik/pypol/'></a>
