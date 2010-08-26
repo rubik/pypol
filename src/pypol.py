@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import division
-import copy
-import fractions
-import operator
-import random
-import re
+import copy ## 6 times used
+import fractions ## 2 times used
+import operator ## 4 times used
+import random ## 7 times used
+import re ## 2 times used
 
 
 __author__ = 'Michele Lacchia'
@@ -21,17 +21,16 @@ def polynomial(string=None, simplify=True, print_format=True):
     string is a string that represent a polynomial, default is None.
 
     ## Syntax rules
-        Powers can be expressed using the `^` symbol. If a digit follows a letter then it will
-          be interpreted as an exponent. So the following expressions will be equal:
+        Powers can be expressed using the `^` symbol. If a digit follows a letter then it is interpreted as an exponent. So the following expressions are be equal:
 
              polynomial('2x^3y^2 + 1'); polynomial('2x3y2 + 1')
 
-          but if there is a white space after the letter then the digit will be interpretated as a positive coefficient.
+          but if there is a white space after the letter then the digit is interpreted as a positive coefficient.
           So this:
 
              polynomial('2x3y 2 + 1')
 
-          will represent this polynomial:
+          represents this polynomial:
 
              2x^3y + 3
     '''
@@ -102,20 +101,20 @@ def parse_polynomial(string, max_length=None):
 
     return monomials
 
-def random_poly(coeff_range=xrange(-10, 11), len_=None, letters='xyz', max_letters=3, exp_range=xrange(1, 6), known_term=None):
+def random_poly(coeff_range=xrange(-10, 11), len_=None, letters='xyz', max_letters=3, exp_range=xrange(1, 6), right_hand_side=None):
     if not len_:
         len_ = random.choice(coeff_range)
     if len_ < 0:
         len_ = -len_
     monomials = []
-    for _ in xrange((len_ - 1 if known_term else len_)):
+    for _ in xrange((len_ - 1 if right_hand_side else len_)):
         vars = {} ## Change on Py2.7
         for __ in xrange(random.randint(1, max_letters)):
             vars[random.choice(letters)] = random.choice(exp_range)
         monomials.append((random.choice(coeff_range), vars))
-    if known_term is None:
-        known_term = random.choice((True, False,))
-    if known_term:
+    if not right_hand_side:
+        right_hand_side = random.choice((True, False,))
+    if right_hand_side:
         monomials.append((random.choice(coeff_range), {}))
     return Polynomial(monomials)
 
@@ -199,14 +198,16 @@ class Polynomial(object):
         Returns a list of all the letters that appear in the polynomial.
         '''
 
-        return tuple(reduce(operator.or_, [set(m[1].keys()) for m in self._monomials if m[1]], set()))
+        return tuple(sorted(reduce(operator.or_, [set(m[1].keys()) for m in self._monomials if m[1]], set())))
 
     @ property
-    def known_term(self):
+    def right_hand_side(self):
         '''
-        Returns, if there is, the note term, False otherwise.
+        Returns, if there is, the right hand-side term, False otherwise.
         '''
 
+        ## if not self._monomials[-1][1]:
+        ##     return self._monomials[-1]  # Check this
         for monomial in self._monomials:
             if not monomial[1]:
                 return monomial[0]
@@ -222,10 +223,12 @@ class Polynomial(object):
 
     @ property
     def zeros(self):
+        if len(self.letters) - 1:
+            return NotImplemented
         divisors = lambda n: [1] + [x for x in xrange(2, n//2 +1) if not n % x] + [n]
-        if not self.known_term:
+        if not self.right_hand_side:
             return []
-        divs = divisors(self.known_term)
+        divs = divisors(self.right_hand_side)
         adivs = map(operator.neg, divs)
         return tuple([x for x in divs + adivs if not self(x)])
 
@@ -258,6 +261,8 @@ class Polynomial(object):
 
         if letter not in self.letters:
             raise KeyError('letter not in polynomial')
+        if right_hand_side:
+            return 0
         return min(self.raw_powers(letter))
 
     def powers(self, letter=None):
@@ -377,17 +382,17 @@ class Polynomial(object):
 
     def _cmp(self, a, b):
         '''
-        Comparation function used to sort the monomials.
+        Comparator function used to sort the monomials.
         '''
 
-        try:                         ## Change this
+        try:                         ## Change this - ugly!
             ma = max(a[1].values())
         except ValueError:
             ma = 0
         try:
             mb = max(b[1].values())
         except ValueError:
-            mb = 0 ################################
+            mb = 0 ########################################
 
         if ma > mb:
             return 1
@@ -459,6 +464,7 @@ class Polynomial(object):
                 if m[0]:
                     tmp_mons.append(m)
             return tmp_mons
+        #other = self._check_other(other)
         return sorted(_filter(self._monomials)) == sorted(_filter(other._monomials))
 
     def __ne__(self, other):
@@ -501,8 +507,9 @@ class Polynomial(object):
     def __call__(self, val):   ## TODO: Change for other letters
         letter = self.letters[0]
         i = '+'.join(['%s*%s' % (str(c), ''.join(['%s**%s' % (letter, exp) for letter, exp in vars.iteritems()]))
-                                                                            for c, vars in self._monomials])
-        return eval(i if i[-1] != '*' else i[:-1], {letter: val})
+                        for c, vars in (self._monomials[:-1] if self.right_hand_side else self._monomials)]) \
+                    .replace('+-', '-').replace('**1', '')
+        return eval(i, {letter: val})
 
     def __add__(self, other):
         try:
@@ -570,6 +577,7 @@ class Polynomial(object):
 
             return Polynomial(((new_coefficient, new_vars),))
 
+        other = self._check_other(other)
         A = Polynomial(copy.deepcopy(self._monomials))
         B = Polynomial(copy.deepcopy(other._monomials))
         Q = Polynomial()

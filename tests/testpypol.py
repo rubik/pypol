@@ -34,16 +34,17 @@ class PypolTestCase(unittest.TestCase):
         self.assertEqual(pypol.polynomial('- x^2 + x'), self.a / self.c)
 
     def testMod(self):
-        pass
+        p = pypol.polynomial('x^2 + 3')
+        self.assertEqual(pypol.polynomial('4'), p % self.c)
 
     def testTruediv(self):
         pass
 
     def testPow(self):
-        pass
+        self.assertEqual(pypol.polynomial('x^2 -2x + 1'), self.c ** 2)
 
     def testLetters(self):
-        pass
+        self.assertEqual(('a', 'b', 'x'), self.b.letters)
 
     def testRawPowers(self):
         pass
@@ -52,7 +53,8 @@ class PypolTestCase(unittest.TestCase):
         pass
 
     def testLinear(self):
-        pass
+        self.assertFalse(self.a.islinear)
+        self.assertTrue(self.c.islinear)
 
     def testOrdered(self):
         pass
@@ -76,7 +78,8 @@ class PypolTestCase(unittest.TestCase):
         pass
 
     def testLen(self):
-        pass
+        self.assertEqual(4, len(self.a))
+        self.assertEqual(1, len(self.d))
 
     def testNonzero(self):
         pass
