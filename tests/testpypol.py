@@ -47,45 +47,50 @@ class PypolTestCase(unittest.TestCase):
         self.assertEqual(('a', 'b', 'x'), self.b.letters)
 
     def testRawPowers(self):
-        pass
+        self.assertEqual([3, 0, 0, 0], self.b.raw_powers('a'))
 
     def testPowers(self):
-        pass
+        self.assertEqual([3, 0], self.b.powers('a'))
 
     def testLinear(self):
-        self.assertFalse(self.a.islinear)
-        self.assertTrue(self.c.islinear)
+        self.assertFalse(self.a.islinear())
+        self.assertTrue(self.c.islinear())
 
     def testOrdered(self):
         pass
 
     def testComplete(self):
-        pass
+        self.assertTrue(self.c.iscomplete('x'))
+        self.assertFalse(self.b.iscomplete('x'))
 
     def testUpdate(self):
         pass
 
     def testEq(self):
-        pass
+        self.assertTrue(pypol.polynomial('x^3 - 2^x + x - 5'))
 
     def testNe(self):
-        pass
+        self.assertTrue(self.a != self.b)
+        self.assertFalse(self.c != self.c)
 
     def testPos(self):
-        pass
+        self.assertEqual(self.a, +self.a)
 
     def testNeg(self):
-        pass
+        self.assertEqual(pypol.polynomial('x - 1'), -self.c)
 
     def testLen(self):
         self.assertEqual(4, len(self.a))
         self.assertEqual(1, len(self.d))
 
     def testNonzero(self):
-        pass
+        p = pypol.polynomial()
+        self.assertTrue(self.a)
+        self.assertFalse(p)
 
     def testContains(self):
-        pass
+        self.assertTrue((1, {'x': 3}) in self.a)
+        self.assertFalse((1, {'x': 5}) in self.a)
 
     def testGetitem(self):
         pass

@@ -9,8 +9,8 @@ import re ## 2 times used
 
 
 __author__ = 'Michele Lacchia'
-__version__ = (0, 0)
-__version_str__ = '0.0'
+__version__ = (0, 1)
+__version_str__ = '0.1'
 
 __all__ = ['polynomial', 'gcd', 'lcm', 'are_similar', 'make_polynomial', 'parse_polynomial', 'random_poly', 'Polynomial', 'AlgebraicFraction',]
 
@@ -308,6 +308,8 @@ class Polynomial(object):
         if not letter:
             return all(self.iscomplete(l) for l in self.letters)
 
+        if self.max_power(letter) == 1:
+            return True
         return self.powers(letter) == range(self.max_power(letter), -1, -1)
 
     def update(self, pol_or_monomials=None):
@@ -483,7 +485,7 @@ class Polynomial(object):
         return bool(len(self))
 
     def __contains__(self, other):
-        return set(self._check_other(other)._monomials).issubset(self._monomials)
+        return other in self._monomials
 
     def __copy__(self):
         return copy.copy(self._monomials)
