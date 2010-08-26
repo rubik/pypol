@@ -1,1 +1,1 @@
-from pypol import *
+from .pypol import *
