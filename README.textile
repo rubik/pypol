@@ -12,4 +12,4 @@ Then you can import it normally:
 >>> </pre>
 
 For examples see the github wiki:
-<a href="http://wiki.github.com/rubik/pypol/"></a>
+<a href="http://wiki.github.com/rubik/pypol/">here</a>
