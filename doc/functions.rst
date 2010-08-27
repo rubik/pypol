@@ -9,7 +9,7 @@ pypol module has some utility functions to work with polynomials:
 
 .. function:: polynomial([string=None[, simplify=True[, print_format=True]]])
 
-    Returns a *Polynomial* object.
+    Returns a :class:`Polynomial` object.
 
     string is a string that represent a polynomial, default is None.
     If simplify is True, the polynomial will be simplified on __init__ and on update.

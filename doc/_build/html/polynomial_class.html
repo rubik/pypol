@@ -54,9 +54,11 @@
 <dl class="class">
 <dt id="Polynomial">
 <em class="property">class </em><tt class="descname">Polynomial</tt><big>(</big><span class="optional">[</span><em>monomials=()</em><span class="optional">[</span>, <em>simplify=True</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#Polynomial" title="Permalink to this definition">¶</a></dt>
-<dd><p>A <a class="reference internal" href="#Polynomial" title="Polynomial"><tt class="xref py py-class docutils literal"><span class="pre">Polynomial</span></tt></a> is an object that represents a Polynomial.
-It accepts two arguments: <em>monomials</em> and <em>simplify</em>.</p>
+<dd><blockquote>
+A <a class="reference internal" href="#Polynomial" title="Polynomial"><tt class="xref py py-class docutils literal"><span class="pre">Polynomial</span></tt></a> is an object that represents a Polynomial.
+It accepts two arguments: <em>monomials</em> and <em>simplify</em>.</blockquote>
 <p><em>monomials</em> is a tuple of tuples that represents all the polynomial&#8217;s monomials.</p>
+<blockquote>
 <p>If <em>simplify</em> is True, then the polynomial will be simplified on __init__ and on <tt class="xref py py-meth docutils literal"><span class="pre">update()</span></tt>.
 An example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">monomials</span> <span class="o">=</span> <span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;x&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;x&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}))</span>
@@ -73,6 +75,52 @@ An example:</p>
 </pre></div>
 </div>
 <p>We can use the <a class="reference internal" href="functions.html#parse_polynomial" title="parse_polynomial"><tt class="xref py py-func docutils literal"><span class="pre">parse_polynomial()</span></tt></a> function too.</p>
+<dl class="method">
+<dt id="Polynomial.monomials">
+<tt class="descname">monomials</tt><big>(</big><big>)</big><a class="headerlink" href="#Polynomial.monomials" title="Permalink to this definition">¶</a></dt>
+<dd><p>monomials is a property that returns the polynomial&#8217;s monomials.
+Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;2x^3 + 4xy&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">monomials</span>
+<span class="go">((2, {&#39;x&#39;: 3}), (4, {&#39;y&#39;: 1, &#39;x&#39;: 1}))</span>
+</pre></div>
+</div>
+<p>You can also set the monomials:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;2x^3 + 4xy&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">monomials</span> <span class="o">=</span> <span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="p">{}),)</span> <span class="c"># The comma!</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ 2</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Polynomial.ordered_monomials">
+<tt class="descname">ordered_monomials</tt><big>(</big><span class="optional">[</span><em>cmp=None</em><span class="optional">[</span>, <em>key=None</em><span class="optional">[</span>, <em>reverse=False</em><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#Polynomial.ordered_monomials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies <tt class="xref py py-func docutils literal"><span class="pre">sorted()</span></tt> to self.monomials, with cmp, key and reverse arguments.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Polynomial.degree">
+<tt class="descname">degree</tt><big>(</big><big>)</big><a class="headerlink" href="#Polynomial.degree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the degree of the polynomial, i.e. the maximum degree of its monomials.
+An example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;2x^3 + 4xy&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">degree</span>
+<span class="go">3</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Polynomial.letters">
+<tt class="descname">letters</tt><big>(</big><big>)</big><a class="headerlink" href="#Polynomial.letters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a tuple of all the letters that appear in the polynomial.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;2x^3 + 4xy&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">letters</span>
+<span class="go">(&#39;x&#39;, &#39;y&#39;)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</blockquote>
 </dd></dl>
 
 </div>

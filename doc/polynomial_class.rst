@@ -27,7 +27,7 @@ The main class in pypol is :class:`Polynomial`:
 
     We can use the :func:`parse_polynomial` function too.
 
-    .. :method: monomials
+    .. method:: monomials
 
         monomials is a property that returns the polynomial's monomials.
         Example::
@@ -42,11 +42,11 @@ The main class in pypol is :class:`Polynomial`:
             >>> p
             + 2
 
-    .. :method: ordered_monomials([, cmp=None[, key=None[, reverse=False]]])
+    .. method:: ordered_monomials([, cmp=None[, key=None[, reverse=False]]])
 
         Applies :func:`sorted` to self.monomials, with cmp, key and reverse arguments.
 
-    .. :method: degree
+    .. method:: degree
 
         Returns the degree of the polynomial, i.e. the maximum degree of its monomials.
         An example::
@@ -54,10 +54,27 @@ The main class in pypol is :class:`Polynomial`:
             >>> Polynomial(parse_polynomial('2x^3 + 4xy')).degree
             3
 
-    .. :method: letters
+    .. method:: letters
 
         Returns a tuple of all the letters that appear in the polynomial.
         ::
 
             >>> Polynomial(parse_polynomial('2x^3 + 4xy')).letters
             ('x', 'y')
+
+    .. method:: right_hand_side
+
+        Returns the right_hand_side, if it exist, False otherwise.
+        ::
+
+            >>> Polynomial(parse_polynomial('2x^3 + 4xy')).right_hand_side
+            False
+            >>> Polynomial(parse_polynomial('2x^3 + 4xy - 3')).right_hand_side
+            -3
+
+    .. method:: zeros
+
+        Returns a tuple containing all the polynomial's zeros. Returns NotImplemented when there are more than one letters or there isn't the right_hand_side.
+        For example::
+
+            

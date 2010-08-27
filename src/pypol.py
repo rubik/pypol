@@ -202,6 +202,15 @@ class Polynomial(object):
             return 0
 
     @ property
+    def eval_form(self):
+        '''
+        Returns a string form that can be used with eval()
+        '''
+        return '+'.join(['%s*%s' % (str(c), ''.join(['%s**%s' % (letter, exp) for letter, exp in vars.iteritems()]))
+                        for c, vars in (self._monomials[:-1] if self.right_hand_side else self._monomials)]) \
+                    .replace('+-', '-').replace('**1', '') + (str(self.right_hand_side) if self.right_hand_side else '')
+
+    @ property
     def letters(self):
         '''
         Returns a tuple of all the letters that appear in the polynomial.
@@ -228,8 +237,8 @@ class Polynomial(object):
             return NotImplemented
         divisors = lambda n: [1] + [x for x in xrange(2, n//2 +1) if not n % x] + [n]
         if not self.right_hand_side:
-            return []
-        divs = divisors(self.right_hand_side)
+            return NotImplemented
+        divs = divisors((-self.right_hand_side if self.right_hand_side < 0 else self.right_hand_side))
         adivs = map(operator.neg, divs)
         return tuple([x for x in divs + adivs if not self(x)])
 
@@ -512,10 +521,7 @@ class Polynomial(object):
 
     def __call__(self, val):   ## TODO: Change for other letters
         letter = self.letters[0]
-        i = '+'.join(['%s*%s' % (str(c), ''.join(['%s**%s' % (letter, exp) for letter, exp in vars.iteritems()]))
-                        for c, vars in (self._monomials[:-1] if self.right_hand_side else self._monomials)]) \
-                    .replace('+-', '-').replace('**1', '')
-        return eval(i, {letter: val})
+        return eval(self.eval_form, {letter: val})
 
     def __add__(self, other):
         try:
