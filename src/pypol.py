@@ -1,4 +1,25 @@
+#!/usr/bin/env python2.6
 # -*- coding: utf-8 -*-
+
+'''
+pypol - a Python library to manipulate polynomials (and monomails too)
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+Requirements:
+- Python 2.6 (or greater)
+'''
 
 from __future__ import division
 import copy ## 6 times used
@@ -24,16 +45,17 @@ def polynomial(string=None, simplify=True):
     ## Syntax rules
         Powers can be expressed using the `^` symbol. If a digit follows a letter then it is interpreted as an exponent. So the following expressions are be equal:
 
-             polynomial('2x^3y^2 + 1'); polynomial('2x3y2 + 1')
+            >>> polynomial('2x^3y^2 + 1') == polynomial('2x3y2 + 1')
+            True
 
           but if there is a white space after the letter then the digit is interpreted as a positive coefficient.
           So this:
 
-             polynomial('2x3y 2 + 1')
+            >>> polynomial('2x3y 2 + 1')
 
           represents this polynomial:
 
-             2x^3y + 3
+            2x^3y + 3
     '''
 
     if not string:
@@ -45,7 +67,7 @@ def make_polynomial(monomials, simplify=True):
     Make a polynomial from a list of tuples.
     For example:
 
-        make_polynomial(parse_polynomial('2x + 3y - 4'))
+        >>> make_polynomial(parse_polynomial('2x + 3y - 4'))
         2x + 3y - 4
     '''
 
@@ -54,7 +76,7 @@ def make_polynomial(monomials, simplify=True):
 def are_similar(a, b):
     '''
     Returns True whether the two monomials are similar,
-    i.e. if they have the same literal part, False otherwise
+    i.e. if they have the same literal part, False otherwise.
     '''
 
     return a[1] == b[1]
@@ -492,7 +514,7 @@ class Polynomial(object):
         return len(self._monomials)
 
     def __pos__(self):
-        return self
+        return copy.copy(self)
 
     def __neg__(self):
         return self * -1
@@ -507,7 +529,7 @@ class Polynomial(object):
         return Polynomial(self._monomials)
 
     def __deepcopy__(self):
-        return Polynomial(self._monomials)
+        return copy.copy(self)
 
     def __getitem__(self, b):
         return self._monomials[b]
@@ -573,13 +595,16 @@ class Polynomial(object):
     def __divmod__(self, other):
         other = self._check_other(other)
         def _set_up(pol):
-             if not pol.letters:
-                 return self._make_complete()
-             for m in pol._monomials:
-                 for var in self.letters:
-                     if var not in m[1]:
-                         m[1][var] = 0
-             self._make_complete(letter)
+            if not pol.letters:
+                return self._make_complete()
+            for m in pol._monomials:
+                for var in self.letters:
+                    if var not in m[1]:
+                        m[1][var] = 0
+            try:
+                self._make_complete(letter)
+            except KeyError:
+                pass
 
         def _div(a, b):
             if len(b) == 1:
@@ -642,7 +667,12 @@ class Polynomial(object):
 
 
 class AlgebraicFraction(object):
+
+    __slots__ = ('numerator')
+
     def __init__(self, numerator, denominator):
+        if not denominator:
+            raise ZeroDivisionError('Denominator cannot be 0')
         self._numerator = numerator
         self._denominator = denominator
 
@@ -686,11 +716,48 @@ class AlgebraicFraction(object):
 
         return (self._numerator, self._denominator)
 
+    def swap(self):
+        return AlgebraicFraction(self._denominator, self._numerator)
+
     def __repr__(self):
-        return 'AlgebraicFraction(%s, %s)' % (self._numerator, self._denominator) ## For compatibility
+        return 'AlgebraicFraction(%s, %s)' % self.terms ## For compatibility
 
     def __str__(self):
         a, b = str(self._numerator), str(self._denominator)
         sep = max((len(a), len(b)))*u'\u2212'.encode('utf-8')
-        len_ = len(sep)//2
+        len_ = len(sep)
         return '\n'.join([a.center(len_), sep, b.center(len_)])
+
+    def __pos__(self):
+        return copy.copy(self)
+
+    def __neg__(self):
+        return AlgebraicFraction(-self._numerator, self._denominator)
+
+    def __copy__(self):
+        return AlgebraicFraction(self._numerator, self._denominator)
+
+    def __deepcopy__(self):
+        return copy.copy(self)
+
+    def __add__(self, other):
+        return NotImplemented
+
+    def __radd__(self, other):
+        return self + other
+
+    def __sub__(self, other):
+        return self + -other
+
+    def __rsub__(self, other):
+        return self - other
+
+    def __mul__(self, other):
+        return AlgebraicFraction(self._numerator * other._numerator,
+                                self._denominator * other._denominator)
+
+    def __rmul__(self, other):
+        return self * other
+
+    def __div__(self, other):
+        return self * other.swap()
