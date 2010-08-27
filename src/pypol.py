@@ -15,10 +15,11 @@ __version_str__ = '0.1'
 __all__ = ['polynomial', 'gcd', 'lcm', 'are_similar', 'make_polynomial', 'parse_polynomial', 'random_poly', 'Polynomial', 'AlgebraicFraction',]
 
 
-def polynomial(string=None, simplify=True, print_format=True):
+def polynomial(string=None, simplify=True):
     '''
     Function that returns a Polynomial object.
     string is a string that represent a polynomial, default is None.
+    If simplify, then the Polynomial will be simplified on __init__ and on update.
 
     ## Syntax rules
         Powers can be expressed using the `^` symbol. If a digit follows a letter then it is interpreted as an exponent. So the following expressions are be equal:
@@ -37,9 +38,9 @@ def polynomial(string=None, simplify=True, print_format=True):
 
     if not string:
         return Polynomial()
-    return make_polynomial(parse_polynomial(string), simplify, print_format)
+    return make_polynomial(parse_polynomial(string), simplify)
 
-def make_polynomial(monomials, simplify=True, print_format=True):
+def make_polynomial(monomials, simplify=True):
     '''
     Make a polynomial from a list of tuples.
     For example:
@@ -48,7 +49,7 @@ def make_polynomial(monomials, simplify=True, print_format=True):
         2x + 3y - 4
     '''
 
-    return Polynomial(monomials, simplify, print_format)
+    return Polynomial(monomials, simplify)
 
 def are_similar(a, b):
     '''
@@ -58,29 +59,29 @@ def are_similar(a, b):
 
     return a[1] == b[1]
 
-def gcd(*args): # Still in development
+def gcd(*polynomials): # Still in development
     '''
-    Calculate the Greatest Common Divisor of args.
+    Calculate the Greatest Common Divisor of the polynomials.
     '''
     def _internal_gcd(a, b):
         while b:
             a, b = b, a % b
         return a
 
-    return reduce(_internal_gcd, args)
+    return reduce(_internal_gcd, polynomials)
 
-def lcm(*args): # Still in development
+def lcm(*polynomials): # Still in development
     '''
-    Calculate the Least Common Divisor of args.
+    Calculate the Least Common Divisor of polynomials.
     '''
     def _internal_lcm(a, b):
         return operator.truediv(a*b, gcd(a, b))
 
-    return reduce(_internal_lcm, args)
+    return reduce(_internal_lcm, polynomials)
 
 def parse_polynomial(string, max_length=None):
     '''
-    Parse a string that represent a polynomial.
+    Parses a string that represent a polynomial.
     It can parse integer coefficients, float coefficient and fractional coefficient.
 
     See polynomial's syntax rules.
@@ -102,6 +103,16 @@ def parse_polynomial(string, max_length=None):
     return monomials
 
 def random_poly(coeff_range=xrange(-10, 11), len_=None, letters='xyz', max_letters=3, exp_range=xrange(1, 6), right_hand_side=None):
+    '''
+    Returns a polynomial generated randomly.
+
+    coeff_range is the range of the polynomial's coefficients, default is ``xrange(-10, 11)``.
+    len_ is the len of the polynomial. Default is None, in this case len_ will be a random number chosen in coeff_range.
+    letters are the letters that appear in the polynomial.
+    max_letter is the maximum number of letter for every monomial.
+    exp_range is the range of the exponents.
+    if right_hand_side is True the polynomial will have a right_hand_side. Default is None, that means the right_hand_side will be chosen randomly.
+    '''
     if not len_:
         len_ = random.choice(coeff_range)
     if len_ < 0:
@@ -146,7 +157,7 @@ def _parse_letters(l):
 class Polynomial(object):
     '''
     Base class that represent a polynomial
-    Polynomial([monomials[, simplify[, print_format]]])
+    Polynomial([monomials[, simplify]])
 
     monomials is a tuple of tuples like this:
 
@@ -155,13 +166,11 @@ class Polynomial(object):
         ((-3, {'x': 1, 'y': 1}), (4, {'x': 2, 'y': 4}))
 
     if simplify, if simplifies monomials on __init__ and update
-    if print_format it will print literal exponents instead of ^ on __repr__
     '''
 
-    def __init__(self, monomials=(), simplify=True, print_format=True):
+    def __init__(self, monomials=(), simplify=True):
         self._monomials = tuple(sorted(monomials, cmp=self._cmp, reverse=True))
         self.simplify = simplify
-        self._print_format = print_format
         if self.simplify:
             self._simplify()
 
@@ -195,7 +204,7 @@ class Polynomial(object):
     @ property
     def letters(self):
         '''
-        Returns a list of all the letters that appear in the polynomial.
+        Returns a tuple of all the letters that appear in the polynomial.
         '''
 
         return tuple(sorted(reduce(operator.or_, [set(m[1].keys()) for m in self._monomials if m[1]], set())))
@@ -212,14 +221,6 @@ class Polynomial(object):
             if not monomial[1]:
                 return monomial[0]
         return False
-
-    @ property
-    def print_format(self):
-        return self._print_format
-
-    @ print_format.setter
-    def print_format(self, val):
-        self._print_format = bool(val)
 
     @ property
     def zeros(self):
@@ -414,11 +415,11 @@ class Polynomial(object):
                 self.append(((0, {letter:exp}),))
         return True
 
-    def _format(self):
-        return ' '.join([self._m_format(monomial).replace('-', '- ') if monomial[0] < 0 \
-                    else ('+ ' + self._m_format(monomial) if self._m_format(monomial) else '') for monomial in self._monomials]).strip()
+    def _format(self, print_format=False):
+        return ' '.join([self._m_format(monomial, print_format).replace('-', '- ') if monomial[0] < 0 \
+                    else ('+ ' + self._m_format(monomial, print_format) if self._m_format(monomial, print_format) else '') for monomial in self._monomials]).strip()
 
-    def _m_format(self, monomial):
+    def _m_format(self, monomial, print_format):
         tmp_coefficient = monomial[0]
         if tmp_coefficient == 0:
             return ''
@@ -438,7 +439,7 @@ class Polynomial(object):
             else:
                 var_list.append('%s^%s' % (var, exp))
 
-        if self._print_format:   ## Implement this
+        if print_format:
             return tmp_coefficient + ''.join(var_list).replace('^', '') \
                 .replace('0', unichr(8304)).replace('1', unichr(185)) \
                 .replace('2', unichr(178)).replace('3', unichr(179)) \
@@ -458,6 +459,9 @@ class Polynomial(object):
 
     def __repr__(self):
         return self._format()
+
+    def __str__(self):
+        return self._format(True)
 
     def __eq__(self, other):
         def _filter(mons):

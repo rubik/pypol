@@ -1,7 +1,7 @@
 h1. Pypol - A Python library for manupulate polynomials
 
 © Copyrigth 2010 Michele Lacchia alias (rubik, Python, python, Pythoner, x-reynik-x)
-    See LICENSE file
+    See LICENSE file too
 
 h2. How to use it
 
@@ -13,3 +13,21 @@ Then you can import it normally:
 
 For examples see the github wiki:
 <a href="http://wiki.github.com/rubik/pypol/">here</a>
+
+
+h2. Documentation
+
+To build the documentation cd to pypol/doc
+
+    $ :input: cd /pypol/doc
+
+and build the documentation files:
+    * if you are on Windows run make.bat
+
+        $ :input: make.bat html
+
+    * if you are on Unix run make
+
+        $ :input: make html
+
+the files are in _build/html directory.

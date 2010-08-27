@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Utility functions &mdash; pypol v0.1 documentation</title>
+    <title>Utility functions &mdash; pypol v0.1.1 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.1',
+        VERSION:     '0.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="pypol v0.1 documentation" href="index.html" />
+    <link rel="top" title="pypol v0.1.1 documentation" href="index.html" />
     <link rel="prev" title="Polynomial class reference" href="polynomial_class.html" /> 
   </head>
   <body>
@@ -35,7 +35,7 @@
         <li class="right" >
           <a href="polynomial_class.html" title="Polynomial class reference"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">pypol v0.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">pypol v0.1.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -49,10 +49,10 @@
 <dl class="docutils">
 <dt>pypol module has some utility functions to work with polynomials:</dt>
 <dd><ul class="first last simple">
-<li>polynomial</li>
-<li>make_polynomial</li>
-<li>parse_polynomial</li>
-<li>random_poly</li>
+<li><a class="reference internal" href="#polynomial" title="polynomial"><tt class="xref py py-func docutils literal"><span class="pre">polynomial()</span></tt></a></li>
+<li><a class="reference internal" href="#make_polynomial" title="make_polynomial"><tt class="xref py py-func docutils literal"><span class="pre">make_polynomial()</span></tt></a></li>
+<li><a class="reference internal" href="#parse_polynomial" title="parse_polynomial"><tt class="xref py py-func docutils literal"><span class="pre">parse_polynomial()</span></tt></a></li>
+<li><a class="reference internal" href="#random_poly" title="random_poly"><tt class="xref py py-func docutils literal"><span class="pre">random_poly()</span></tt></a></li>
 </ul>
 </dd>
 </dl>
@@ -60,7 +60,8 @@
 <dt id="polynomial">
 <tt class="descname">polynomial</tt><big>(</big><span class="optional">[</span><em>string=None</em><span class="optional">[</span>, <em>simplify=True</em><span class="optional">[</span>, <em>print_format=True</em><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#polynomial" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a <em>Polynomial</em> object.</p>
-<p>string is a string that represent a polynomial, default is None.</p>
+<p>string is a string that represent a polynomial, default is None.
+If simplify is True, the polynomial will be simplified on __init__ and on update.</p>
 <dl class="docutils">
 <dt><strong>Syntax rules</strong></dt>
 <dd><p class="first">Powers can be expressed using the <em>^</em> symbol. If a digit follows a letter then it is interpreted as an exponent. So the following expressions are be equal:</p>
@@ -77,6 +78,69 @@ So this::</p>
 </div>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="make_polynomial">
+<tt class="descname">make_polynomial</tt><big>(</big><em>monomials</em><span class="optional">[</span>, <em>simplify=True</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#make_polynomial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a polynomial from a list of tuples.
+For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">make_polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;2x + 3y - 4&#39;</span><span class="p">))</span>
+<span class="go">2x + 3y - 4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">make_polynomial</span><span class="p">(((</span><span class="mi">2</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;x&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;y&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}),</span> <span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="p">{})))</span>
+<span class="go">2x + 3y - 4</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="are_similar">
+<tt class="descname">are_similar</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#are_similar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True whether the two monomials <em>a</em> and <em>b</em> are similar, i.e. they have the same literal part, False otherwise.
+An example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">are_similar</span><span class="p">((</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;x&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}),</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;x&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}))</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">are_similar</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;y&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;y&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}))</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="parse_polynomial">
+<tt class="descname">parse_polynomial</tt><big>(</big><em>string</em><span class="optional">[</span>, <em>max_length=None</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#parse_polynomial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a string that represent a polynomial.
+It can parse integer coefficients, float coefficient and fractional coefficient.
+max_length represent the maximum length that the polynomial can have.</p>
+<p>See <a class="reference internal" href="#polynomial" title="polynomial"><tt class="xref py py-func docutils literal"><span class="pre">polynomial()</span></tt></a>&#8216;s syntax rules.
+An example::</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;2x^3 - 3y + 2&#39;</span><span class="p">)</span>
+<span class="go">[(2, {&#39;x&#39;: 3}), (-3, {&#39;y&#39;: 1}), (2, {})]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;x3 - 3y2 + 2&#39;</span><span class="p">)</span>
+<span class="go">[(1, {&#39;x&#39;: 3}), (-3, {&#39;y&#39;: 2}), (2, {})]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="random_poly">
+<tt class="descname">random_poly</tt><big>(</big><span class="optional">[</span><em>coeff_range=xrange(-10</em>, <em>11)</em><span class="optional">[</span>, <em>len_=None</em><span class="optional">[</span>, <em>letters='xyz'</em><span class="optional">[</span>, <em>max_letters=3</em><span class="optional">[</span>, <em>exp_range=xrange(1</em>, <em>6)</em><span class="optional">[</span>, <em>right_hand_side=None</em><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#random_poly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a polynomial generated randomly.</p>
+<p>coeff_range is the range of the polynomial&#8217;s coefficients, default is <tt class="docutils literal"><span class="pre">xrange(-10,</span> <span class="pre">11)</span></tt>.
+len_ is the len of the polynomial. Default is None, in this case len_ will be a random number chosen in coeff_range.
+letters are the letters that appear in the polynomial.
+max_letter is the maximum number of letter for every monomial.
+exp_range is the range of the exponents.
+if right_hand_side is True the polynomial will have a right_hand_side. Default is None, that means the right_hand_side will be chosen randomly.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">random_poly</span><span class="p">()</span>
+<span class="go"> + 2x^4y^5 + 3y^5 + 5xy^5 + 10x^2y^3z^3 - 5z</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">random_poly</span><span class="p">()</span>
+<span class="go"> + 7xy^5 - 3z^4 - 2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">random_poly</span><span class="p">(</span><span class="n">len_</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">letters</span><span class="o">=</span><span class="s">&#39;ab&#39;</span><span class="p">)</span>
+<span class="go"> + 9a^5 + 7a^2b^4 - 8ab^2</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </div>
@@ -121,7 +185,7 @@ So this::</p>
         <li class="right" >
           <a href="polynomial_class.html" title="Polynomial class reference"
              >previous</a> |</li>
-        <li><a href="index.html">pypol v0.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">pypol v0.1.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Polynomial class reference &mdash; pypol v0.1 documentation</title>
+    <title>Polynomial class reference &mdash; pypol v0.1.1 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.1',
+        VERSION:     '0.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,8 +22,9 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="pypol v0.1 documentation" href="index.html" />
-    <link rel="prev" title="Utility functions" href="functions.html" /> 
+    <link rel="top" title="pypol v0.1.1 documentation" href="index.html" />
+    <link rel="next" title="Utility functions" href="functions.html" />
+    <link rel="prev" title="Tutorial" href="tutorial.html" /> 
   </head>
   <body>
     <div class="related">
@@ -34,8 +35,11 @@
              accesskey="I">index</a></li>
         <li class="right" >
           <a href="functions.html" title="Utility functions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">pypol v0.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">pypol v0.1.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -46,6 +50,31 @@
             
   <div class="section" id="polynomial-class-reference">
 <h1>Polynomial class reference<a class="headerlink" href="#polynomial-class-reference" title="Permalink to this headline">¶</a></h1>
+<p>The main class in pypol is <a class="reference internal" href="#Polynomial" title="Polynomial"><tt class="xref py py-class docutils literal"><span class="pre">Polynomial</span></tt></a>:</p>
+<dl class="class">
+<dt id="Polynomial">
+<em class="property">class </em><tt class="descname">Polynomial</tt><big>(</big><span class="optional">[</span><em>monomials=()</em><span class="optional">[</span>, <em>simplify=True</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#Polynomial" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference internal" href="#Polynomial" title="Polynomial"><tt class="xref py py-class docutils literal"><span class="pre">Polynomial</span></tt></a> is an object that represents a Polynomial.
+It accepts two arguments: <em>monomials</em> and <em>simplify</em>.</p>
+<p><em>monomials</em> is a tuple of tuples that represents all the polynomial&#8217;s monomials.</p>
+<p>If <em>simplify</em> is True, then the polynomial will be simplified on __init__ and on <tt class="xref py py-meth docutils literal"><span class="pre">update()</span></tt>.
+An example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">monomials</span> <span class="o">=</span> <span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;x&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;x&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Polynomial</span><span class="p">(</span><span class="n">monomials</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ 2x^3 + 4xy</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(((</span><span class="mi">2</span><span class="p">,</span> <span class="p">{}),))</span> <span class="c">## Remember the comma!</span>
+<span class="go">+ 2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;2x^3 + 4xy&#39;</span><span class="p">)</span>
+<span class="go">[(2, {&#39;x&#39;: 3}), (4, {&#39;y&#39;: 1, &#39;x&#39;: 1})]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;2x^3 + 4xy&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ 2x^3 + 4xy</span>
+</pre></div>
+</div>
+<p>We can use the <a class="reference internal" href="functions.html#parse_polynomial" title="parse_polynomial"><tt class="xref py py-func docutils literal"><span class="pre">parse_polynomial()</span></tt></a> function too.</p>
+</dd></dl>
+
 </div>
 
 
@@ -55,8 +84,11 @@
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
+  <p class="topless"><a href="tutorial.html"
+                        title="previous chapter">Tutorial</a></p>
+  <h4>Next topic</h4>
   <p class="topless"><a href="functions.html"
-                        title="previous chapter">Utility functions</a></p>
+                        title="next chapter">Utility functions</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/polynomial_class.txt"
@@ -87,8 +119,11 @@
              >index</a></li>
         <li class="right" >
           <a href="functions.html" title="Utility functions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
              >previous</a> |</li>
-        <li><a href="index.html">pypol v0.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">pypol v0.1.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
