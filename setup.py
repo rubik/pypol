@@ -6,5 +6,5 @@ setup(name='pypol',
       author='Michele Lacchia',
       author_email='michelelacchia@gmail.com',
       url='http://github.com/rubik/pypol',
-      packages=['src', 'tests'],
+      packages=['src', 'tests', 'doc'],
       )

@@ -6,7 +6,7 @@ import operator
 import copy
 import pypol
 
-class PypolTestCase(unittest.TestCase):
+class PolynomialTestCase(unittest.TestCase):
     def setUp(self):
         self.a = pypol.polynomial('x^3 - 2x^2 + x -5')
         self.b = pypol.polynomial('a^3 - 2x^2 - b + 3')
@@ -105,6 +105,27 @@ class PypolTestCase(unittest.TestCase):
     def testDelitem(self):
         del self.a[1:3]
         self.assertEqual(pypol.polynomial('x^3 - 5'), self.a)
+
+
+class FunctionsTestCase(unittest.TestCase):
+    def setUp(self):
+        pass
+
+    def testMakePolynomial(self):
+        self.assertEqual(pypol.make_polynomial(((2, {'x': 3}), (-3, {'x': 1, 'y': 1}), (-2, {}))), pypol.polynomial('2x^3 -3xy - 2'))
+
+    def testParsePolynomial(self):
+        self.assertEqual([(2, {'x': 3}), (-3, {'x': 1}), (2, {})], pypol.parse_polynomial('2x^3 -3x + 2'))
+
+    def testAreSimilar(self):
+        self.assertTrue(pypol.are_similar((3, {'x': 2}), (4, {'x': 2})))
+        self.assertFalse(pypol.are_similar((2, {'y': 3}), (2, {'y': 2})))
+
+    def testGcd(self):
+        pass
+
+    def testLcm(self):
+        pass
 
 
 if __name__ == '__main__':

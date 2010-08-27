@@ -1,0 +1,2 @@
+Polynomial class reference
+==========================

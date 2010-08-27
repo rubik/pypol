@@ -17,7 +17,7 @@ __all__ = ['polynomial', 'gcd', 'lcm', 'are_similar', 'make_polynomial', 'parse_
 
 def polynomial(string=None, simplify=True, print_format=True):
     '''
-    Function that returns a Polynomial instance.
+    Function that returns a Polynomial object.
     string is a string that represent a polynomial, default is None.
 
     ## Syntax rules
@@ -605,8 +605,6 @@ class Polynomial(object):
 
         return Q, A
 
-
-
     def __div__(self, other):
         quotient, remainder = divmod(self, other)
         return quotient
@@ -654,7 +652,7 @@ class AlgebraicFraction(object):
     @ property
     def denominator(self):
         '''
-        Returns the denominator of the AlgebraicFraction.
+        Returns the denominator of the algebraic fraction.
         '''
 
         return self._denominator
@@ -662,7 +660,7 @@ class AlgebraicFraction(object):
     @ denominator.setter
     def numerator(self, val):
         '''
-        Sets the denominator of the AlgebraicFraction
+        Sets the denominator of the algebraic fraction
         '''
 
         self._denominator = val

@@ -1,0 +1,132 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Utility functions &mdash; pypol v0.1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pypol v0.1 documentation" href="index.html" />
+    <link rel="prev" title="Polynomial class reference" href="polynomial_class.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="polynomial_class.html" title="Polynomial class reference"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">pypol v0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="utility-functions">
+<h1>Utility functions<a class="headerlink" href="#utility-functions" title="Permalink to this headline">¶</a></h1>
+<dl class="docutils">
+<dt>pypol module has some utility functions to work with polynomials:</dt>
+<dd><ul class="first last simple">
+<li>polynomial</li>
+<li>make_polynomial</li>
+<li>parse_polynomial</li>
+<li>random_poly</li>
+</ul>
+</dd>
+</dl>
+<dl class="function">
+<dt id="polynomial">
+<tt class="descname">polynomial</tt><big>(</big><span class="optional">[</span><em>string=None</em><span class="optional">[</span>, <em>simplify=True</em><span class="optional">[</span>, <em>print_format=True</em><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#polynomial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a <em>Polynomial</em> object.</p>
+<p>string is a string that represent a polynomial, default is None.</p>
+<dl class="docutils">
+<dt><strong>Syntax rules</strong></dt>
+<dd><p class="first">Powers can be expressed using the <em>^</em> symbol. If a digit follows a letter then it is interpreted as an exponent. So the following expressions are be equal:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">polynomial</span><span class="p">(</span><span class="s">&#39;2x^3y^2 + 1&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">polynomial</span><span class="p">(</span><span class="s">&#39;2x3y2 + 1&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>but if there is a white space after the letter then the digit is interpreted as a positive coefficient.
+So this::</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">polynomial</span><span class="p">(</span><span class="s">&#39;2x3y 2 + 1&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>represents this polynomial::</p>
+<div class="last highlight-python"><pre>2x^3y + 3</pre>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="polynomial_class.html"
+                        title="previous chapter">Polynomial class reference</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/functions.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="polynomial_class.html" title="Polynomial class reference"
+             >previous</a> |</li>
+        <li><a href="index.html">pypol v0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Michele Lacchia.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.3.
+    </div>
+  </body>
+</html>
