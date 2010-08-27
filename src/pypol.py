@@ -206,9 +206,12 @@ class Polynomial(object):
         '''
         Returns a string form that can be used with eval()
         '''
+
+        if len(self.letters) - 1:
+            return NotImplemented
         return '+'.join(['%s*%s' % (str(c), ''.join(['%s**%s' % (letter, exp) for letter, exp in vars.iteritems()]))
                         for c, vars in (self._monomials[:-1] if self.right_hand_side else self._monomials)]) \
-                    .replace('+-', '-').replace('**1', '') + (str(self.right_hand_side) if self.right_hand_side else '')
+                    .replace('+-', '-').replace('**1', '') + (str((self.right_hand_side if self.right_hand_side < 0 else '+' + str(self.right_hand_side))) if self.right_hand_side else '')
 
     @ property
     def letters(self):

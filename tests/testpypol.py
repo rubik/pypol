@@ -47,6 +47,12 @@ class PolynomialTestCase(unittest.TestCase):
     def testLetters(self):
         self.assertEqual(('a', 'b', 'x'), self.b.letters)
 
+    def testEvalForm(self):
+        pass
+
+    def testZeros(self):
+        pass
+
     def testRawPowers(self):
         self.assertEqual([3, 0, 0, 0], self.b.raw_powers('a'))
 

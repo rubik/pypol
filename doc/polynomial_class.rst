@@ -62,9 +62,19 @@ The main class in pypol is :class:`Polynomial`:
             >>> Polynomial(parse_polynomial('2x^3 + 4xy')).letters
             ('x', 'y')
 
+    .. method:: eval_form
+
+        Returns a string form of the polynomial that can be used with eval::
+
+            >>> e = Polynomial(parse_polynomial('2x^2 - 4x + 4')).eval_form
+            >>> eval(e, {'x': 3})
+            10
+
+        If there are more than one letters, it returns NotImplemented.
+
     .. method:: right_hand_side
 
-        Returns the right_hand_side, if it exist, False otherwise.
+        Returns the right-hand side, if it exist, False otherwise.
         ::
 
             >>> Polynomial(parse_polynomial('2x^3 + 4xy')).right_hand_side
@@ -74,7 +84,8 @@ The main class in pypol is :class:`Polynomial`:
 
     .. method:: zeros
 
-        Returns a tuple containing all the polynomial's zeros. Returns NotImplemented when there are more than one letters or there isn't the right_hand_side.
+        Returns a tuple containing all the polynomial's zeros. Returns NotImplemented when there are more than one letters or there isn't the right-hand side.
         For example::
 
-            
+            >>> Polynomial(parse_polynomial('2x - 4')).zeros
+            (2,)
