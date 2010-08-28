@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,9 +7,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>pypol classes reference &mdash; pypol v0.1.1 documentation</title>
-    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/print.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
@@ -23,30 +21,32 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/theme_extras.js"></script>
     <link rel="top" title="pypol v0.1.1 documentation" href="index.html" />
     <link rel="next" title="Utility functions" href="functions.html" />
     <link rel="prev" title="Tutorial" href="tutorial.html" /> 
   </head>
   <body>
-      <div class="header"><h1 class="heading"><a href="index.html">
-          <span>pypol v0.1.1 documentation</span></a></h1>
-        <h2 class="heading"><span>pypol classes reference</span></h2>
-      </div>
-      <div class="topnav">
-      
-        <p>
-        «&#160;&#160;<a href="tutorial.html">Tutorial</a>
-        &#160;&#160;::&#160;&#160;
-        <a class="uplink" href="index.html">Contents</a>
-        &#160;&#160;::&#160;&#160;
-        <a href="functions.html">Utility functions</a>&#160;&#160;»
-        </p>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="functions.html" title="Utility functions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">pypol v0.1.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
 
-      </div>
-      <div class="content">
-        
-        
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
   <div class="section" id="pypol-classes-reference">
 <h1>pypol classes reference<a class="headerlink" href="#pypol-classes-reference" title="Permalink to this headline">¶</a></h1>
 <p>pypol&#8217;s classes are two: <tt class="xref py py-class docutils literal"><span class="pre">Polynomail</span></tt> and <a class="reference internal" href="#AlgebraicFraction" title="AlgebraicFraction"><tt class="xref py py-class docutils literal"><span class="pre">AlgebraicFraction</span></tt></a>.</p>
@@ -179,12 +179,45 @@ Returns NotImplemented when:</p>
 <dl class="method">
 <dt id="Polynomial.raw_powers">
 <tt class="descname">raw_powers</tt><big>(</big><span class="optional">[</span><em>letter=None</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#Polynomial.raw_powers" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns a list with the same length of the polynomial with all the degrees of <em>letter</em>.
+Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - 2a^2 + x - 2&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">raw_powers</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">)</span>
+<span class="go">[3, 0, 1, 0] ## In -2a^2 and -2 there isn&#39;t the letter `x`, so there are two zeros</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - 2a^2 + x - 2&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">raw_powers</span><span class="p">(</span><span class="s">&#39;q&#39;</span><span class="p">)</span>
+<span class="go">[0, 0, 0, 0]</span>
+</pre></div>
+</div>
+<p>If letter is None, it returns a dictionary with all the degrees of all the letters in the polynomial:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - 2a^2 + x - 2&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">raw_powers</span><span class="p">()</span>
+<span class="go">{&#39;a&#39;: [0, 2, 0, 0],</span>
+<span class="go"> &#39;x&#39;: [3, 0, 1, 0],</span>
+<span class="go"> }</span>
+</pre></div>
+</div>
+<p>See also <a class="reference internal" href="#Polynomial.powers" title="Polynomial.powers"><tt class="xref py py-meth docutils literal"><span class="pre">powers()</span></tt></a>.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="Polynomial.max_power">
 <tt class="descname">max_power</tt><big>(</big><em>letter</em><big>)</big><a class="headerlink" href="#Polynomial.max_power" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the maximum degree of a letter:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - 2a^2 + x - 2&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">max_power</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">)</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - 2a^2 + x - 2&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">max_power</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">)</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - 2a^2 + x - 2&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">max_power</span><span class="p">(</span><span class="s">&#39;q&#39;</span><span class="p">)</span>
+
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;pyshell#7&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n-Identifier">&lt;module&gt;</span>
+    <span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - 2a^2 + x - 2&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">max_power</span><span class="p">(</span><span class="s">&#39;q&#39;</span><span class="p">)</span>
+  File <span class="nb">&quot;/home/miki/pypol/src/pypol.py&quot;</span>, line <span class="m">316</span>, in <span class="n-Identifier">max_power</span>
+    <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s">&#39;letter not in polynomial&#39;</span><span class="p">)</span>
+<span class="nc">KeyError</span>: <span class="n-Identifier">&#39;letter not in polynomial&#39;</span>
+</pre></div>
+</div>
+<p>It raises KeyError if the letter is not in the polynomial.
+See also <a class="reference internal" href="#Polynomial.min_power" title="Polynomial.min_power"><tt class="xref py py-meth docutils literal"><span class="pre">min_power()</span></tt></a>.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="Polynomial.min_power">
@@ -236,21 +269,6 @@ Returns NotImplemented when:</p>
 <tt class="descname">_make_complete</tt><big>(</big><em>letter</em><big>)</big><a class="headerlink" href="#Polynomial._make_complete" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt>
-<tt class="descname">islinear</tt><big>(</big><big>)</big></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">islinear</tt><big>(</big><big>)</big></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt>
-<tt class="descname">islinear</tt><big>(</big><big>)</big></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 </div>
@@ -269,19 +287,63 @@ It accepts two arguments: <em>numerator</em> and <em>denominator</em>.
 </div>
 
 
+          </div>
+        </div>
       </div>
-      <div class="bottomnav">
-      
-        <p>
-        «&#160;&#160;<a href="tutorial.html">Tutorial</a>
-        &#160;&#160;::&#160;&#160;
-        <a class="uplink" href="index.html">Contents</a>
-        &#160;&#160;::&#160;&#160;
-        <a href="functions.html">Utility functions</a>&#160;&#160;»
-        </p>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">pypol classes reference</a><ul>
+<li><a class="reference internal" href="#polynomial-class-reference">Polynomial class reference</a></li>
+<li><a class="reference internal" href="#algebraicfraction-class-reference">AlgebraicFraction class reference</a></li>
+</ul>
+</li>
+</ul>
 
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tutorial.html"
+                        title="previous chapter">Tutorial</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="functions.html"
+                        title="next chapter">Utility functions</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/classes.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
       </div>
-
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="functions.html" title="Utility functions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             >previous</a> |</li>
+        <li><a href="index.html">pypol v0.1.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
     <div class="footer">
         &copy; Copyright 2010, Michele Lacchia.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.3.

@@ -114,7 +114,42 @@ The main class in pypol is :class:`Polynomial`:
 
     .. method:: raw_powers([, letter=None])
 
+        Returns a list with the same length of the polynomial with all the degrees of *letter*.
+        Example::
+
+            >>> Polynomial(parse_polynomial('3x^3 - 2a^2 + x - 2')).raw_powers('x')
+            [3, 0, 1, 0] ## In -2a^2 and -2 there isn't the letter `x`, so there are two zeros
+            >>> Polynomial(parse_polynomial('3x^3 - 2a^2 + x - 2')).raw_powers('q')
+            [0, 0, 0, 0]
+
+        If letter is None, it returns a dictionary with all the degrees of all the letters in the polynomial::
+
+            >>> Polynomial(parse_polynomial('3x^3 - 2a^2 + x - 2')).raw_powers()
+            {'a': [0, 2, 0, 0],
+             'x': [3, 0, 1, 0],
+             }
+
+        See also :meth:`powers`.
+
     .. method:: max_power(letter)
+
+        Returns the maximum degree of a letter::
+
+            >>> Polynomial(parse_polynomial('3x^3 - 2a^2 + x - 2')).max_power('a')
+            2
+            >>> Polynomial(parse_polynomial('3x^3 - 2a^2 + x - 2')).max_power('x')
+            3
+            >>> Polynomial(parse_polynomial('3x^3 - 2a^2 + x - 2')).max_power('q')
+            
+            Traceback (most recent call last):
+              File "<pyshell#7>", line 1, in <module>
+                Polynomial(parse_polynomial('3x^3 - 2a^2 + x - 2')).max_power('q')
+              File "/home/miki/pypol/src/pypol.py", line 316, in max_power
+                raise KeyError('letter not in polynomial')
+            KeyError: 'letter not in polynomial'
+
+        It raises KeyError if the letter is not in the polynomial.
+        See also :meth:`min_power`.
 
     .. method:: min_power(letter)
 
@@ -135,12 +170,6 @@ The main class in pypol is :class:`Polynomial`:
     .. method:: _cmp(a, b)
 
     .. method:: _make_complete(letter)
-
-    .. method:: islinear()
-
-    .. method:: islinear()
-
-    .. method:: islinear()
 
 
 AlgebraicFraction class reference

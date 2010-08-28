@@ -323,7 +323,7 @@ class Polynomial(object):
 
         if letter not in self.letters:
             raise KeyError('letter not in polynomial')
-        if right_hand_side:
+        if self.right_hand_side:
             return 0
         return min(self.raw_powers(letter))
 
@@ -476,6 +476,9 @@ class Polynomial(object):
         If the polynomial is already complete returns False, otherwise makes it complete and returns True.
         '''
 
+        if not letter:
+            for l in self.letters:
+                self._make_complete(l)
         if self.iscomplete(letter):
             return False
         for exp in xrange(1, self.max_power(letter)+1):
@@ -639,6 +642,7 @@ class Polynomial(object):
             self._make_complete()
 
         def _div(a, b):
+            print a, b
             if len(b) == 1:
                 b = (1, b)
 
