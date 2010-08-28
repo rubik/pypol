@@ -136,12 +136,6 @@ The main class in pypol is :class:`Polynomial`:
 
     .. method:: _make_complete(letter)
 
-    .. method:: islinear()
-
-    .. method:: islinear()
-
-    .. method:: islinear()
-
 
 AlgebraicFraction class reference
 ---------------------------------
