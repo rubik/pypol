@@ -1,5 +1,10 @@
+pypol classes reference
+=======================
+
+pypol's classes are two: :class:`Polynomail` and :class:`AlgebraicFraction`.
+
 Polynomial class reference
-==========================
+--------------------------
 
 In all these examples we use this method to make a polynomial::
 
@@ -106,3 +111,45 @@ The main class in pypol is :class:`Polynomial`:
 
             >>> Polynomial(parse_polynomial('2x - 4')).zeros
             (2,)
+
+    .. method:: raw_powers([, letter=None])
+
+    .. method:: max_power(letter)
+
+    .. method:: min_power(letter)
+
+    .. method:: powers([, letter=None])
+
+    .. method:: islinear()
+
+    .. method:: isordered([, letter])
+
+    .. method:: iscomplete([, letter=None])
+
+    .. method:: update([, pol_or_monomials=None])
+
+    .. method:: append()
+
+    .. method:: simplify()
+
+    .. method:: _cmp(a, b)
+
+    .. method:: _make_complete(letter)
+
+    .. method:: islinear()
+
+    .. method:: islinear()
+
+    .. method:: islinear()
+
+
+AlgebraicFraction class reference
+---------------------------------
+
+pypol supports the algebraic fractions, although now it is very limited. It supports all the four basic operation but at the moment it does not simplify the terms.
+
+.. class:: AlgebraicFraction(numerator, denominator)
+
+        This class represent an algebraic fraction object.
+        It accepts two arguments: *numerator* and *denominator*.
+        *numerator* is the numerator of the algebraic fraction, and *denominator* its denominator. Both the terms have to be two polynomials.

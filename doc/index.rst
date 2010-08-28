@@ -14,5 +14,5 @@ Contents:
    :maxdepth: 2
    
    tutorial.rst
-   polynomial_class.rst
+   classes.rst
    functions.rst

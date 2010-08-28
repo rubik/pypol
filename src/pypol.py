@@ -33,7 +33,7 @@ __author__ = 'Michele Lacchia'
 __version__ = (0, 1)
 __version_str__ = '0.1'
 
-__all__ = ['polynomial', 'gcd', 'lcm', 'are_similar', 'make_polynomial', 'parse_polynomial', 'random_poly', 'Polynomial', 'AlgebraicFraction',]
+__all__ = ['polynomial', 'algebraic_fraction', 'gcd', 'lcm', 'are_similar', 'make_polynomial', 'parse_polynomial', 'random_poly', 'Polynomial', 'AlgebraicFraction',]
 
 
 def polynomial(string=None, simplify=True):
@@ -61,6 +61,19 @@ def polynomial(string=None, simplify=True):
     if not string:
         return Polynomial()
     return make_polynomial(parse_polynomial(string), simplify)
+
+def algebraic_fraction(s1, s2):
+    '''
+    Wrapper function that returns an :class:AlgebraicFraction object.
+        s1 and s2 are two strings that represent a polynomial::
+
+            >>> algebraic_fraction('3x^2 - 4xy', 'x + y')
+            AlgebraicFraction(+ 3x² - 4xy, + x + y)
+            >>> algebraic_fraction('3x^2 - 4xy', 'x + y').terms
+            (+ 3x^2 - 4xy, + x + y)
+    '''
+
+    return AlgebraicFraction(polynomial(s1), polynomial(s2))
 
 def make_polynomial(monomials, simplify=True):
     '''
@@ -190,6 +203,8 @@ class Polynomial(object):
     if simplify, if simplifies monomials on __init__ and update
     '''
 
+    __slots__ = ('_monomials', '_simplify',)
+
     def __init__(self, monomials=(), simplify=True):
         self._monomials = tuple(sorted(monomials, cmp=self._cmp, reverse=True))
         self._simplify = simplify
@@ -263,7 +278,7 @@ class Polynomial(object):
     @ property
     def zeros(self):
         if len(self.letters) - 1: ## Polynomial has more than one letter or none
-            if len(self) == 1 and self.right_hand_side: ## For example polynomial('-4')
+            if len(self) == 1 and self.right_hand_side: ## For example polynomial('-4'), i.e. no letters
                 return -self.right_hand_side
             return NotImplemented
 
@@ -373,6 +388,12 @@ class Polynomial(object):
         default is None. In this case self.monomials will be updated with an empty tuple.
         '''
 
+        if not pol_or_monomials:
+            self._monomials = ()
+            if self._simplify:
+                self.simplify()
+            return self
+
         try:
            self._monomials = self._check_other(pol_or_monomials)._monomials
         except AttributeError:
@@ -450,7 +471,7 @@ class Polynomial(object):
         else:
             return -1
 
-    def _make_complete(self, letter):
+    def _make_complete(self, letter=None):
         '''
         If the polynomial is already complete returns False, otherwise makes it complete and returns True.
         '''
@@ -615,10 +636,7 @@ class Polynomial(object):
                 for var in self.letters:
                     if var not in m[1]:
                         m[1][var] = 0
-            try:
-                self._make_complete(letter)
-            except KeyError:
-                pass
+            self._make_complete()
 
         def _div(a, b):
             if len(b) == 1:
@@ -682,7 +700,7 @@ class Polynomial(object):
 
 class AlgebraicFraction(object):
 
-    __slots__ = ('_numerator', '_denominator', 'numerator', 'denominator',)
+    __slots__ = ('_numerator', '_denominator',)
 
     def __init__(self, numerator, denominator):
         if not denominator:

@@ -7,9 +7,10 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Polynomial class reference &mdash; pypol v0.1.1 documentation</title>
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <title>pypol classes reference &mdash; pypol v0.1.1 documentation</title>
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
@@ -22,34 +23,35 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/theme_extras.js"></script>
     <link rel="top" title="pypol v0.1.1 documentation" href="index.html" />
     <link rel="next" title="Utility functions" href="functions.html" />
     <link rel="prev" title="Tutorial" href="tutorial.html" /> 
   </head>
   <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="functions.html" title="Utility functions"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="tutorial.html" title="Tutorial"
-             accesskey="P">previous</a> |</li>
-        <li><a href="index.html">pypol v0.1.1 documentation</a> &raquo;</li> 
-      </ul>
-    </div>  
+      <div class="header"><h1 class="heading"><a href="index.html">
+          <span>pypol v0.1.1 documentation</span></a></h1>
+        <h2 class="heading"><span>pypol classes reference</span></h2>
+      </div>
+      <div class="topnav">
+      
+        <p>
+        «&#160;&#160;<a href="tutorial.html">Tutorial</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="functions.html">Utility functions</a>&#160;&#160;»
+        </p>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
-            
-  <div class="section" id="polynomial-class-reference">
-<h1>Polynomial class reference<a class="headerlink" href="#polynomial-class-reference" title="Permalink to this headline">¶</a></h1>
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="pypol-classes-reference">
+<h1>pypol classes reference<a class="headerlink" href="#pypol-classes-reference" title="Permalink to this headline">¶</a></h1>
+<p>pypol&#8217;s classes are two: <tt class="xref py py-class docutils literal"><span class="pre">Polynomail</span></tt> and <a class="reference internal" href="#AlgebraicFraction" title="AlgebraicFraction"><tt class="xref py py-class docutils literal"><span class="pre">AlgebraicFraction</span></tt></a>.</p>
+<div class="section" id="polynomial-class-reference">
+<h2>Polynomial class reference<a class="headerlink" href="#polynomial-class-reference" title="Permalink to this headline">¶</a></h2>
 <p>In all these examples we use this method to make a polynomial:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^2 - 3&#39;</span><span class="p">))</span>
 </pre></div>
@@ -67,7 +69,7 @@ Where <em>polynomial</em> is the function <a class="reference internal" href="fu
 <dd><p>A <a class="reference internal" href="#Polynomial" title="Polynomial"><tt class="xref py py-class docutils literal"><span class="pre">Polynomial</span></tt></a> is an object that represents a Polynomial.
 It accepts two arguments: <em>monomials</em> and <em>simplify</em>.</p>
 <p><em>monomials</em> is a tuple of tuples that represents all the polynomial&#8217;s monomials.</p>
-<p>If <em>simplify</em> is True, then the polynomial will be simplified on __init__ and on <tt class="xref py py-meth docutils literal"><span class="pre">update()</span></tt>.
+<p>If <em>simplify</em> is True, then the polynomial will be simplified on __init__ and on <a class="reference internal" href="#Polynomial.update" title="Polynomial.update"><tt class="xref py py-meth docutils literal"><span class="pre">update()</span></tt></a>.
 An example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">monomials</span> <span class="o">=</span> <span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;x&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;x&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Polynomial</span><span class="p">(</span><span class="n">monomials</span><span class="p">)</span>
@@ -174,59 +176,112 @@ Returns NotImplemented when:</p>
 </div>
 </dd></dl>
 
+<dl class="method">
+<dt id="Polynomial.raw_powers">
+<tt class="descname">raw_powers</tt><big>(</big><span class="optional">[</span><em>letter=None</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#Polynomial.raw_powers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="Polynomial.max_power">
+<tt class="descname">max_power</tt><big>(</big><em>letter</em><big>)</big><a class="headerlink" href="#Polynomial.max_power" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="Polynomial.min_power">
+<tt class="descname">min_power</tt><big>(</big><em>letter</em><big>)</big><a class="headerlink" href="#Polynomial.min_power" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="Polynomial.powers">
+<tt class="descname">powers</tt><big>(</big><span class="optional">[</span><em>letter=None</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#Polynomial.powers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="Polynomial.islinear">
+<tt class="descname">islinear</tt><big>(</big><big>)</big><a class="headerlink" href="#Polynomial.islinear" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="Polynomial.isordered">
+<tt class="descname">isordered</tt><big>(</big><span class="optional">[</span><em>letter</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#Polynomial.isordered" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="Polynomial.iscomplete">
+<tt class="descname">iscomplete</tt><big>(</big><span class="optional">[</span><em>letter=None</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#Polynomial.iscomplete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="Polynomial.update">
+<tt class="descname">update</tt><big>(</big><span class="optional">[</span><em>pol_or_monomials=None</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#Polynomial.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="Polynomial.append">
+<tt class="descname">append</tt><big>(</big><big>)</big><a class="headerlink" href="#Polynomial.append" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="Polynomial.simplify">
+<tt class="descname">simplify</tt><big>(</big><big>)</big><a class="headerlink" href="#Polynomial.simplify" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="Polynomial._cmp">
+<tt class="descname">_cmp</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#Polynomial._cmp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="Polynomial._make_complete">
+<tt class="descname">_make_complete</tt><big>(</big><em>letter</em><big>)</big><a class="headerlink" href="#Polynomial._make_complete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">islinear</tt><big>(</big><big>)</big></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">islinear</tt><big>(</big><big>)</big></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">islinear</tt><big>(</big><big>)</big></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </div>
+<div class="section" id="algebraicfraction-class-reference">
+<h2>AlgebraicFraction class reference<a class="headerlink" href="#algebraicfraction-class-reference" title="Permalink to this headline">¶</a></h2>
+<p>pypol supports the algebraic fractions, although now it is very limited. It supports all the four basic operation but at the moment it does not simplify the terms.</p>
+<dl class="class">
+<dt id="AlgebraicFraction">
+<em class="property">class </em><tt class="descname">AlgebraicFraction</tt><big>(</big><em>numerator</em>, <em>denominator</em><big>)</big><a class="headerlink" href="#AlgebraicFraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class represent an algebraic fraction object.
+It accepts two arguments: <em>numerator</em> and <em>denominator</em>.
+<em>numerator</em> is the numerator of the algebraic fraction, and <em>denominator</em> its denominator. Both the terms have to be two polynomials.</p>
+</dd></dl>
 
-
-          </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="tutorial.html"
-                        title="previous chapter">Tutorial</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="functions.html"
-                        title="next chapter">Utility functions</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/polynomial_class.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
+</div>
+
+
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="functions.html" title="Utility functions"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="tutorial.html" title="Tutorial"
-             >previous</a> |</li>
-        <li><a href="index.html">pypol v0.1.1 documentation</a> &raquo;</li> 
-      </ul>
-    </div>
+      <div class="bottomnav">
+      
+        <p>
+        «&#160;&#160;<a href="tutorial.html">Tutorial</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="functions.html">Utility functions</a>&#160;&#160;»
+        </p>
+
+      </div>
+
     <div class="footer">
         &copy; Copyright 2010, Michele Lacchia.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.3.
