@@ -48,10 +48,13 @@ class PolynomialTestCase(unittest.TestCase):
         self.assertEqual(('a', 'b', 'x'), self.b.letters)
 
     def testEvalForm(self):
-        pass
+        self.assertEqual('2*x**3-4*x**2+2', pypol.polynomial('2x3 - 4x2 +2').eval_form)
+        self.assertEqual(NotImplemented, self.b.eval_form)
 
     def testZeros(self):
-        pass
+        self.assertEqual((1,), self.c.zeros)
+        self.assertEqual((), self.a.zeros)
+        self.assertEqual(NotImplemented, self.b.zeros)
 
     def testRawPowers(self):
         self.assertEqual([3, 0, 0, 0], self.b.raw_powers('a'))

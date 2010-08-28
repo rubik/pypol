@@ -192,9 +192,9 @@ class Polynomial(object):
 
     def __init__(self, monomials=(), simplify=True):
         self._monomials = tuple(sorted(monomials, cmp=self._cmp, reverse=True))
-        self.simplify = simplify
-        if self.simplify:
-            self._simplify()
+        self._simplify = simplify
+        if self._simplify:
+            self.simplify()
 
     @ property
     def monomials(self):
@@ -210,6 +210,10 @@ class Polynomial(object):
         '''
 
         return sorted(self._monomials, cmp, key, reverse)
+
+    @ property
+    def coefficients(self):
+        return [monomial[0] for monomial in self._monomials]
 
     @ property
     def degree(self):
@@ -258,14 +262,22 @@ class Polynomial(object):
 
     @ property
     def zeros(self):
-        if len(self.letters) - 1:
+        if len(self.letters) - 1: ## Polynomial has more than one letter or none
+            if len(self) == 1 and self.right_hand_side: ## For example polynomial('-4')
+                return -self.right_hand_side
             return NotImplemented
-        divisors = lambda n: [1] + [x for x in xrange(2, n//2 +1) if not n % x] + [n]
+
         if not self.right_hand_side:
+            if len(self.letters) == 1:
+                if not sum(self.coefficients):
+                    return 1
             return NotImplemented
+
+        divisors = lambda n: ([1] if n != 1 else []) + [x for x in xrange(2, n//2 +1) if not n % x] + [n]
+
         divs = divisors((-self.right_hand_side if self.right_hand_side < 0 else self.right_hand_side))
-        adivs = map(operator.neg, divs)
-        return tuple([x for x in divs + adivs if not self(x)])
+        negdivs = map(operator.neg, divs)
+        return tuple([x for x in divs + negdivs if not self(x)])
 
     def raw_powers(self, letter=None):
         '''
@@ -320,7 +332,7 @@ class Polynomial(object):
         Returns True if the polynomial is linear, False otherwise.
         '''
 
-        return all(exp <= 1 for monomial in self._monomials for var, exp in monomial[1].iteritems())
+        return self.degree <= 1
 
     def isordered(self, letter=None):
         '''
@@ -366,8 +378,8 @@ class Polynomial(object):
         except AttributeError:
             return NotImplemented
 
-        if self.simplify:
-            self._simplify()
+        if self._simplify:
+            self.simplify()
         return self
 
     def append(self, pol_or_monomials):
@@ -383,19 +395,9 @@ class Polynomial(object):
         '''
 
         self._monomials = tuple(sorted(self._check_other(pol_or_monomials)._monomials + self._monomials, cmp=self._cmp, reverse=True))
-        self._simplify()
+        self.simplify()
 
-    def insert(self, index, monomial):
-        '''
-        Deprecated method
-        '''
-        raise DeprecationWarning('This method is deprecated, use append instead')
-        tmp_monomials = list(self._monomials)
-        tmp_monomials.insert(index, monomial)
-        self._monomials = tuple(tmp_monomials)
-        self._simplify()
-
-    def _simplify(self):
+    def simplify(self):
         simplified = []
         for monomial in self._monomials:
             for other in simplified:
@@ -416,6 +418,16 @@ class Polynomial(object):
                 del simplified[index]
 
         self._monomials = tuple(simplified)
+
+    def insert(self, index, monomial):
+        '''
+        Deprecated method
+        '''
+        raise DeprecationWarning('This method is deprecated, use append instead')
+        tmp_monomials = list(self._monomials)
+        tmp_monomials.insert(index, monomial)
+        self._monomials = tuple(tmp_monomials)
+        self.simplify()
 
     def _cmp(self, a, b):
         '''
@@ -546,6 +558,8 @@ class Polynomial(object):
 
     def __call__(self, val):   ## TODO: Change for other letters
         letter = self.letters[0]
+        if val == 1:
+            return sum([monomial[0] for monomial in self._monomials])
         return eval(self.eval_form, {letter: val})
 
     def __add__(self, other):
@@ -668,7 +682,7 @@ class Polynomial(object):
 
 class AlgebraicFraction(object):
 
-    __slots__ = ('numerator')
+    __slots__ = ('_numerator', '_denominator', 'numerator', 'denominator',)
 
     def __init__(self, numerator, denominator):
         if not denominator:

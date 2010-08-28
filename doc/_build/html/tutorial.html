@@ -51,10 +51,9 @@
   <div class="section" id="tutorial">
 <h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
 <p>This is the pypol tutorial. If you haven&#8217;t installed it yet, see below.</p>
-</div>
 <div class="section" id="first-steps-with-pypol">
-<h1>First steps with pypol<a class="headerlink" href="#first-steps-with-pypol" title="Permalink to this headline">¶</a></h1>
-<p>First of all, you need to get the modules. To do this, go to the <a class="reference external" href="http://github.com/rubik/pypol/downloads">github repository</a> and download the appropriate archive.</p>
+<h2>First steps with pypol<a class="headerlink" href="#first-steps-with-pypol" title="Permalink to this headline">¶</a></h2>
+<p>First of all, you need to get the modules. To do this, go to the <a class="reference external" href="http://github.com/rubik/pypol/downloads">github repository</a> and download the appropriate file.</p>
 <p>Unpack it:</p>
 <div class="highlight-python"><pre>$ tar xzf pypol-0.1.1.tar.gz</pre>
 </div>
@@ -64,7 +63,9 @@
 <ul>
 <li><dl class="first docutils">
 <dt>On Windows:</dt>
-<dd><p class="first last">Simply run the executable file:</p>
+<dd><p class="first">Simply run the executable file:</p>
+<div class="last highlight-python"><pre>$ pypol-0.1.1.exe</pre>
+</div>
 </dd>
 </dl>
 </li>
@@ -79,6 +80,19 @@
 </ul>
 </div>
 </div>
+<div class="section" id="run-the-tests">
+<h2>Run the tests<a class="headerlink" href="#run-the-tests" title="Permalink to this headline">¶</a></h2>
+<p>If you want to run pypol&#8217;s tests you only have to run testpypol.py, that is in the <em>tests</em> directory:</p>
+<div class="highlight-python"><pre>$ cd pypol/tests
+$ python testpypol.py
+...............................
+----------------------------------------------------------------------
+Ran 31 tests in 0.036s
+
+OK</pre>
+</div>
+</div>
+</div>
 
 
           </div>
@@ -88,8 +102,11 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Tutorial</a></li>
+<li><a class="reference internal" href="#">Tutorial</a><ul>
 <li><a class="reference internal" href="#first-steps-with-pypol">First steps with pypol</a></li>
+<li><a class="reference internal" href="#run-the-tests">Run the tests</a></li>
+</ul>
+</li>
 </ul>
 
   <h4>Previous topic</h4>
