@@ -1,7 +1,7 @@
 pypol classes reference
 =======================
 
-pypol's classes are two: :class:`Polynomail` and :class:`AlgebraicFraction`.
+pypol's classes are two: :class:`Polynomial` and :class:`AlgebraicFraction`.
 
 Polynomial class reference
 --------------------------
@@ -26,7 +26,7 @@ The main class in pypol is :class:`Polynomial`:
 
     *monomials* is a tuple of tuples that represents all the polynomial's monomials.
 
-    If *simplify* is True, then the polynomial will be simplified on __init__ and on :meth:`update`.
+    If *simplify* is True, then the polynomial will be simplified on __init__ and on :meth:`update`. See also :meth:`simplify`
     An example::
 
         >>> monomials = ((2, {'x': 3}), (4, {'x': 1, 'y': 1}))
@@ -173,21 +173,181 @@ The main class in pypol is :class:`Polynomial`:
 
     .. method:: powers([, letter=None])
 
+        Like :meth:`raw_powers`, but eliminates all the zeros except the trailing one.
+        If *letter* is None, it returns a dictionary::
+
+            >>> Polynomial(parse_polynomial('3x^3 - a^2 + x - 5')).powers('x')
+            [3, 1, 0]
+            >>> Polynomial(parse_polynomial('3x^3 - a^2 + x - 5')).powers('a')
+            [2, 0]
+            >>> Polynomial(parse_polynomial('3x^3 - a^2 + x - 5')).powers()
+            {'a': [2, 0],
+            'x': [3, 1, 0],
+            }
+
+        See also: :meth:`raw_powers`
+
     .. method:: islinear()
 
-    .. method:: isordered([, letter])
+        Returns True if the polynomial is linear, i.e. all the expoenents are <= 1, False otherwise.
+        ::
+
+            >>> Polynomial(parse_polynomial('3x^3 - a^2 + x - 5')).islinear()
+            False
+            >>> Polynomial(parse_polynomial('-5')).islinear()
+            True
+            >>> Polynomial(parse_polynomial('3x^3 - a^2 + x - 5')).powers('q')
+            [0]
+            >>> Polynomial(parse_polynomial('')).powers('q')
+            []
+
+    .. method:: isordered([, letter=None])
+
+        Returns True whether the polynomial is ordered, False otherwise.
+        If letter is None, it checks for all letters; if the polynomial is ordered for all letters, it returns True, False otherwise.
+        ::
+
+            >>> Polynomial(parse_polynomial('3x^3 - a^2 + x - 5')).isordered('x')
+            False
+            >>> Polynomial(parse_polynomial('3x^3 - a^2 + a - 5')).isordered('a')
+            True
+
+        See also :meth:`iscomplete`
 
     .. method:: iscomplete([, letter=None])
 
+        Returns True whether the polynomial is complete, False otherwise.
+        If letter is None it checks for all the letters of the polynomial.
+        ::
+
+            >>> Polynomial(parse_polynomial('3x^3 - a^2 + a - 5')).iscomplete('a')
+            True
+            >>> Polynomial(parse_polynomial('3x^3 - a^2 + a - 5')).iscomplete('x')
+            False
+            >>> Polynomial(parse_polynomial('3x^3 - a^2 + a - 5')).iscomplete()
+            False
+
+        See also: :meth:`isordered`
+
     .. method:: update([, pol_or_monomials=None])
+
+        Updates the polynomial with another polynomial.
+        This does not create a new instance, but replaces self.monomials with others monomials, then it simplifies.
+
+        pol_or_monomials can be:
+          * a polynomial
+          * a tuple of monomials
+          * a string that will be passed to :func:`parse_polynomial`
+          * an integer
+
+        default is None. In this case self.monomials will be updated with an empty tuple.
+        ::
+
+            >>> p = Polynomial(parse_polynomial('3x^3 - a^2 + a - 5'))
+            >>> p
+            + 3x^3 - a^2 + a - 5
+            >>> p.update(Polynomial(parse_polynomial('3x^2 - 2')))
+            + 3x^2 - 2
+            >>> p
+            + 3x^2 - 2
+            >>> p.update(((3, {'x': 1}), (-5, {})))
+            + 3x - 5
+            >>> p
+            + 3x - 5
+            >>> p.update('30j + q - y')
+            + 30j + q - y
+            >>> p
+            + 30j + q - y
+            >>> p.update(3)
+            + 3
+            >>> p
+            + 3
+
+        This method returns the instance, so we can use it::
+
+            >>> p.update('2c - 4a').raw_powers()
+            {'a': [0, 1], 'c': [1, 0]}
+            >>> p
+            + 2c - 4a
+            >>> p.update('3x^2 - x + 5').iscomplete()
+            True
+            >>> p
+            + 3x^2 - x + 5
+
+        See also: :meth:`append`
 
     .. method:: append()
 
+        Appends the given monomials to self.monomials, then simplifies.
+
+        pol_or_monomials can be:
+          * a polynomial
+          * a string
+          * a tuple of monomials
+          * an integer
+
+        ::
+
+            >>> p = Polynomial(parse_polynomial('3x^2 - ax + 5'))
+            >>> p
+            + 3x^2 - ax + 5
+            >>> p.append('x^3')
+            >>> p
+            + x^3 + 3x^2 - ax + 5
+            >>> p.append(-4)
+            >>> p
+            + x^3 + 3x^2 - ax + 1
+            >>> p.append(((-1, {'a': 1, 'x': 1}),)) ## The comma!
+            >>> p
+            + x^3 + 3x^2 - 2ax + 1
+            >>> p.append(Polynomial(parse_polynomial('-x^3 + ax + 4')))
+            >>> p
+            + 3x^2 - ax + 5
+
+        See also: :meth:`update`
+
     .. method:: simplify()
+
+        Simplifies the polynomial. This is done automatically on the __init__ and on the :meth:`update` methods if self._simplify is True
+        ::
+
+            >>> p = Polynomial(parse_polynomial('3x^2 - ax + 5 - 4 + 4ax'))
+            >>> p
+            + 3x^2 + 3ax + 1
+            >>> p = Polynomial(parse_polynomial('3x^2 - ax + 5 - 4 + 4ax'), simplify=False)
+            >>> p
+            + 3x^2 - ax + 4ax + 5 - 4
+            >>> p.simplify()
+            >>> p
+            + 3x^2 + 3ax + 1
 
     .. method:: _cmp(a, b)
 
-    .. method:: _make_complete(letter)
+            Comparator function used to sort the polynomial's monomials. You should not change it nor call it.
+            See (NotImplemented)
+
+    .. method:: _make_complete([, letter=None])
+
+        If the polynomial is already complete for the letter *letter* returns False, otherwise makes it complete and returns True.
+        ::
+
+            >>> p = Polynomial(parse_polynomial('3x^2 + 2'))
+            >>> p
+            + 3x^2 + 2
+            >>> p.monomials
+            ((3, {'x': 2}), (2, {}))
+            >>> p.iscomplete('x')
+            False
+            >>> p._make_complete('x')
+            True
+            >>> p.iscomplete('x')
+            True
+            >>> p.monomials
+            ((3, {'x': 2}), (0, {'x': 1}), (2, {}))
+
+        If *letter* is None, it makes the polynomial complete for all the letters::
+
+            -- Missing example --
 
 
 AlgebraicFraction class reference
@@ -195,8 +355,51 @@ AlgebraicFraction class reference
 
 pypol supports the algebraic fractions, although now it is very limited. It supports all the four basic operation but at the moment it does not simplify the terms.
 
+In all these examples we assume::
+
+    a, b = polynomial('3x - 5'), polynomial('2a')
+
+
 .. class:: AlgebraicFraction(numerator, denominator)
 
         This class represent an algebraic fraction object.
         It accepts two arguments: *numerator* and *denominator*.
         *numerator* is the numerator of the algebraic fraction, and *denominator* its denominator. Both the terms have to be two polynomials.
+        ::
+
+            >>> AlgebraicFraction(a, b)
+            AlgebraicFraction(+ 3x - 5, + 2a)
+
+    .. method:: numerator
+
+        Returns the numerator of the :class:`AlgebraicFraction`.
+        ::
+
+            >>> AlgebraicFraction(a, b).numerator
+            + 3x - 5
+
+    .. method:: denominator
+
+        Returns the denominator of the :class:`AlgebraicFraction`.
+        ::
+
+            >>> AlgebraicFraction(a, b).denominator
+            + 2a
+
+    .. method:: terms
+
+        Returns both the :meth:`numerator` and the :meth:`denominator`::
+
+            >>> AlgebraicFraction(a, b).terms
+            (+ 3x - 5, + 2a)
+
+    .. method:: swap()
+
+        Returns a new :class:`AlgebraicFraction` object with the numerator and the denominator swapped::
+
+            >>> a = AlgebraicFraction(a, b)
+            >>> a
+            AlgebraicFraction(+ 3x - 5, + 2a)
+            >>> b = a.swap()
+            >>> b
+            AlgebraicFraction(+ 2a, + 3x - 5)

@@ -3,6 +3,7 @@ Utility functions
 
 pypol module has some utility functions to work with polynomials:
     * :func:`polynomial`
+    * :func:`algebraic_fraction`
     * :func:`make_polynomial`
     * :func:`parse_polynomial`
     * :func:`random_poly`
@@ -17,16 +18,22 @@ pypol module has some utility functions to work with polynomials:
     **Syntax rules**
         Powers can be expressed using the *^* symbol. If a digit follows a letter then it is interpreted as an exponent. So the following expressions are be equal::
 
-             polynomial('2x^3y^2 + 1') == polynomial('2x3y2 + 1')
+            >>> polynomial('2x^3y^2 + 1') == polynomial('2x3y2 + 1')
+            True
 
         but if there is a white space after the letter then the digit is interpreted as a positive coefficient.
         So this:::
 
-             polynomial('2x3y 2 + 1')
+            >>> polynomial('2x3y 2 + 1')
 
         represents this polynomial:::
 
              2x^3y + 3
+
+        ::
+
+            >>> polynomial('2x3y 2 + 1')
+            + 2x^3y + 3
 
 .. function:: algebraic_fraction(s1, s2)
 
@@ -92,3 +99,13 @@ pypol module has some utility functions to work with polynomials:
          + 7xy^5 - 3z^4 - 2
         >>> random_poly(len_=3, letters='ab')
          + 9a^5 + 7a^2b^4 - 8ab^2
+        >>> qw_(letters='abcdef', max_letters=1)
+        - 9
+        >>> qw_(letters='abcdef', max_letters=1)
+        - 5e^5 + 2f^4 + 5a^2
+        >>> qw_(letters='abcdef', max_letters=2)
+        - 9f^5 - d - 10
+        >>> qw_(letters='abcdef', max_letters=2)
+        - 9de^5 - 4a^3d^5 - 5d^5 + 4af^3 + 2e^2f - 3f^2
+        >>> qw_(letters='abcdef', max_letters=2, exp_range=xrange(0, 20, 5))
+        - 7e^15 + 5d^15 - 10c^15 - 9b^10 - 12e^5 - 12c^5 - 2f^5

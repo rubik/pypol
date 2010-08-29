@@ -313,6 +313,7 @@ class Polynomial(object):
         '''
 
         if letter not in self.letters:
+            print letter
             raise KeyError('letter not in polynomial')
         return max(self.raw_powers(letter))
 
@@ -340,7 +341,10 @@ class Polynomial(object):
             return d
 
         raw = self.raw_powers(letter)
-        return filter(None, raw[:-1]) + [raw[-1]]
+        try:
+            return filter(None, raw[:-1]) + [raw[-1]]
+        except IndexError:
+            return []
 
     def islinear(self):
         '''
@@ -419,6 +423,8 @@ class Polynomial(object):
         self.simplify()
 
     def simplify(self):
+        '''
+        '''
         simplified = []
         for monomial in self._monomials:
             for other in simplified:
@@ -479,6 +485,8 @@ class Polynomial(object):
         if not letter:
             for l in self.letters:
                 self._make_complete(l)
+            else:
+                return True
         if self.iscomplete(letter):
             return False
         for exp in xrange(1, self.max_power(letter)+1):
@@ -631,7 +639,6 @@ class Polynomial(object):
         return self * other
 
     def __divmod__(self, other):
-        other = self._check_other(other)
         def _set_up(pol):
             if not pol.letters:
                 return self._make_complete()
@@ -653,7 +660,7 @@ class Polynomial(object):
 
             return Polynomial(((new_coefficient, new_vars),))
 
-        other = self._check_other(other)
+        #other = self._check_other(other)
         A = Polynomial(copy.deepcopy(self._monomials))
         B = Polynomial(copy.deepcopy(other._monomials))
         Q = Polynomial()
@@ -737,7 +744,7 @@ class AlgebraicFraction(object):
         return self._denominator
 
     @ denominator.setter
-    def numerator(self, val):
+    def denominator(self, val):
         '''
         Sets the denominator of the algebraic fraction
         '''
