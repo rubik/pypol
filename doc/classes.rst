@@ -153,6 +153,24 @@ The main class in pypol is :class:`Polynomial`:
 
     .. method:: min_power(letter)
 
+        Returns the maximum degree of a letter::
+
+            >>> Polynomial(parse_polynomial('3x^3 - 2a^2 + x - 2')).min_power('a')
+            0
+            >>> Polynomial(parse_polynomial('3x^3 - 2a^2 + x - 2')).min_power('x')
+            0
+            >>> Polynomial(parse_polynomial('3x^3 - 2a^2 + x - 2')).min_power('q')
+            
+            Traceback (most recent call last):
+              File "<pyshell#3>", line 1, in <module>
+                Polynomial(parse_polynomial('3x^3 - 2a^2 + x - 2')).min_power('q')
+              File "/home/miki/pypol/src/pypol.py", line 325, in min_power
+                raise KeyError('letter not in polynomial')
+            KeyError: 'letter not in polynomial'
+
+        It raises KeyError if the letter is not in the polynomial.
+        See also :meth:`max_power`.
+
     .. method:: powers([, letter=None])
 
     .. method:: islinear()
