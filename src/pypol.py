@@ -22,18 +22,18 @@ Requirements:
 '''
 
 from __future__ import division
-import copy ## 6 times used
-import fractions ## 2 times used
-import operator ## 4 times used
-import random ## 7 times used
-import re ## 2 times used
+import copy ## used 6 times
+import fractions ## used 2 times
+import operator ## used 4 times
+import random ## used 7 times
+import re ## 2 used times
 
 
 __author__ = 'Michele Lacchia'
 __version__ = (0, 1)
 __version_str__ = '0.1'
 
-__all__ = ['polynomial', 'algebraic_fraction', 'gcd', 'lcm', 'are_similar', 'make_polynomial', 'parse_polynomial', 'random_poly', 'Polynomial', 'AlgebraicFraction',]
+__all__ = ['polynomial', 'algebraic_fraction', 'gcd', 'lcm', 'gcd_poly', 'lcm_poly', 'are_similar', 'make_polynomial', 'parse_polynomial', 'random_poly', 'Polynomial', 'AlgebraicFraction',]
 
 
 def polynomial(string=None, simplify=True):
@@ -94,7 +94,7 @@ def are_similar(a, b):
 
     return a[1] == b[1]
 
-def gcd(*polynomials): # Still in development
+def gcd(*polynomials):
     '''
     Calculate the Greatest Common Divisor of the polynomials.
     '''
@@ -106,7 +106,10 @@ def gcd(*polynomials): # Still in development
 
     return reduce(_internal_gcd, polynomials)
 
-def lcm(*polynomials): # Still in development
+def gcd_poly(poly):
+    return gcd(*[Polynomial((monomial,)) for monomial in poly.monomials])
+
+def lcm(*polynomials):
     '''
     Calculate the Least Common Divisor of polynomials.
     '''
@@ -114,6 +117,9 @@ def lcm(*polynomials): # Still in development
         return operator.truediv(a*b, gcd(a, b))
 
     return reduce(_internal_lcm, polynomials)
+
+def lcm_poly(poly):
+    return lcm(*[Polynomial((monomial,)) for monomial in poly.monomials])
 
 def parse_polynomial(string, max_length=None):
     '''
@@ -673,10 +679,6 @@ class Polynomial(object):
                 #pol._make_complete(letter)
 
         def _div(a, b):
-            print a, b
-            if len(b) == 1:
-                b = (1, b)
-
             new_coefficient = fractions.Fraction(str(a[0] / b[0]))
             new_vars = copy.copy(a[1])
             for letter, exp in b[1].iteritems():
@@ -689,11 +691,6 @@ class Polynomial(object):
         A = Polynomial(copy.deepcopy(self._monomials))
         B = Polynomial(copy.deepcopy(other._monomials))
         Q = Polynomial()
-
-        d = {}
-        for l in B.letters:
-            d[B.max_power(l)] = l
-        letter = d[max(d.keys())]
 
         if A.degree < B.degree:
             raise ValueError('The polynomials are not divisible')
@@ -722,10 +719,7 @@ class Polynomial(object):
         return quotient
 
     def __mod__(self, other):
-        quotient, remainder = divmod(self, other)
-        if not remainder:
-            return Polynomial
-        return remainder
+        return divmod(self, other)[1]
 
     def __pow__(self, exp):
         '''

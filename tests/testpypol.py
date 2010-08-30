@@ -30,8 +30,10 @@ class PolynomialTestCase(unittest.TestCase):
         self.assertEqual(pypol.polynomial('x^3a^3 - 2x^5 - x^3b - 2x^2a^3 + 4x^4 + 2x^2b + xa^3 + x^3 - xb + 3x - 5a^3 + 4x^2 + 5b - 15'), self.a * self.b)
         self.assertRaises(TypeError, operator.mul, self.d, [])
 
-    def testDiv(self):
+    def testDivmod(self):
         self.assertEqual((pypol.polynomial('- x^2 + x'), pypol.polynomial('- 5')), divmod(self.a, self.c))
+
+    def testDiv(self):
         self.assertEqual(pypol.polynomial('- x^2 + x'), self.a / self.c)
 
     def testMod(self):
