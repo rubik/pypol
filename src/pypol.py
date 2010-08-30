@@ -98,7 +98,8 @@ def gcd(*polynomials): # Still in development
     '''
     Calculate the Greatest Common Divisor of the polynomials.
     '''
-    def _internal_gcd(a, b):
+    def _internal_gcd(p, q):
+        a, b = copy.deepcopy(p), copy.deepcopy(q)
         while b:
             a, b = b, a % b
         return a
@@ -248,11 +249,24 @@ class Polynomial(object):
         Returns a string form that can be used with eval()
         '''
 
-        if len(self.letters) - 1:
-            return NotImplemented
-        return '+'.join(['%s*%s' % (str(c), ''.join(['%s**%s' % (letter, exp) for letter, exp in vars.iteritems()]))
-                        for c, vars in (self._monomials[:-1] if self.right_hand_side else self._monomials)]) \
-                    .replace('+-', '-').replace('**1', '') + (str((self.right_hand_side if self.right_hand_side < 0 else '+' + str(self.right_hand_side))) if self.right_hand_side else '')
+
+        ## We can replace the code below with this:
+        #return '+'.join(['%s*%s' % (str(c), '*'.join(['%s**%s' % (letter, exp) for letter, exp in vars.iteritems()]))
+                        #for c, vars in (self._monomials[:-1] if self.right_hand_side else self._monomials)]) \
+                    #.replace('+-', '-').replace('**1', '') + (str((self.right_hand_side if self.right_hand_side < 0 \
+                                            #else '+' + str(self.right_hand_side))) if self.right_hand_side else '')
+        tmp = []
+        for c, vars in self._monomials:
+            ll = []
+            if not vars:
+                tmp.append(str(c))
+            else:
+                for letter, exp in vars.iteritems():
+                   ll.append('%s**%s' % (letter, exp))
+                tmp.append('%s*%s' % (str(c), '*'.join(ll)))
+
+        evallable = '+'.join(tmp).replace('+-', '-').replace('**1', '').replace('1*', '')
+        return evallable
 
     @ property
     def letters(self):
@@ -378,6 +392,18 @@ class Polynomial(object):
             return True
         return self.powers(letter) == range(self.max_power(letter), -1, -1)
 
+    def check_other(wrapped):
+        def wrapper(self, other):
+            if isinstance(other, int):
+                other = Polynomial(((other, {}),))
+            elif isinstance(other, str):
+                other =  polynomial(other)
+            elif isinstance(other, tuple):
+                other =  Polynomial(other)
+            return wrapped(self, other)
+        return wrapper
+
+    @ check_other
     def update(self, pol_or_monomials=None):
         '''
         Updates the polynomial with another polynomial.
@@ -399,7 +425,7 @@ class Polynomial(object):
             return self
 
         try:
-           self._monomials = self._check_other(pol_or_monomials)._monomials
+           self._monomials = pol_or_monomials._monomials
         except AttributeError:
             return NotImplemented
 
@@ -407,6 +433,7 @@ class Polynomial(object):
             self.simplify()
         return self
 
+    @ check_other
     def append(self, pol_or_monomials):
         '''
         Appends the given monomials to self.monomials,
@@ -419,7 +446,7 @@ class Polynomial(object):
           - an integer
         '''
 
-        self._monomials = tuple(sorted(self._check_other(pol_or_monomials)._monomials + self._monomials, cmp=self._cmp, reverse=True))
+        self._monomials = tuple(sorted(pol_or_monomials._monomials + self._monomials, cmp=self._cmp, reverse=True))
         self.simplify()
 
     def simplify(self):
@@ -477,16 +504,11 @@ class Polynomial(object):
         else:
             return -1
 
-    def _make_complete(self, letter=None):
+    def _make_complete(self, letter):
         '''
         If the polynomial is already complete returns False, otherwise makes it complete and returns True.
         '''
 
-        if not letter:
-            for l in self.letters:
-                self._make_complete(l)
-            else:
-                return True
         if self.iscomplete(letter):
             return False
         for exp in xrange(1, self.max_power(letter)+1):
@@ -495,7 +517,8 @@ class Polynomial(object):
 
     def _format(self, print_format=False):
         return ' '.join([self._m_format(monomial, print_format).replace('-', '- ') if monomial[0] < 0 \
-                    else ('+ ' + self._m_format(monomial, print_format) if self._m_format(monomial, print_format) else '') for monomial in self._monomials]).strip()
+                    else ('+ ' + self._m_format(monomial, print_format) if self._m_format(monomial, print_format) \
+                    else '') for monomial in self._monomials]).strip()
 
     def _m_format(self, monomial, print_format):
         tmp_coefficient = monomial[0]
@@ -526,15 +549,6 @@ class Polynomial(object):
                 .replace('8', unichr(8312)).replace('9', unichr(8313)).encode('utf-8')
         return tmp_coefficient + ''.join(var_list)
 
-    def _check_other(self, a):
-        if isinstance(a, int):
-            return Polynomial(((a, {}),))
-        elif isinstance(a, str):
-            return polynomial(a)
-        elif isinstance(a, tuple):
-            return Polynomial(a)
-        return a
-
     def __repr__(self):
         return self._format()
 
@@ -548,8 +562,13 @@ class Polynomial(object):
                 if m[0]:
                     tmp_mons.append(m)
             return tmp_mons
-        #other = self._check_other(other)
-        return sorted(_filter(self._monomials)) == sorted(_filter(other._monomials))
+
+        if len(self) == 0 and len(other) == 0:
+            return True
+        try:
+            return sorted(_filter(self._monomials)) == sorted(_filter(other._monomials))
+        except (AttributeError, TypeError):
+            return NotImplemented
 
     def __ne__(self, other):
         return not self == other
@@ -572,8 +591,8 @@ class Polynomial(object):
     def __copy__(self):
         return Polynomial(self._monomials)
 
-    def __deepcopy__(self):
-        return copy.copy(self)
+    def __deepcopy__(self, p):
+        return Polynomial(self._monomials)
 
     def __getitem__(self, b):
         return self._monomials[b]
@@ -588,15 +607,16 @@ class Polynomial(object):
         del tmp_monomials[b]
         self._monomials = tuple(tmp_monomials)
 
-    def __call__(self, val):   ## TODO: Change for other letters
-        letter = self.letters[0]
-        if val == 1:
-            return sum([monomial[0] for monomial in self._monomials])
-        return eval(self.eval_form, {letter: val})
+    def __call__(self, *args, **kwargs):
+        if args:
+            letters = dict(zip(self.letters[:len(args)], args))
+        elif kwargs:
+            letters = kwargs
+        return eval(self.eval_form, letters)
 
+    @ check_other
     def __add__(self, other):
         try:
-            other = self._check_other(other)
             return Polynomial(self._monomials + other._monomials)
         except (AttributeError, TypeError):
             return NotImplemented
@@ -604,9 +624,9 @@ class Polynomial(object):
     def __radd__(self, other):
         return self + other
 
+    @ check_other
     def __sub__(self, other):
         try:
-            other = self._check_other(other)
             return Polynomial(self._monomials + (-other)._monomials)
         except (AttributeError, TypeError):
             return NotImplemented
@@ -614,8 +634,8 @@ class Polynomial(object):
     def __rsub__(self, other):
         return self - other
 
+    @ check_other
     def __mul__(self, other):
-        other = self._check_other(other)
         def _mul(a, b):
             new_coeff = a[0] * b[0]
             if not a[1] and not b[1]:
@@ -638,15 +658,19 @@ class Polynomial(object):
     def __rmul__(self, other):
         return self * other
 
+    @ check_other
     def __divmod__(self, other):
         def _set_up(pol):
             if not pol.letters:
-                return self._make_complete()
+                #for letter in set(self.letters).union(other.letters):
+                    #pol._make_complete(letter)
+                return
             for m in pol._monomials:
                 for var in self.letters:
                     if var not in m[1]:
                         m[1][var] = 0
-            self._make_complete()
+            #for letter in set(self.letters).union(other.letters):
+                #pol._make_complete(letter)
 
         def _div(a, b):
             print a, b
@@ -656,11 +680,12 @@ class Polynomial(object):
             new_coefficient = fractions.Fraction(str(a[0] / b[0]))
             new_vars = copy.copy(a[1])
             for letter, exp in b[1].iteritems():
+                if exp == 0:
+                    continue
                 new_vars[letter] = a[1][letter] - exp
 
             return Polynomial(((new_coefficient, new_vars),))
 
-        #other = self._check_other(other)
         A = Polynomial(copy.deepcopy(self._monomials))
         B = Polynomial(copy.deepcopy(other._monomials))
         Q = Polynomial()
@@ -703,10 +728,18 @@ class Polynomial(object):
         return remainder
 
     def __pow__(self, exp):
-        try:
-            return reduce(operator.mul, [self]*exp)
-        except (AttributeError, TypeError):
-            return NotImplemented
+        '''
+        '''
+
+        if exp == 0:
+            return Polynomial()
+        elif exp < 0:
+            return AlgebraicFraction(Polynomial(((1, {}),)), self ** abs(exp))
+        else:
+            try:
+                return reduce(operator.mul, [self]*exp)
+            except (AttributeError, TypeError):
+                return NotImplemented
 
 
 class AlgebraicFraction(object):
@@ -762,6 +795,13 @@ class AlgebraicFraction(object):
     def swap(self):
         return AlgebraicFraction(self._denominator, self._numerator)
 
+    def check_other(wrapped):
+        def wrapper(self, other):
+            if isinstance(other, Polynomial):
+                other = AlgebraicFraction(other, 1)
+            return wrapped(self, other)
+        return wrapper
+
     def __repr__(self):
         return 'AlgebraicFraction(%s, %s)' % self.terms ## For compatibility
 
@@ -770,6 +810,12 @@ class AlgebraicFraction(object):
         sep = max((len(a), len(b)))*u'\u2212'.encode('utf-8')
         len_ = len(sep)
         return '\n'.join([a.center(len_), sep, b.center(len_)])
+
+    def __eq__(self, other):
+        return self._numerator == other._numerator and self._denominator == other._denominator
+    
+    def __ne__(self, other):
+        return not self == other
 
     def __pos__(self):
         return copy.copy(self)
@@ -780,8 +826,8 @@ class AlgebraicFraction(object):
     def __copy__(self):
         return AlgebraicFraction(self._numerator, self._denominator)
 
-    def __deepcopy__(self):
-        return copy.copy(self)
+    def __deepcopy__(self, algebraicfraction):
+        return AlgebraicFraction(self._numerator, self._denominator)
 
     def __add__(self, other):
         return NotImplemented
@@ -795,6 +841,7 @@ class AlgebraicFraction(object):
     def __rsub__(self, other):
         return self - other
 
+    @ check_other
     def __mul__(self, other):
         return AlgebraicFraction(self._numerator * other._numerator,
                                 self._denominator * other._denominator)

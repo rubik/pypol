@@ -45,6 +45,8 @@ The main class in pypol is :class:`Polynomial`:
 
     .. method:: monomials
 
+        **property**
+
         monomials is a property that returns the polynomial's monomials.
         Example::
 
@@ -64,6 +66,8 @@ The main class in pypol is :class:`Polynomial`:
 
     .. method:: degree
 
+        **property**
+
         Returns the degree of the polynomial, i.e. the maximum degree of its monomials.
         An example::
 
@@ -72,6 +76,8 @@ The main class in pypol is :class:`Polynomial`:
 
     .. method:: letters
 
+        **property**
+
         Returns a tuple of all the letters that appear in the polynomial.
         ::
 
@@ -79,6 +85,8 @@ The main class in pypol is :class:`Polynomial`:
             ('x', 'y')
 
     .. method:: eval_form
+
+        **property**
 
         Returns a string form of the polynomial that can be used with eval::
 
@@ -90,6 +98,8 @@ The main class in pypol is :class:`Polynomial`:
 
     .. method:: right_hand_side
 
+        **property**
+
         Returns the right-hand side, if it exist, False otherwise.
         ::
 
@@ -99,6 +109,8 @@ The main class in pypol is :class:`Polynomial`:
             -3
 
     .. method:: zeros
+
+        **property**
 
         Returns a tuple containing all the polynomial's zeros.
         Returns NotImplemented when:
@@ -326,7 +338,7 @@ The main class in pypol is :class:`Polynomial`:
             Comparator function used to sort the polynomial's monomials. You should not change it nor call it.
             See (NotImplemented)
 
-    .. method:: _make_complete([, letter=None])
+    .. method:: _make_complete(letter)
 
         If the polynomial is already complete for the letter *letter* returns False, otherwise makes it complete and returns True.
         ::
@@ -345,10 +357,31 @@ The main class in pypol is :class:`Polynomial`:
             >>> p.monomials
             ((3, {'x': 2}), (0, {'x': 1}), (2, {}))
 
-        If *letter* is None, it makes the polynomial complete for all the letters::
+    .. method:: __call__(*args, **kwargs)
 
-            -- Missing example --
+            It's also possible to call the polynomial.
+            You can pass the arguments in two ways:
 
+                * positional way, using *args*
+                * keyword way, using *kwargs*
+
+            ::
+
+                >>> Polynomial(parse_polynomial('3xy + x^2 - 4'))(2, 3)  ## Positional way, x=2, y=3
+                18
+                >>> Polynomial(parse_polynomial('3xy + x^2 - 4'))(y=2, x=3)  ## Keyword way: y=2, x=3
+                23
+
+            When you use *args*, the dictionary is built in this way::
+
+                dict(zip(self.letters[:len(args)], args))
+
+            *args* has a major priority of *kwargs*, so if you try them both at the same time::
+
+                >>> Polynomial(parse_polynomial('3xy + x^2 - 4'))(2, 3, y=5, x=78)
+                18
+
+            *args* is predominant.
 
 AlgebraicFraction class reference
 ---------------------------------
@@ -372,6 +405,8 @@ In all these examples we assume::
 
     .. method:: numerator
 
+        **property**
+
         Returns the numerator of the :class:`AlgebraicFraction`.
         ::
 
@@ -380,6 +415,8 @@ In all these examples we assume::
 
     .. method:: denominator
 
+        **property**
+
         Returns the denominator of the :class:`AlgebraicFraction`.
         ::
 
@@ -387,6 +424,8 @@ In all these examples we assume::
             + 2a
 
     .. method:: terms
+
+        **property**
 
         Returns both the :meth:`numerator` and the :meth:`denominator`::
 

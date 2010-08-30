@@ -30,7 +30,7 @@ For the installation see below.
 Run the tests
 -------------
 
-If you want to run pypol's tests you only have to run testpypol.py, that is in the *tests* directory::
+If you want to run pypol's tests you only have to run *testpypol.py*, that is in the *tests* directory::
 
     $ cd pypol/tests
     $ python testpypol.py
