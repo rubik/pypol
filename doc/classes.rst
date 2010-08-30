@@ -436,9 +436,11 @@ In all these examples we assume::
 
         Returns a new :class:`AlgebraicFraction` object with the numerator and the denominator swapped::
 
-            >>> a = AlgebraicFraction(a, b)
-            >>> a
+            >>> c = AlgebraicFraction(a, b)
+            >>> c
             AlgebraicFraction(+ 3x - 5, + 2a)
-            >>> b = a.swap()
-            >>> b
+            >>> d = c.swap()
+            >>> d
             AlgebraicFraction(+ 2a, + 3x - 5)
+            >>> c.swap() == AlgebraicFraction(b, a)
+            True
