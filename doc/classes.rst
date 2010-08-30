@@ -64,6 +64,15 @@ The main class in pypol is :class:`Polynomial`:
 
         Applies :func:`sorted` to self.monomials, with cmp, key and reverse arguments.
 
+    .. mehtod:: coefficients
+
+        **property**
+
+        Returns the polynomial's coefficients::
+
+            >>> Polynomial(parse_polynomial('2x^3 + 4xy - 5')).coefficients
+            [2, 4, -5]
+
     .. method:: degree
 
         **property**
@@ -240,6 +249,17 @@ The main class in pypol is :class:`Polynomial`:
             False
 
         See also: :meth:`isordered`
+
+    .. method:: invert([, v=1])
+
+        Returns an :class:`AlgebraicFraction` object with *v* as :meth:`AlgebraicFraction.numerator` and this polynomial as :meth:`AlgebraicFraction.denominator`::
+
+            >>> Polynomial(parse_polynomial('3x^3 - a^2 + a - 5')).invert()
+            AlgebraicFraction(+ 1, + 3x³ - a² + a - 5)
+            >>> print Polynomial(parse_polynomial('3x^3 - a^2 + a - 5')).invert(3)
+                    + 3         
+            −−−−−−−−−−−−−−−−−−−−
+            + 3x³ - a² + a - 5
 
     .. method:: update([, pol_or_monomials=None])
 
@@ -432,7 +452,7 @@ In all these examples we assume::
             >>> AlgebraicFraction(a, b).terms
             (+ 3x - 5, + 2a)
 
-    .. method:: swap()
+    .. method:: invert()
 
         Returns a new :class:`AlgebraicFraction` object with the numerator and the denominator swapped::
 

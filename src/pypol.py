@@ -398,6 +398,9 @@ class Polynomial(object):
             return True
         return self.powers(letter) == range(self.max_power(letter), -1, -1)
 
+    def invert(self, v=1):
+        return AlgebraicFraction(Polynomial(((v, {}),)), self)
+
     def check_other(wrapped):
         def wrapper(self, other):
             if isinstance(other, int):
@@ -738,13 +741,16 @@ class Polynomial(object):
 
 class AlgebraicFraction(object):
 
-    __slots__ = ('_numerator', '_denominator',)
+    __slots__ = ('_numerator', '_denominator', '_simplify')
 
-    def __init__(self, numerator, denominator):
+    def __init__(self, numerator, denominator=1, simplify=True):
         if not denominator:
             raise ZeroDivisionError('Denominator cannot be 0')
         self._numerator = numerator
         self._denominator = denominator
+        self._simplify = simplify
+        if self._simplify:
+            self.simplify()
 
     @ property
     def numerator(self):
@@ -786,8 +792,11 @@ class AlgebraicFraction(object):
 
         return (self._numerator, self._denominator)
 
-    def swap(self):
+    def invert(self):
         return AlgebraicFraction(self._denominator, self._numerator)
+
+    def simplify(self):
+        return NotImplemented
 
     def check_other(wrapped):
         def wrapper(self, other):
@@ -797,16 +806,18 @@ class AlgebraicFraction(object):
         return wrapper
 
     def __repr__(self):
-        return 'AlgebraicFraction(%s, %s)' % self.terms ## For compatibility
+        return 'AlgebraicFraction({0[0]}, {0[1]})'.format(self.terms)
 
     def __str__(self):
         a, b = str(self._numerator), str(self._denominator)
-        sep = max((len(a), len(b)))*u'\u2212'.encode('utf-8')
-        len_ = len(sep)
-        return '\n'.join([a.center(len_), sep, b.center(len_)])
+        la, lb = len(a), len(b)
+        n = max(la, lb)
+        sep = n*u'\u2212'.encode('utf-8')
+        return '\n'.join([a.center(n), sep, b.center(n)])
 
     def __eq__(self, other):
-        return self._numerator == other._numerator and self._denominator == other._denominator
+        return self._numerator == other._numerator and \
+               self._denominator == other._denominator
     
     def __ne__(self, other):
         return not self == other
@@ -844,4 +855,4 @@ class AlgebraicFraction(object):
         return self * other
 
     def __div__(self, other):
-        return self * other.swap()
+        return self * other.invert()
