@@ -1,0 +1,12 @@
+setup.py
+doc/Makefile
+doc/classes.rst
+doc/conf.py
+doc/functions.rst
+doc/index.rst
+doc/make.bat
+doc/tutorial.rst
+src/__init__.py
+src/pypol.py
+tests/__init__.py
+tests/testpypol.py

@@ -64,7 +64,7 @@ The main class in pypol is :class:`Polynomial`:
 
         Applies :func:`sorted` to self.monomials, with cmp, key and reverse arguments.
 
-    .. method:: coefficients
+    .. mehtod:: coefficients
 
         **property**
 
