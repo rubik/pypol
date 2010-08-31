@@ -62,7 +62,7 @@ def polynomial(string=None, simplify=True):
         return Polynomial()
     return make_polynomial(parse_polynomial(string), simplify)
 
-def algebraic_fraction(s1, s2):
+def algebraic_fraction(s1, s2='1', simplify=True):
     '''
     Wrapper function that returns an :class:AlgebraicFraction object.
         s1 and s2 are two strings that represent a polynomial::
@@ -73,7 +73,7 @@ def algebraic_fraction(s1, s2):
             (+ 3x^2 - 4xy, + x + y)
     '''
 
-    return AlgebraicFraction(polynomial(s1), polynomial(s2))
+    return AlgebraicFraction(polynomial(s1), polynomial(s2), simplify)
 
 def make_polynomial(monomials, simplify=True):
     '''
@@ -373,7 +373,6 @@ class Polynomial(object):
         '''
 
         if letter not in self.letters:
-            print letter
             raise KeyError('letter not in polynomial')
         return max(self.raw_powers(letter))
 
@@ -497,6 +496,13 @@ class Polynomial(object):
 
         self._monomials = tuple(sorted(pol_or_monomials._monomials + self._monomials, cmp=self._cmp, reverse=True))
         self.simplify()
+
+    def div_all(self, poly):
+        '''
+        Divide all polynomial's monomials by *poly*
+        '''
+
+        return sum([Polynomial((monomial,)) / poly for monomial in self._monomials])
 
     def simplify(self):
         '''
@@ -774,11 +780,13 @@ class Polynomial(object):
 
 class AlgebraicFraction(object):
 
-    __slots__ = ('_numerator', '_denominator', '_simplify')
+    __slots__ = ('_numerator', '_denominator', '_simplify',)
 
     def __init__(self, numerator, denominator=1, simplify=True):
         if not denominator:
             raise ZeroDivisionError('Denominator cannot be 0')
+        if isinstance(numerator, AlgebraicFraction) or isinstance(denominator, AlgebraicFraction):
+            return NotImplemented
         self._numerator = numerator
         self._denominator = denominator
         self._simplify = simplify
@@ -830,9 +838,8 @@ class AlgebraicFraction(object):
 
     def simplify(self):
         common_poly = gcd(self._numerator.gcd, self._denominator.gcd)
-        print common_poly
-        self._numerator /= common_poly
-        self._denominator /= common_poly
+        self._numerator = self._numerator.div_all(common_poly)
+        self._denominator = self._denominator.div_all(common_poly)
         return self
 
     def check_other(wrapped):
