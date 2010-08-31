@@ -11,7 +11,7 @@ pypol is a Python library that allows you to manipulate polynomials. This is the
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
    
    tutorial.rst
    classes.rst

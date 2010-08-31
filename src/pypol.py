@@ -33,7 +33,7 @@ __author__ = 'Michele Lacchia'
 __version__ = (0, 1)
 __version_str__ = '0.1'
 
-__all__ = ['polynomial', 'algebraic_fraction', 'gcd', 'lcm', 'gcd_poly', 'lcm_poly', 'are_similar', 'make_polynomial', 'parse_polynomial', 'random_poly', 'Polynomial', 'AlgebraicFraction',]
+__all__ = ['polynomial', 'algebraic_fraction', 'gcd', 'lcm', 'gcd_p', 'lcm_p', 'are_similar', 'make_polynomial', 'parse_polynomial', 'random_poly', 'Polynomial', 'AlgebraicFraction',]
 
 
 def polynomial(string=None, simplify=True):
@@ -94,32 +94,34 @@ def are_similar(a, b):
 
     return a[1] == b[1]
 
-def gcd(*polynomials):
+def gcd(a, b):
     '''
-    Calculate the Greatest Common Divisor of the polynomials.
+    Calculates the Greatest Common Divisor of the two polynomials.
     '''
-    def _internal_gcd(p, q):
-        a, b = copy.deepcopy(p), copy.deepcopy(q)
-        while b:
-            a, b = b, a % b
-        return a
 
-    return reduce(_internal_gcd, polynomials)
+    coefficient = fractions.gcd(a.coeff_gcd, b.coeff_gcd)
+    letters = set(a.letters).intersection(b.letters)
+    vars = {} ## Change for Py2.7
+    for letter in letters:
+        vars[letter] = min(a.min_power(letter), b.min_power(letter))
+    return Polynomial(((coefficient, vars),))
 
-def gcd_poly(poly):
-    return gcd(*[Polynomial((monomial,)) for monomial in poly.monomials])
+def gcd_p(*polynomials):
+    return reduce(gcd, polynomials)
 
-def lcm(*polynomials):
+def lcm(a, b):
     '''
-    Calculate the Least Common Divisor of polynomials.
+    Calculates the Least Common Divisor of two polynomials.
     '''
-    def _internal_lcm(a, b):
-        return operator.truediv(a*b, gcd(a, b))
 
-    return reduce(_internal_lcm, polynomials)
+    coefficient = (a.coeff_lcm*b.coeff_lcm, fractions.gcd(a.coeff_lcm, b.coeff_lcm))
+    letters = set(a.letters).intersection(b.letters)
+    for letter in letters:
+        vars[letter] = max(a.max_power(letter), b.max_power(letter))
+    return Polynomial(((coefficient, vars),))
 
-def lcm_poly(poly):
-    return lcm(*[Polynomial((monomial,)) for monomial in poly.monomials])
+def lcm_p(*polynomials):
+    return reduce(lcm, polynomials)
 
 def parse_polynomial(string, max_length=None):
     '''
@@ -195,6 +197,15 @@ def _parse_letters(l):
         d[letter] = int(exp)
     return d
 
+def _get_letters_powers(p, l, min=True):
+    d = {} ## Change for Py2.7
+    for letter in l:
+        if min:
+            d[letter] = p.min_power(letter)
+        else:
+            d[letter] = p.max_power(letter)
+    return d
+
 
 class Polynomial(object):
     '''
@@ -236,6 +247,28 @@ class Polynomial(object):
     @ property
     def coefficients(self):
         return [monomial[0] for monomial in self._monomials]
+
+    @ property
+    def coeff_gcd(self):
+        return reduce(fractions.gcd, self.coefficients)
+
+    @ property
+    def coeff_lcm(self):
+        return reduce(lambda a, b: operator.truediv(a*b, fractions.gcd(a, b)), self.coefficients)
+
+    @ property
+    def gcd(self):
+        vars = {} ## Change for Py2.7
+        for letter in self.joint_letters:
+            vars[letter] = self.min_power(letter)
+        return Polynomial(((self.coeff_gcd, vars),))
+
+    @ property
+    def lcm(self):
+        vars = {} ## Change for Py2.7
+        for letter in self.joint_letters:
+            vars[letter] = self.max_power(letter)
+        return Polynomial(((self.coeff_gcd, vars),))
 
     @ property
     def degree(self):
@@ -283,16 +316,23 @@ class Polynomial(object):
         return tuple(sorted(reduce(operator.or_, [set(m[1].keys()) for m in self._monomials if m[1]], set())))
 
     @ property
+    def joint_letters(self):
+        '''
+        Returns a tuple of the letters that appear in all the polynomial's monomials
+        '''
+
+        if len(self) == 1:
+            return self.letters
+        return tuple(reduce(operator.and_, [set(monomial[1].keys()) for monomial in self.monomials]))
+
+    @ property
     def right_hand_side(self):
         '''
         Returns, if there is, the right hand-side term, False otherwise.
         '''
 
-        ## if not self._monomials[-1][1]:
-        ##     return self._monomials[-1]  # Check this
-        for monomial in self._monomials:
-            if not monomial[1]:
-                return monomial[0]
+        if not self._monomials[-1][1]:
+            return self._monomials[-1]
         return False
 
     @ property
@@ -497,15 +537,8 @@ class Polynomial(object):
         Comparator function used to sort the monomials.
         '''
 
-        try:                         ## Change this - ugly!
-            ma = max(a[1].values())
-        except ValueError:
-            ma = 0
-        try:
-            mb = max(b[1].values())
-        except ValueError:
-            mb = 0 ########################################
-
+        ma = max(a[1].values() + [0])
+        mb = max(b[1].values() + [0])
         if ma > mb:
             return 1
         elif ma == mb:
@@ -796,12 +829,18 @@ class AlgebraicFraction(object):
         return AlgebraicFraction(self._denominator, self._numerator)
 
     def simplify(self):
-        return NotImplemented
+        common_poly = gcd(self._numerator.gcd, self._denominator.gcd)
+        print common_poly
+        self._numerator /= common_poly
+        self._denominator /= common_poly
+        return self
 
     def check_other(wrapped):
         def wrapper(self, other):
             if isinstance(other, Polynomial):
-                other = AlgebraicFraction(other, 1)
+                other = AlgebraicFraction(other)
+            elif isinstance(other, str):
+                other = AlgebraicFraction(polynomial(other))
             return wrapped(self, other)
         return wrapper
 

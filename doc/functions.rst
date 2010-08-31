@@ -37,23 +37,37 @@ pypol module has some utility functions to work with polynomials:
 
 .. function:: algebraic_fraction(s1, s2)
 
-        Wrapper function that returns an :class:AlgebraicFraction object.
-        *s1* and *s2* are two strings that represent a polynomial::
+    Wrapper function that returns an :class:AlgebraicFraction object.
+    *s1* and *s2* are two strings that represent a polynomial::
 
-            >>> algebraic_fraction('3x^2 - 4xy', 'x + y')
-            AlgebraicFraction(+ 3x² - 4xy, + x + y)
-            >>> algebraic_fraction('3x^2 - 4xy', 'x + y').terms
-            (+ 3x^2 - 4xy, + x + y)
+        >>> algebraic_fraction('3x^2 - 4xy', 'x + y')
+        AlgebraicFraction(+ 3x² - 4xy, + x + y)
+        >>> algebraic_fraction('3x^2 - 4xy', 'x + y').terms
+        (+ 3x^2 - 4xy, + x + y)
+
+.. function:: gcd(polynomials):
+
+    Returns the Great Common Divisor of the polynomial::
+
+        >>> a = polynomial('12x^3 - 4xy + 3x^2')
+        >>> gcd(a)
+        - x
+
+.. function:: lcm(polynomial):
+
+    Returns the Least Common Multiple of the polynomial::
+
+        
 
 .. function:: make_polynomial(monomials[, simplify=True])
 
-        Make a polynomial from a list of tuples.
-        For example::
+    Make a polynomial from a list of tuples.
+    For example::
 
-            >>> make_polynomial(parse_polynomial('2x + 3y - 4'))
-            2x + 3y - 4
-            >>> make_polynomial(((2, {'x': 1}), (3, {'y': 1}), (-4, {})))
-            2x + 3y - 4
+        >>> make_polynomial(parse_polynomial('2x + 3y - 4'))
+        2x + 3y - 4
+        >>> make_polynomial(((2, {'x': 1}), (3, {'y': 1}), (-4, {})))
+        2x + 3y - 4
 
 .. function:: are_similar(a, b)
 

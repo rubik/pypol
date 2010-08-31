@@ -100,10 +100,13 @@ The main class in pypol is :class:`Polynomial`:
         Returns a string form of the polynomial that can be used with eval::
 
             >>> e = Polynomial(parse_polynomial('2x^2 - 4x + 4')).eval_form
+            >>> e
+            '2*x**2-4*x+4'
             >>> eval(e, {'x': 3})
             10
+            >>> Polynomial(parse_polynomial('2x^2y^4 - 4xabc + 4z^2y^5')).eval_form
+            '4*y**5*z**2+2*y**4*x**2-4*a*x*c*b'
 
-        If there are more than one letters, it returns NotImplemented.
 
     .. method:: right_hand_side
 
