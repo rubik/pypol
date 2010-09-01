@@ -75,6 +75,9 @@ def algebraic_fraction(s1, s2='1', simplify=True):
 
     return AlgebraicFraction(polynomial(s1), polynomial(s2), simplify)
 
+def monomial(c, **vars):
+    return Polynomial(((c, vars),))
+
 def make_polynomial(monomials, simplify=True):
     '''
     Make a polynomial from a list of tuples.
@@ -94,7 +97,7 @@ def are_similar(a, b):
 
     return a[1] == b[1]
 
-def gcd(a, b):
+def gcd(a, b): ## Still in developement
     '''
     Calculates the Greatest Common Divisor of the two polynomials.
     '''
@@ -104,23 +107,24 @@ def gcd(a, b):
     vars = {} ## Change for Py2.7
     for letter in letters:
         vars[letter] = min(a.min_power(letter), b.min_power(letter))
-    return Polynomial(((coefficient, vars),))
+    return monomial(coefficient, **vars)
 
-def gcd_p(*polynomials):
+def gcd_p(*polynomials): ## Still in development
     return reduce(gcd, polynomials)
 
-def lcm(a, b):
+def lcm(a, b): ## Still in development
     '''
     Calculates the Least Common Divisor of two polynomials.
     '''
 
-    coefficient = (a.coeff_lcm*b.coeff_lcm, fractions.gcd(a.coeff_lcm, b.coeff_lcm))
+    coefficient = (operator.truediv(a.coeff_lcm*b.coeff_lcm, fractions.gcd(a.coeff_lcm, b.coeff_lcm)))
     letters = set(a.letters).intersection(b.letters)
+    vars = {} ## Change for Py2.7
     for letter in letters:
         vars[letter] = max(a.max_power(letter), b.max_power(letter))
-    return Polynomial(((coefficient, vars),))
+    return monomial(coefficient, **vars)
 
-def lcm_p(*polynomials):
+def lcm_p(*polynomials): ## Still in development
     return reduce(lcm, polynomials)
 
 def parse_polynomial(string, max_length=None):
@@ -261,14 +265,14 @@ class Polynomial(object):
         vars = {} ## Change for Py2.7
         for letter in self.joint_letters:
             vars[letter] = self.min_power(letter)
-        return Polynomial(((self.coeff_gcd, vars),))
+        return monomial(self.coeff_gcd, **vars)
 
     @ property
     def lcm(self):
         vars = {} ## Change for Py2.7
         for letter in self.joint_letters:
             vars[letter] = self.max_power(letter)
-        return Polynomial(((self.coeff_gcd, vars),))
+        return monomial(self.coeff_gcd, **vars)
 
     @ property
     def degree(self):
@@ -332,7 +336,7 @@ class Polynomial(object):
         '''
 
         if not self._monomials[-1][1]:
-            return self._monomials[-1]
+            return self._monomials[-1][0]
         return False
 
     @ property
@@ -412,6 +416,28 @@ class Polynomial(object):
 
         return self.degree <= 1
 
+    def is_square_diff(self):
+        '''
+        Returns True whether the polynomial is the difference of two squares, False otherwise.
+        '''
+        def is_square(n):
+            return n & 1 == 0 ## n % 2
+        def _check(a):
+            first = self[a][1]
+            power = first[first.keys()[0]]
+            if len(first) == 1 and is_square(power):
+                if a == 1:
+                    return self[a][0] < 0
+                return True
+            return False
+
+        if len(self) != 2:
+            return False
+        if self.right_hand_side and (self.right_hand_side < 0 and is_square(self.right_hand_side)):
+            return _check(0)
+        else:
+            return _check(0) and _check(1)
+
     def isordered(self, letter=None):
         '''
         Returns True whether the polynomial is ordered, False otherwise.
@@ -438,12 +464,12 @@ class Polynomial(object):
         return self.powers(letter) == range(self.max_power(letter), -1, -1)
 
     def invert(self, v=1):
-        return AlgebraicFraction(Polynomial(((v, {}),)), self)
+        return AlgebraicFraction(monomial(v), self)
 
     def check_other(wrapped):
         def wrapper(self, other):
             if isinstance(other, int):
-                other = Polynomial(((other, {}),))
+                other = monomial(other)
             elif isinstance(other, str):
                 other =  polynomial(other)
             elif isinstance(other, tuple):
@@ -728,7 +754,7 @@ class Polynomial(object):
                     continue
                 new_vars[letter] = a[1][letter] - exp
 
-            return Polynomial(((new_coefficient, new_vars),))
+            return monomial(new_coefficient, **new_vars)
 
         A = Polynomial(copy.deepcopy(self._monomials))
         B = Polynomial(copy.deepcopy(other._monomials))
@@ -770,7 +796,7 @@ class Polynomial(object):
         if exp == 0:
             return Polynomial()
         elif exp < 0:
-            return AlgebraicFraction(Polynomial(((1, {}),)), self ** abs(exp))
+            return AlgebraicFraction(monomial(1), self ** abs(exp))
         else:
             try:
                 return reduce(operator.mul, [self]*exp)
@@ -881,7 +907,10 @@ class AlgebraicFraction(object):
         return AlgebraicFraction(self._numerator, self._denominator)
 
     def __add__(self, other):
-        return NotImplemented
+        least_multiple = lcm(self._denominator.lcm, other._denominator.lcm)
+        num = least_multiple / self._numerator
+        den = least_multiple / self._denominator
+        return AlgebraicFraction(self._numerator * num, self._denominator * den)
 
     def __radd__(self, other):
         return self + other
@@ -902,3 +931,43 @@ class AlgebraicFraction(object):
 
     def __div__(self, other):
         return self * other.invert()
+
+
+
+class _DecomposedPolynomial(object):
+
+    __slots__ = ('poly', 'factors',)
+    ONE = monomial(1)
+
+    def __init__(self, polynomial):
+        self.poly = polynomial
+        self.factors = []
+        self._decompose()
+
+    def ruffini(self):
+        if self.poly.zeros:
+            letter = self.poly.letters[0]
+            factor = Polynomial(((1, {letter: 1}), (self.poly.zeros[0]),))
+            self.poly /= factor
+            self.factors.append(factor)
+            self.ruffini()
+        return False
+
+    def total(self):
+        factor = self.poly.div_all(self.poly.gcd)
+        if factor == self.ONE:
+            return False
+        self.poly /= factor
+        self.factors.append(factor)
+        return True
+
+    def square_diff(self):
+        return NotImplemented
+
+    def _decompose(self):
+        if len(self.poly.letters) == 1:
+            self.ruffini()
+        if self.poly.gcd != self.ONE:
+            self.total()
+        if self.poly.is_square_diff():
+            self.square_diff()
