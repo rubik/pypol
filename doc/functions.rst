@@ -4,11 +4,19 @@ Utility functions
 pypol module has some utility functions to work with polynomials:
     * :func:`polynomial`
     * :func:`algebraic_fraction`
+    * :func:`monomial`
+    * :func:`gcd`
+    * :func:`gcd_p`
+    * :func:`lcm`
+    * :func:`lcm_p`
     * :func:`make_polynomial`
     * :func:`parse_polynomial`
     * :func:`random_poly`
 
-.. function:: polynomial([string=None[, simplify=True[, print_format=True]]])
+polynomial
+++++++++++
+
+.. function:: polynomial([string=None[, simplify=True]])
 
     Returns a :class:`Polynomial` object.
 
@@ -35,6 +43,9 @@ pypol module has some utility functions to work with polynomials:
             >>> polynomial('2x3y 2 + 1')
             + 2x^3y + 3
 
+algebraic_fraction
+++++++++++++++++++
+
 .. function:: algebraic_fraction(s1, s2)
 
     Wrapper function that returns an :class:AlgebraicFraction object.
@@ -45,19 +56,99 @@ pypol module has some utility functions to work with polynomials:
         >>> algebraic_fraction('3x^2 - 4xy', 'x + y').terms
         (+ 3x^2 - 4xy, + x + y)
 
-.. function:: gcd(polynomials):
+monomial
+++++++++
 
-    Returns the Great Common Divisor of the polynomial::
+.. function:: monomial(c, \*\*vars)
 
-        >>> a = polynomial('12x^3 - 4xy + 3x^2')
-        >>> gcd(a)
-        - x
+    Simple function that returns a :class:`Polynomial` object.
+    *c* is the coefficient of the polynomial, *\*\*vars* are the monomial's letters::
 
-.. function:: lcm(polynomial):
+       >>> monomial(5, a=3, b=4)
+       + 5a^3b^4
+       >>> m = monomial(5, a=3, b=4)
+       >>> m
+       + 5a^3b^4
+       >>> type(m)
+       <class 'pypol.src.pypol.Polynomial'>
+       >>> m.monomials
+       ((5, {'a': 3, 'b': 4}),)
 
-    Returns the Least Common Multiple of the polynomial::
+    This function is useful when you need a monomial. If there isn't this function you should do::
 
-        
+       >>> Polynomial(((5, {'a': 3, 'b': 4}),))
+       + 5a^3b^4
+
+    *\*\*vars* is optional::
+
+       >>> monomial(1)
+       + 1
+
+    Equivalent to::
+
+        def monomial(c, **vars):
+            return Polynomial(((c, vars)))
+
+gcd
++++
+
+.. function:: gcd(a, b):
+
+    Returns the Greatest Common Divisor of the two polynomials::
+
+       >>> gcd(polynomial('3x'), polynomial('6x^2'))
+       + 3x
+
+    See also: :func:`gcd_p`, :func:`lcm`, :func:`lcm_p`. 
+
+gcd_p
++++++
+
+.. function:: gcd_p(\*polynomials)
+
+    Like :func:`gcd`, but accepts many arguments::
+
+        >>> gcd_p(polynomial('3x'), polynomial('6x^2'), polynomial('8x^3'))
+        + x
+
+    Equivalent to::
+
+        def gcd_p(*polynomials):
+            return reduce(gcd, polynomials)
+
+    See also: :func:`gcd`, :func:`lcm`, :func:`lcm_p`. 
+
+lcm
++++
+
+.. function:: lcm(a, b):
+
+    Returns the Least Common Multiple of the two polynomials::
+
+        >>> lcm(p('3x'), p('6x^2'))
+        + 6x^2
+
+    See also: :func:`gcd`, :func:`gcd_p`, :func:`lcm_p`.
+
+lcm_p
++++++
+
+.. function:: lcm_p(*polynomials)
+
+    Like :func:`lcm`, but accepts many arguments::
+
+        >>> lcm_p(polynomial('3x'), polynomial('6x^2'), polynomial('8x^3'))
+        + 24x^3
+
+    Equivalent to::
+
+        def lcm_p(*polynomials):
+            return reduce(lcm, polynomials)
+
+    See also: :func:`gcd`, :func:`gcd_p`, :func:`lcm`.
+
+make_polynomial
++++++++++++++++
 
 .. function:: make_polynomial(monomials[, simplify=True])
 
@@ -69,6 +160,9 @@ pypol module has some utility functions to work with polynomials:
         >>> make_polynomial(((2, {'x': 1}), (3, {'y': 1}), (-4, {})))
         2x + 3y - 4
 
+are_similar
++++++++++++
+
 .. function:: are_similar(a, b)
 
     Returns True whether the two monomials *a* and *b* are similar, i.e. they have the same literal part, False otherwise.
@@ -78,6 +172,9 @@ pypol module has some utility functions to work with polynomials:
         False
         >>> are_similar((3, {'y': 4}), (4, {'y': 4}))
         True
+
+parse_polynomial
+++++++++++++++++
 
 .. function:: parse_polynomial(string[, max_length=None])
 
@@ -92,6 +189,9 @@ pypol module has some utility functions to work with polynomials:
         [(2, {'x': 3}), (-3, {'y': 1}), (2, {})]
         >>> parse_polynomial('x3 - 3y2 + 2')
         [(1, {'x': 3}), (-3, {'y': 2}), (2, {})]
+
+random_poly
++++++++++++
 
 .. function:: random_poly([, coeff_range=xrange(-10, 11)[, len_=None[, letters='xyz'[, \
                             max_letters=3[, exp_range=xrange(1, 6)[, right_hand_side=None]]]]]])

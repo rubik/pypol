@@ -73,6 +73,59 @@ The main class in pypol is :class:`Polynomial`:
             >>> Polynomial(parse_polynomial('2x^3 + 4xy - 5')).coefficients
             [2, 4, -5]
 
+    .. method:: coeff_gcd
+
+        **property**
+
+        Returns the Greatest Common Divisor of the polynomial coefficients::
+
+            >>> Polynomial(parse_polynomial('2x^3 + 4xy - 16')).coeff_gcd
+            -2
+
+        Equivalent to::
+
+            >>> import fractions
+            >>> reduce(fractions.gcd, Polynomial(parse_polynomial('2x^3 + 4xy - 16')).coefficients)
+            -2
+
+        See also: :meth:`coeff_lcm`
+
+    .. method:: coeff_lcm
+
+        **property**
+
+        Returns the Least Common Multiple of the polynomial coefficients::
+
+            >>> Polynomial(parse_polynomial('2x^3 + 4xy - 16')).coeff_lcm
+            16.0
+
+        Equivalent to::
+
+            >>> import fractions
+            >>> import operator
+            >>> reduce(lambda a, b: operator.truediv(a*b, fractions.gcd(a, b), Polynomial(parse_polynomial('2x^3 + 4xy - 16')).coefficients)
+            16.0
+
+        See also: :meth:`coeff_gcd`
+
+    .. method:: gcd
+
+        **property**
+
+        Returns the Greatest Common Divisor of the polynomial::
+
+            >>> Polynomial(parse_polynomial('3x^4 - 9x')).gcd
+            - 3x
+
+    .. method:: lcm
+
+        **property**
+
+        Returns the Least Common Multiple of the polynomial::
+
+            >>> Polynomial(parse_polynomial('3x^4 - 9x')).lcm
+            + 9x^4
+
     .. method:: degree
 
         **property**
@@ -92,6 +145,21 @@ The main class in pypol is :class:`Polynomial`:
 
             >>> Polynomial(parse_polynomial('2x^3 + 4xy')).letters
             ('x', 'y')
+
+        See also: :meth:`join_letters`
+
+    .. method:: joint_letters
+
+        **property**
+
+        Returns a tuple of the letters that appear in all the polynomial's monomials::
+
+            >>> Polynomial(parse_polynomial('2x^3 + 4xy - 16')).joint_letters
+            ()
+            >>> Polynomial(parse_polynomial('2x^3 + 4xy - 16ax')).joint_letters
+            ('x',)
+
+        See also: :meth:`letters`
 
     .. method:: eval_form
 
@@ -225,6 +293,21 @@ The main class in pypol is :class:`Polynomial`:
             >>> Polynomial(parse_polynomial('')).powers('q')
             []
 
+    .. method:: is_square_diff()
+
+        Returns True whether the polynomial is a difference of two squares, False otherwise::
+
+            >>> Polynomial(parse_polynomial('2x^4 - 6')).is_square_diff()
+            False
+            >>> Polynomial(parse_polynomial('2x^4 + 9')).is_square_diff()
+            False
+            >>> Polynomial(parse_polynomial('2x^4 - 9')).is_square_diff()
+            False
+            >>> Polynomial(parse_polynomial('x^4 - 9')).is_square_diff()
+            True
+            >>> Polynomial(parse_polynomial('25x^4 - 9')).is_square_diff()
+            True
+
     .. method:: isordered([, letter=None])
 
         Returns True whether the polynomial is ordered, False otherwise.
@@ -343,9 +426,19 @@ The main class in pypol is :class:`Polynomial`:
 
         See also: :meth:`update`
 
+    .. method:: div_all(poly)
+
+        Divide all polynomial's monomials by *poly*::
+
+            >>> a = Polynomial(parse_polynomial('3x^4 - 9x'))
+            >>> a.gcd
+            - 3x
+            >>> a.div_all(a.gcd)
+            - x^3 + 3
+
     .. method:: simplify()
 
-        Simplifies the polynomial. This is done automatically on the __init__ and on the :meth:`update` methods if self._simplify is True
+        Simplifies the polynomial. This is done automatically on the __init__ and on the :meth:`update` methods if self._simplify is True.
         ::
 
             >>> p = Polynomial(parse_polynomial('3x^2 - ax + 5 - 4 + 4ax'))
@@ -411,7 +504,7 @@ The main class in pypol is :class:`Polynomial`:
 AlgebraicFraction class reference
 ---------------------------------
 
-pypol supports the algebraic fractions, although now it is very limited. It supports all the four basic operation but at the moment it does not simplify the terms.
+pypol supports the algebraic fractions, although now it is very limited. It supports all the four basic operation but at the moment it does not decompose the terms.
 
 In all these examples we assume::
 
@@ -471,3 +564,19 @@ In all these examples we assume::
             True
 
         See also: :meth:`Polynomial.invert`
+
+    .. method:: simplify()
+
+        Simplifies the algebraic fraction. This is done automatically on the __init__ and on the :meth:`update` methods if self._simplify is True.
+        Actually we can simplify some algebraic fractions only.
+        ::
+
+            >>> c, d = polynomial('12a - 6a^3'), polynomial('2a - 4a^2')
+            >>> f = AlgebraicFraction(c, d)
+            >>> f
+            AlgebraicFraction(- 3a² + 6, - 2a + 1)
+            >>> f = AlgebraicFraction(c, d, simplify=False)
+            >>> f
+            AlgebraicFraction(- 6a³ + 12a, - 4a² + 2a)
+            >>> f.simplify()
+            AlgebraicFraction(- 3a² + 6, - 2a + 1)
