@@ -21,8 +21,8 @@ Now run the setup.py script::
 
 
 
-Run the tests
-+++++++++++++
+Running the tests
++++++++++++++++++
 
 If you want to run pypol's tests you only have to run *testpypol.py*, that is in the *tests* directory::
 

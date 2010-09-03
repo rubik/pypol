@@ -33,29 +33,35 @@ __author__ = 'Michele Lacchia'
 __version__ = (0, 1)
 __version_str__ = '0.1'
 
-__all__ = ['polynomial', 'algebraic_fraction', 'monomial', 'gcd', 'lcm', 'gcd_p', 'lcm_p', 'are_similar', 'make_polynomial', 'parse_polynomial', 'random_poly', 'Polynomial', 'AlgebraicFraction',]
+__all__ = ['polynomial', 'algebraic_fraction', 'monomial', 'gcd', 'lcm', 'gcd_p', 'lcm_p', 'are_similar', 'make_polynomial', 'parse_polynomial', 'random_poly', 'root', 'Polynomial', 'AlgebraicFraction',]
 
 
 def polynomial(string=None, simplify=True):
     '''
-    Function that returns a Polynomial object.
-    string is a string that represent a polynomial, default is None.
-    If simplify, then the Polynomial will be simplified on __init__ and on update.
+    Returns a :class:`Polynomial` object.
 
-    ## Syntax rules
-        Powers can be expressed using the `^` symbol. If a digit follows a letter then it is interpreted as an exponent. So the following expressions are be equal:
+    string is a string that represent a polynomial, default is None.
+    If simplify is True, the polynomial will be simplified on __init__ and on update.
+
+    **Syntax rules**
+        Powers can be expressed using the *^* symbol. If a digit follows a letter then it is interpreted as an exponent. So the following expressions are be equal::
 
             >>> polynomial('2x^3y^2 + 1') == polynomial('2x3y2 + 1')
             True
 
-          but if there is a white space after the letter then the digit is interpreted as a positive coefficient.
-          So this:
+        but if there is a white space after the letter then the digit is interpreted as a positive coefficient.
+        So this::
 
             >>> polynomial('2x3y 2 + 1')
 
-          represents this polynomial:
+        represents this polynomial::
 
-            2x^3y + 3
+             2x^3y + 3
+
+        ::
+
+            >>> polynomial('2x3y 2 + 1')
+            + 2x^3y + 3
     '''
 
     if not string:
@@ -65,25 +71,57 @@ def polynomial(string=None, simplify=True):
 def algebraic_fraction(s1, s2='1', simplify=True):
     '''
     Wrapper function that returns an :class:AlgebraicFraction object.
-        s1 and s2 are two strings that represent a polynomial::
+    *s1* and *s2* are two strings that represent a polynomial::
 
-            >>> algebraic_fraction('3x^2 - 4xy', 'x + y')
-            AlgebraicFraction(+ 3x² - 4xy, + x + y)
-            >>> algebraic_fraction('3x^2 - 4xy', 'x + y').terms
-            (+ 3x^2 - 4xy, + x + y)
+        >>> algebraic_fraction('3x^2 - 4xy', 'x + y')
+        AlgebraicFraction(+ 3x² - 4xy, + x + y)
+        >>> algebraic_fraction('3x^2 - 4xy', 'x + y').terms
+        (+ 3x^2 - 4xy, + x + y)
     '''
 
     return AlgebraicFraction(polynomial(s1), polynomial(s2), simplify)
 
 def monomial(c, **vars):
+    '''
+    Simple function that returns a :class:`Polynomial` object.
+    *c* is the coefficient of the polynomial, *\*\*vars* are the monomial's letters::
+
+       >>> monomial(5, a=3, b=4)
+       + 5a^3b^4
+       >>> m = monomial(5, a=3, b=4)
+       >>> m
+       + 5a^3b^4
+       >>> type(m)
+       <class 'pypol.src.pypol.Polynomial'>
+       >>> m.monomials
+       ((5, {'a': 3, 'b': 4}),)
+
+    This function is useful when you need a monomial. If there isn't this function you should do::
+
+       >>> Polynomial(((5, {'a': 3, 'b': 4}),))
+       + 5a^3b^4
+
+    *\*\*vars* is optional::
+
+       >>> monomial(1)
+       + 1
+
+    Equivalent to::
+
+        def monomial(c, **vars):
+            return Polynomial(((c, vars)))
+    '''
+
     return Polynomial(((c, vars),))
 
 def make_polynomial(monomials, simplify=True):
     '''
     Make a polynomial from a list of tuples.
-    For example:
+    For example::
 
         >>> make_polynomial(parse_polynomial('2x + 3y - 4'))
+        2x + 3y - 4
+        >>> make_polynomial(((2, {'x': 1}), (3, {'y': 1}), (-4, {})))
         2x + 3y - 4
     '''
 
@@ -91,15 +129,26 @@ def make_polynomial(monomials, simplify=True):
 
 def are_similar(a, b):
     '''
-    Returns True whether the two monomials are similar,
-    i.e. if they have the same literal part, False otherwise.
+    Returns True whether the two monomials *a* and *b* are similar, i.e. they have the same literal part, False otherwise.
+    An example::
+
+        >>> are_similar((-2, {'x': 2, 'y': 2}), (-2, {'x': 3}))
+        False
+        >>> are_similar((3, {'y': 4}), (4, {'y': 4}))
+        True
     '''
 
     return a[1] == b[1]
 
 def gcd(a, b):
     '''
-    Calculates the Greatest Common Divisor of the two polynomials.
+    Returns the Greatest Common Divisor between the two polynomials::
+
+       >>> gcd(polynomial('3x'), polynomial('6x^2'))
+       + 3x
+
+    .. seealso::
+        :func:`gcd_p`, :func:`lcm`, :func:`lcm_p`. 
     '''
 
     coefficient = fractions.gcd(a.coeff_gcd, b.coeff_gcd)
@@ -107,11 +156,32 @@ def gcd(a, b):
     return monomial(coefficient, **_get_letters_powers(a, b, letters))
 
 def gcd_p(*polynomials):
+    '''
+    Like :func:`gcd`, but accepts many arguments::
+
+        >>> gcd_p(polynomial('3x'), polynomial('6x^2'), polynomial('8x^3'))
+        + x
+
+    Equivalent to::
+
+        def gcd_p(*polynomials):
+            return reduce(gcd, polynomials)
+
+    .. seealso::
+        :func:`gcd`, :func:`lcm`, :func:`lcm_p`. 
+    '''
+
     return reduce(gcd, polynomials)
 
 def lcm(a, b):
     '''
-    Calculates the Least Common Divisor of two polynomials.
+    Returns the Least Common Multiple of the two polynomials::
+
+        >>> lcm(p('3x'), p('6x^2'))
+        + 6x^2
+
+    .. seealso::
+        :func:`gcd`, :func:`gcd_p`, :func:`lcm_p`.
     '''
 
     coefficient = (operator.truediv(a.coeff_lcm*b.coeff_lcm, fractions.gcd(a.coeff_lcm, b.coeff_lcm)))
@@ -123,14 +193,37 @@ def lcm(a, b):
     return monomial(coefficient, **_get_letters_powers(a, b, letters, False))
 
 def lcm_p(*polynomials):
+    '''
+    Like :func:`lcm`, but accepts many arguments::
+
+        >>> lcm_p(polynomial('3x'), polynomial('6x^2'), polynomial('8x^3'))
+        + 24x^3
+
+    Equivalent to::
+
+        def lcm_p(*polynomials):
+            return reduce(lcm, polynomials)
+
+    .. seealso::
+        :func:`gcd`, :func:`gcd_p`, :func:`lcm`.
+    '''
+
     return reduce(lcm, polynomials)
 
 def parse_polynomial(string, max_length=None):
     '''
     Parses a string that represent a polynomial.
     It can parse integer coefficients, float coefficient and fractional coefficient.
+    max_length represent the maximum length that the polynomial can have.
 
-    See polynomial's syntax rules.
+    An example:::
+
+        >>> parse_polynomial('2x^3 - 3y + 2')
+        [(2, {'x': 3}), (-3, {'y': 1}), (2, {})]
+        >>> parse_polynomial('x3 - 3y2 + 2')
+        [(1, {'x': 3}), (-3, {'y': 2}), (2, {})]
+    
+    See :func:`polynomial`'s syntax rules.
     '''
 
     monomials = []
@@ -152,12 +245,31 @@ def random_poly(coeff_range=xrange(-10, 11), len_=None, letters='xyz', max_lette
     '''
     Returns a polynomial generated randomly.
 
-    coeff_range is the range of the polynomial's coefficients, default is ``xrange(-10, 11)``.
-    len_ is the len of the polynomial. Default is None, in this case len_ will be a random number chosen in coeff_range.
-    letters are the letters that appear in the polynomial.
-    max_letter is the maximum number of letter for every monomial.
-    exp_range is the range of the exponents.
-    if right_hand_side is True the polynomial will have a right_hand_side. Default is None, that means the right_hand_side will be chosen randomly.
+    * coeff_range is the range of the polynomial's coefficients, default is ``xrange(-10, 11)``.
+    * len\_ is the len of the polynomial. Default is None, in this case len\_ will be a random number chosen in coeff_range.
+    * letters are the letters that appear in the polynomial.
+    * max_letter is the maximum number of letter for every monomial.
+    * exp_range is the range of the exponents.
+    * if right_hand_side is True the polynomial will have a right_hand_side. Default is None, that means the right_hand_side will be chosen randomly.
+
+    ::
+
+        >>> random_poly()
+         + 2x^4y^5 + 3y^5 + 5xy^5 + 10x^2y^3z^3 - 5z
+        >>> random_poly()
+         + 7xy^5 - 3z^4 - 2
+        >>> random_poly(len_=3, letters='ab')
+         + 9a^5 + 7a^2b^4 - 8ab^2
+        >>> random_poly(letters='abcdef', max_letters=1)
+        - 9
+        >>> random_poly(letters='abcdef', max_letters=1)
+        - 5e^5 + 2f^4 + 5a^2
+        >>> random_poly(letters='abcdef', max_letters=2)
+        - 9f^5 - d - 10
+        >>> random_poly(letters='abcdef', max_letters=2)
+        - 9de^5 - 4a^3d^5 - 5d^5 + 4af^3 + 2e^2f - 3f^2
+        >>> random_poly(letters='abcdef', max_letters=2, exp_range=xrange(0, 20, 5))
+        - 7e^15 + 5d^15 - 10c^15 - 9b^10 - 12e^5 - 12c^5 - 2f^5
     '''
     if not len_:
         len_ = random.choice(coeff_range)
@@ -174,6 +286,41 @@ def random_poly(coeff_range=xrange(-10, 11), len_=None, letters='xyz', max_lette
     if right_hand_side:
         monomials.append((random.choice(coeff_range), {}))
     return Polynomial(monomials)
+
+def root(poly, k=0.5, epsilon=10**-8):
+    '''
+    Finds the root of the polynomial *poly* using the *bisection* method [#f1]_.
+    When it finds the root, it checks if -root is a root too. If so, it returns a two-length tuple, else a tuple
+    with one root.
+    *k* is the increment of the two extreme point. The increment is calculated with the following formula::
+
+        a + ak
+
+    So, if *a* is 50, after the increment ``50 + 50*0.5`` *a* will be 75.
+    *epsilon* sets the precision of the calculation. Smaller it is, greater is the precision.
+
+    .. warning:: If *epsilon* is bigger than 5 :exc:`ValueError` is raised.
+    '''
+
+    if k < 0:
+        raise ValueError('k value cannot be negative')
+
+    if epsilon > 5:
+        raise ValueError('epsilon cannot be greater than 5')
+
+    _d = lambda a, b: a * b < 0 # Check if discordant
+    a, b = -50, 45
+    while abs(a - b) > 2*epsilon:
+        media = (a + b) / 2 # Midpoint
+        if _d(poly(a), poly(media)):
+            b = media
+        elif _d(poly(b), poly(media)):
+            a = media
+        else: # Not discordant
+            a, b = a + a*k, b + b*k
+    if media != 0 and not poly(-int(media)):
+        return (int(media), -int(media))
+    return (int(media),)
 
 def _parse_coeff(c):
     if not c:
@@ -211,16 +358,27 @@ def _get_letters_powers(a, b, l, min_=True):
 
 class Polynomial(object):
     '''
-    Base class that represent a polynomial
-    Polynomial([monomials[, simplify]])
+    A :class:`Polynomial` is an object that represents a Polynomial.
+    It accepts two arguments: *monomials* and *simplify*.
 
-    monomials is a tuple of tuples like this:
+    *monomials* is a tuple of tuples that represents all the polynomial's monomials.
 
-      -3xy + 4x^2y^4       ->
+    If *simplify* is True, then the polynomial will be simplified on __init__ and on :meth:`update`. See also :meth:`simplify`
+    An example::
 
-        ((-3, {'x': 1, 'y': 1}), (4, {'x': 2, 'y': 4}))
+        >>> monomials = ((2, {'x': 3}), (4, {'x': 1, 'y': 1}))
+        >>> p = Polynomial(monomials)
+        >>> p
+        + 2x^3 + 4xy
+        >>> Polynomial(((2, {}),)) ## Remember the comma!
+        + 2
+        >>> parse_polynomial('2x^3 + 4xy')
+        [(2, {'x': 3}), (4, {'y': 1, 'x': 1})]
+        >>> p = Polynomial(parse_polynomial('2x^3 + 4xy'))
+        >>> p
+        + 2x^3 + 4xy
 
-    if simplify, if simplifies monomials on __init__ and update
+    We can use the :func:`parse_polynomial` function too.
     '''
 
     __slots__ = ('_monomials', '_simplify',)
@@ -233,6 +391,23 @@ class Polynomial(object):
 
     @ property
     def monomials(self):
+        '''
+        **property**
+
+        monomials is a property that returns the polynomial's monomials.
+        Example::
+
+            >>> Polynomial(parse_polynomial('2x^3 + 4xy')).monomials
+            ((2, {'x': 3}), (4, {'y': 1, 'x': 1}))
+
+        You can also set the monomials::
+
+            >>> p = Polynomial(parse_polynomial('2x^3 + 4xy'))
+            >>> p.monomials = ((2, {}),) # The comma!
+            >>> p
+            + 2
+        '''
+
         return self._monomials
 
     @ monomials.setter
@@ -241,21 +416,67 @@ class Polynomial(object):
 
     def ordered_monomials(self, cmp=None, key=None, reverse=False):
         '''
-        Return a sorted tuple of monomials applying sorted() to self.monomials.
+        Applies :func:`sorted` to self.monomials, with *cmp*, *key* and *reverse* arguments.
         '''
 
         return sorted(self._monomials, cmp, key, reverse)
 
     @ property
     def coefficients(self):
+        '''
+        **property**
+
+        Returns the polynomial's coefficients::
+
+            >>> Polynomial(parse_polynomial('2x^3 + 4xy - 5')).coefficients
+            [2, 4, -5]
+        '''
+
         return [monomial[0] for monomial in self._monomials]
 
     @ property
     def coeff_gcd(self):
+        '''
+        **property**
+
+        Returns the Greatest Common Divisor of the polynomial coefficients::
+
+            >>> Polynomial(parse_polynomial('2x^3 + 4xy - 16')).coeff_gcd
+            -2
+
+        Equivalent to::
+
+            >>> import fractions
+            >>> reduce(fractions.gcd, Polynomial(parse_polynomial('2x^3 + 4xy - 16')).coefficients)
+            -2
+
+        .. seealso::
+            :meth:`coeff_lcm`
+        '''
+
         return reduce(fractions.gcd, self.coefficients)
 
     @ property
     def coeff_lcm(self):
+        '''
+        **property**
+
+        Returns the Least Common Multiple of the polynomial coefficients::
+
+            >>> Polynomial(parse_polynomial('2x^3 + 4xy - 16')).coeff_lcm
+            16.0
+
+        Equivalent to::
+
+            >>> import fractions
+            >>> import operator
+            >>> reduce(lambda a, b: operator.truediv(a*b, fractions.gcd(a, b), Polynomial(parse_polynomial('2x^3 + 4xy - 16')).coefficients)
+            16.0
+
+        .. seealso::
+            :meth:`coeff_gcd`
+        '''
+
         c_lcm = reduce(lambda a, b: operator.truediv(a*b, fractions.gcd(a, b)), self.coefficients)
         if c_lcm == int(c_lcm):
             c_lcm = int(c_lcm)
@@ -265,6 +486,15 @@ class Polynomial(object):
 
     @ property
     def gcd(self):
+        '''
+        **property**
+
+        Returns the Greatest Common Divisor of the polynomial::
+
+            >>> Polynomial(parse_polynomial('3x^4 - 9x')).gcd
+            - 3x
+        '''
+
         vars = {} ## Change for Py2.7
         for letter in self.joint_letters:
             vars[letter] = self.min_power(letter)
@@ -272,6 +502,15 @@ class Polynomial(object):
 
     @ property
     def lcm(self):
+        '''
+        **property**
+
+        Returns the Least Common Multiple of the polynomial::
+
+            >>> Polynomial(parse_polynomial('3x^4 - 9x')).lcm
+            + 9x^4
+        '''
+
         vars = {} ## Change for Py2.7
         for letter in self.joint_letters:
             vars[letter] = self.max_power(letter)
@@ -280,8 +519,13 @@ class Polynomial(object):
     @ property
     def degree(self):
         '''
-        Return the degree of the polynomial, i.e. the maximum
-        degree of its monomials.
+        **property**
+
+        Returns the degree of the polynomial, i.e. the maximum degree of its monomials.
+        An example::
+
+            >>> Polynomial(parse_polynomial('2x^3 + 4xy')).degree
+            3
         '''
 
         try:
@@ -292,9 +536,18 @@ class Polynomial(object):
     @ property
     def eval_form(self):
         '''
-        Returns a string form that can be used with eval()
-        '''
+        **property**
 
+        Returns a string form of the polynomial that can be used with eval::
+
+            >>> e = Polynomial(parse_polynomial('2x^2 - 4x + 4')).eval_form
+            >>> e
+            '2*x**2-4*x+4'
+            >>> eval(e, {'x': 3})
+            10
+            >>> Polynomial(parse_polynomial('2x^2y^4 - 4xabc + 4z^2y^5')).eval_form
+            '4*y**5*z**2+2*y**4*x**2-4*a*x*c*b'
+        '''
 
         ## We can replace the code below with this:
         #return '+'.join(['%s*%s' % (str(c), '*'.join(['%s**%s' % (letter, exp) for letter, exp in vars.iteritems()]))
@@ -311,13 +564,22 @@ class Polynomial(object):
                     ll.append('%s**%s' % (letter, exp))
                 tmp.append('%s*%s' % (str(c), '*'.join(ll)))
 
-        evallable = '+'.join(tmp).replace('+-', '-').replace('**1', '').replace('1*', '')
+        evallable = '+'.join(tmp).replace('+-', '-').replace('**1', '').replace('-1*', '-')
         return evallable
 
     @ property
     def letters(self):
         '''
+        **property**
+
         Returns a tuple of all the letters that appear in the polynomial.
+        ::
+
+            >>> Polynomial(parse_polynomial('2x^3 + 4xy')).letters
+            ('x', 'y')
+
+        .. seealso::
+            :meth:`join_letters`.
         '''
 
         return tuple(sorted(reduce(operator.or_, [set(m[1].keys()) for m in self._monomials if m[1]], set())))
@@ -325,7 +587,17 @@ class Polynomial(object):
     @ property
     def joint_letters(self):
         '''
-        Returns a tuple of the letters that appear in all the polynomial's monomials
+        **property**
+
+        Returns a tuple of the letters that appear in all the polynomial's monomials::
+
+            >>> Polynomial(parse_polynomial('2x^3 + 4xy - 16')).joint_letters
+            ()
+            >>> Polynomial(parse_polynomial('2x^3 + 4xy - 16ax')).joint_letters
+            ('x',)
+
+        .. seealso::
+            :meth:`letters`.
         '''
 
         if len(self) == 1:
@@ -335,7 +607,15 @@ class Polynomial(object):
     @ property
     def right_hand_side(self):
         '''
-        Returns, if there is, the right hand-side term, False otherwise.
+        **property**
+
+        Returns the right-hand side, if it exist, False otherwise.
+        ::
+
+            >>> Polynomial(parse_polynomial('2x^3 + 4xy')).right_hand_side
+            False
+            >>> Polynomial(parse_polynomial('2x^3 + 4xy - 3')).right_hand_side
+            -3
         '''
 
         if not self._monomials[-1][1]:
@@ -344,6 +624,22 @@ class Polynomial(object):
 
     @ property
     def zeros(self):
+        '''
+        **property**
+
+        Returns a tuple containing all the polynomial's zeros.
+        Returns NotImplemented when:
+
+        * there are more than one letters
+        * there isn't the right-hand side and there are more than one letters or the sum of the polynomial's
+            coefficients is not 0
+
+        For example::
+
+            >>> Polynomial(parse_polynomial('2x - 4')).zeros
+            (2,)
+        '''
+
         if len(self.letters) - 1: ## Polynomial has more than one letter or none
             if len(self) == 1 and self.right_hand_side: ## For example polynomial('-4'), i.e. no letters
                 return -self.right_hand_side
@@ -363,7 +659,22 @@ class Polynomial(object):
 
     def raw_powers(self, letter=None):
         '''
-        Returns all the degrees of a letter.
+        Returns a list with the same length of the polynomial with all the degrees of *letter*.
+        Example::
+
+            >>> Polynomial(parse_polynomial('3x^3 - 2a^2 + x - 2')).raw_powers('x')
+            [3, 0, 1, 0] ## In -2a^2 and -2 there isn't the letter `x`, so there are two zeros
+            >>> Polynomial(parse_polynomial('3x^3 - 2a^2 + x - 2')).raw_powers('q')
+            [0, 0, 0, 0]
+
+        If letter is None, it returns a dictionary with all the degrees of all the letters in the polynomial::
+
+            >>> Polynomial(parse_polynomial('3x^3 - 2a^2 + x - 2')).raw_powers()
+            {'a': [0, 2, 0, 0],
+             'x': [3, 0, 1, 0],
+             }
+
+        See also :meth:`powers`.
         '''
 
         if not letter:
@@ -376,7 +687,23 @@ class Polynomial(object):
 
     def max_power(self, letter):
         '''
-        Returns the maximum degree of a letter.
+        Returns the maximum degree of a letter::
+
+            >>> Polynomial(parse_polynomial('3x^3 - 2a^2 + x - 2')).max_power('a')
+            2
+            >>> Polynomial(parse_polynomial('3x^3 - 2a^2 + x - 2')).max_power('x')
+            3
+            >>> Polynomial(parse_polynomial('3x^3 - 2a^2 + x - 2')).max_power('q')
+            
+            Traceback (most recent call last):
+              File "<pyshell#7>", line 1, in <module>
+                Polynomial(parse_polynomial('3x^3 - 2a^2 + x - 2')).max_power('q')
+              File "/home/miki/pypol/src/pypol.py", line 316, in max_power
+                raise KeyError('letter not in polynomial')
+            KeyError: 'letter not in polynomial'
+
+        It raises KeyError if the letter is not in the polynomial.
+        See also :meth:`min_power`.
         '''
 
         if letter not in self.letters:
@@ -385,7 +712,23 @@ class Polynomial(object):
 
     def min_power(self, letter):
         '''
-        Returns the minimum degree of a letter.
+        Returns the maximum degree of a letter::
+
+            >>> Polynomial(parse_polynomial('3x^3 - 2a^2 + x - 2')).min_power('a')
+            0
+            >>> Polynomial(parse_polynomial('3x^3 - 2a^2 + x - 2')).min_power('x')
+            0
+            >>> Polynomial(parse_polynomial('3x^3 - 2a^2 + x - 2')).min_power('q')
+            
+            Traceback (most recent call last):
+              File "<pyshell#3>", line 1, in <module>
+                Polynomial(parse_polynomial('3x^3 - 2a^2 + x - 2')).min_power('q')
+              File "/home/miki/pypol/src/pypol.py", line 325, in min_power
+                raise KeyError('letter not in polynomial')
+            KeyError: 'letter not in polynomial'
+
+        It raises KeyError if the letter is not in the polynomial.
+        See also :meth:`max_power`.
         '''
 
         if letter not in self.letters:
@@ -396,8 +739,20 @@ class Polynomial(object):
 
     def powers(self, letter=None):
         '''
-        Returns all the degrees of a letter and eliminates
-        all the zeros except the trailing one.
+        Like :meth:`raw_powers`, but eliminates all the zeros except the trailing one.
+        If *letter* is None, it returns a dictionary::
+
+            >>> Polynomial(parse_polynomial('3x^3 - a^2 + x - 5')).powers('x')
+            [3, 1, 0]
+            >>> Polynomial(parse_polynomial('3x^3 - a^2 + x - 5')).powers('a')
+            [2, 0]
+            >>> Polynomial(parse_polynomial('3x^3 - a^2 + x - 5')).powers()
+            {'a': [2, 0],
+            'x': [3, 1, 0],
+            }
+
+        .. seealso::
+            :meth:`raw_powers`.
         '''
 
         if not letter:
@@ -414,15 +769,37 @@ class Polynomial(object):
 
     def islinear(self):
         '''
-        Returns True if the polynomial is linear, False otherwise.
+        Returns True if the polynomial is linear, i.e. all the expoenents are <= 1, False otherwise.
+        ::
+
+            >>> Polynomial(parse_polynomial('3x^3 - a^2 + x - 5')).islinear()
+            False
+            >>> Polynomial(parse_polynomial('-5')).islinear()
+            True
+            >>> Polynomial(parse_polynomial('3x^3 - a^2 + x - 5')).powers('q')
+            [0]
+            >>> Polynomial(parse_polynomial('')).powers('q')
+            []
         '''
 
         return self.degree <= 1
 
     def is_square_diff(self):
         '''
-        Returns True whether the polynomial is the difference of two squares, False otherwise.
+        Returns True whether the polynomial is a difference of two squares, False otherwise::
+
+            >>> Polynomial(parse_polynomial('2x^4 - 6')).is_square_diff()
+            False
+            >>> Polynomial(parse_polynomial('2x^4 + 9')).is_square_diff()
+            False
+            >>> Polynomial(parse_polynomial('2x^4 - 9')).is_square_diff()
+            False
+            >>> Polynomial(parse_polynomial('x^4 - 9')).is_square_diff()
+            True
+            >>> Polynomial(parse_polynomial('25x^4 - 9')).is_square_diff()
+            True
         '''
+
         def is_square(n):
             return n & 1 == 0 ## n % 2
         def is_perfect_square(n):
@@ -450,6 +827,15 @@ class Polynomial(object):
     def isordered(self, letter=None):
         '''
         Returns True whether the polynomial is ordered, False otherwise.
+        If letter is None, it checks for all letters; if the polynomial is ordered for all letters, it returns True, False otherwise.
+        ::
+
+            >>> Polynomial(parse_polynomial('3x^3 - a^2 + x - 5')).isordered('x')
+            False
+            >>> Polynomial(parse_polynomial('3x^3 - a^2 + a - 5')).isordered('a')
+            True
+
+        See also :meth:`iscomplete`.
         '''
 
         if not letter:
@@ -463,6 +849,18 @@ class Polynomial(object):
     def iscomplete(self, letter=None):
         '''
         Returns True whether the polynomial is complete, False otherwise.
+        If letter is None it checks for all the letters of the polynomial.
+        ::
+
+            >>> Polynomial(parse_polynomial('3x^3 - a^2 + a - 5')).iscomplete('a')
+            True
+            >>> Polynomial(parse_polynomial('3x^3 - a^2 + a - 5')).iscomplete('x')
+            False
+            >>> Polynomial(parse_polynomial('3x^3 - a^2 + a - 5')).iscomplete()
+            False
+
+        .. seealso::
+            :meth:`isordered`.
         '''
 
         if not letter:
@@ -473,6 +871,20 @@ class Polynomial(object):
         return self.powers(letter) == range(self.max_power(letter), -1, -1)
 
     def invert(self, v=1):
+        '''
+        Returns an :class:`AlgebraicFraction` object with *v* as :meth:`AlgebraicFraction.numerator` and this polynomial as :meth:`AlgebraicFraction.denominator`::
+
+            >>> Polynomial(parse_polynomial('3x^3 - a^2 + a - 5')).invert()
+            AlgebraicFraction(+ 1, + 3x³ - a² + a - 5)
+            >>> print Polynomial(parse_polynomial('3x^3 - a^2 + a - 5')).invert(3)
+                    + 3         
+            −−−−−−−−−−−−−−−−−−−−
+            + 3x³ - a² + a - 5
+
+        .. seealso::
+            :meth:`AlgebraicFraction.invert`
+        '''
+
         return AlgebraicFraction(monomial(v), self)
 
     def check_other(wrapped):
@@ -490,15 +902,50 @@ class Polynomial(object):
     def update(self, pol_or_monomials=None):
         '''
         Updates the polynomial with another polynomial.
-        This does not create a new instance, but replaces self.monomials with others monomials, then simplify.
+        This does not create a new instance, but replaces self.monomials with others monomials, then it simplifies.
 
         pol_or_monomials can be:
-          - a polynomial
-          - a tuple of monomials
-          - a string that will be passed to parse_polynomial
-          - an integer
+          * a polynomial
+          * a tuple of monomials
+          * a string that will be passed to :func:`parse_polynomial`
+          * an integer
 
         default is None. In this case self.monomials will be updated with an empty tuple.
+        ::
+
+            >>> p = Polynomial(parse_polynomial('3x^3 - a^2 + a - 5'))
+            >>> p
+            + 3x^3 - a^2 + a - 5
+            >>> p.update(Polynomial(parse_polynomial('3x^2 - 2')))
+            + 3x^2 - 2
+            >>> p
+            + 3x^2 - 2
+            >>> p.update(((3, {'x': 1}), (-5, {})))
+            + 3x - 5
+            >>> p
+            + 3x - 5
+            >>> p.update('30j + q - y')
+            + 30j + q - y
+            >>> p
+            + 30j + q - y
+            >>> p.update(3)
+            + 3
+            >>> p
+            + 3
+
+        This method returns the instance, so we can use it::
+
+            >>> p.update('2c - 4a').raw_powers()
+            {'a': [0, 1], 'c': [1, 0]}
+            >>> p
+            + 2c - 4a
+            >>> p.update('3x^2 - x + 5').iscomplete()
+            True
+            >>> p
+            + 3x^2 - x + 5
+
+        .. seealso::
+            :meth:`append`.
         '''
 
         if not pol_or_monomials:
@@ -519,14 +966,34 @@ class Polynomial(object):
     @ check_other
     def append(self, pol_or_monomials):
         '''
-        Appends the given monomials to self.monomials,
-        then simplify.
+        Appends the given monomials to self.monomials, then simplifies.
 
         pol_or_monomials can be:
-          - a polynomial
-          - a string
-          - a tuple of monomials
-          - an integer
+          * a polynomial
+          * a string
+          * a tuple of monomials
+          * an integer
+
+        ::
+
+            >>> p = Polynomial(parse_polynomial('3x^2 - ax + 5'))
+            >>> p
+            + 3x^2 - ax + 5
+            >>> p.append('x^3')
+            >>> p
+            + x^3 + 3x^2 - ax + 5
+            >>> p.append(-4)
+            >>> p
+            + x^3 + 3x^2 - ax + 1
+            >>> p.append(((-1, {'a': 1, 'x': 1}),)) ## The comma!
+            >>> p
+            + x^3 + 3x^2 - 2ax + 1
+            >>> p.append(Polynomial(parse_polynomial('-x^3 + ax + 4')))
+            >>> p
+            + 3x^2 - ax + 5
+
+        .. seealso::
+            :meth:`update`.
         '''
 
         self._monomials = tuple(sorted(pol_or_monomials._monomials + self._monomials, cmp=self._cmp, reverse=True))
@@ -534,14 +1001,33 @@ class Polynomial(object):
 
     def div_all(self, poly):
         '''
-        Divide all polynomial's monomials by *poly*
+        Divide all polynomial's monomials by *poly*::
+
+            >>> a = Polynomial(parse_polynomial('3x^4 - 9x'))
+            >>> a.gcd
+            - 3x
+            >>> a.div_all(a.gcd)
+            - x^3 + 3
         '''
 
         return sum([Polynomial((monomial,)) / poly for monomial in self._monomials])
 
     def simplify(self):
         '''
+        Simplifies the polynomial. This is done automatically on the __init__ and on the :meth:`update` methods if self._simplify is True.
+        ::
+
+            >>> p = Polynomial(parse_polynomial('3x^2 - ax + 5 - 4 + 4ax'))
+            >>> p
+            + 3x^2 + 3ax + 1
+            >>> p = Polynomial(parse_polynomial('3x^2 - ax + 5 - 4 + 4ax'), simplify=False)
+            >>> p
+            + 3x^2 - ax + 4ax + 5 - 4
+            >>> p.simplify()
+            >>> p
+            + 3x^2 + 3ax + 1
         '''
+
         simplified = []
         for monomial in self._monomials:
             for other in simplified:
@@ -575,7 +1061,8 @@ class Polynomial(object):
 
     def _cmp(self, a, b):
         '''
-        Comparator function used to sort the monomials.
+        Comparator function used to sort the polynomial's monomials. You should not change it nor call it.
+            See (NotImplemented)
         '''
 
         ma = max(a[1].values() + [0])
@@ -589,7 +1076,22 @@ class Polynomial(object):
 
     def _make_complete(self, letter):
         '''
-        If the polynomial is already complete returns False, otherwise makes it complete and returns True.
+        If the polynomial is already complete for the letter *letter* returns False, otherwise makes it complete and returns True.
+        ::
+
+            >>> p = Polynomial(parse_polynomial('3x^2 + 2'))
+            >>> p
+            + 3x^2 + 2
+            >>> p.monomials
+            ((3, {'x': 2}), (2, {}))
+            >>> p.iscomplete('x')
+            False
+            >>> p._make_complete('x')
+            True
+            >>> p.iscomplete('x')
+            True
+            >>> p.monomials
+            ((3, {'x': 2}), (0, {'x': 1}), (2, {}))
         '''
 
         if self.iscomplete(letter):
@@ -691,6 +1193,32 @@ class Polynomial(object):
         self._monomials = tuple(tmp_monomials)
 
     def __call__(self, *args, **kwargs):
+        '''
+        It's also possible to call the polynomial.
+           You can pass the arguments in two ways:
+
+              * positional way, using *args*
+                * keyword way, using *kwargs*
+
+            ::
+
+                >>> Polynomial(parse_polynomial('3xy + x^2 - 4'))(2, 3)  ## Positional way, x=2, y=3
+                18
+                >>> Polynomial(parse_polynomial('3xy + x^2 - 4'))(y=2, x=3)  ## Keyword way: y=2, x=3
+                23
+
+            When you use *args*, the dictionary is built in this way::
+
+                dict(zip(self.letters[:len(args)], args))
+
+            *args* has a major priority of *kwargs*, so if you try them both at the same time::
+
+                >>> Polynomial(parse_polynomial('3xy + x^2 - 4'))(2, 3, y=5, x=78)
+                18
+
+            *args* is predominant.
+        '''
+
         if args:
             letters = dict(zip(self.letters[:len(args)], args))
         elif kwargs:
@@ -817,6 +1345,15 @@ class Polynomial(object):
 
 
 class AlgebraicFraction(object):
+    '''
+    This class represent an algebraic fraction.
+    It accepts two arguments: *numerator* and *denominator*.
+    *numerator* is the numerator of the algebraic fraction, and *denominator* its denominator. Both the terms have to be two polynomials.
+    ::
+
+        >>> AlgebraicFraction(a, b)
+        AlgebraicFraction(+ 3x - 5, + 2a)
+    '''
 
     __slots__ = ('_numerator', '_denominator', '_simplify',)
 
@@ -836,7 +1373,13 @@ class AlgebraicFraction(object):
     @ property
     def numerator(self):
         '''
-        Returns the numerator of the AlgebraicFraction.
+        **property**
+
+        Returns the numerator of the :class:`AlgebraicFraction`.
+        ::
+
+            >>> AlgebraicFraction(a, b).numerator
+            + 3x - 5
         '''
 
         return self._numerator
@@ -852,7 +1395,13 @@ class AlgebraicFraction(object):
     @ property
     def denominator(self):
         '''
-        Returns the denominator of the algebraic fraction.
+        **property**
+
+        Returns the denominator of the :class:`AlgebraicFraction`.
+        ::
+
+            >>> AlgebraicFraction(a, b).denominator
+            + 2a
         '''
 
         return self._denominator
@@ -860,7 +1409,7 @@ class AlgebraicFraction(object):
     @ denominator.setter
     def denominator(self, val):
         '''
-        Sets the denominator of the algebraic fraction
+        Sets the denominator of the AlgebraicFraction
         '''
 
         self._denominator = val
@@ -868,15 +1417,52 @@ class AlgebraicFraction(object):
     @ property
     def terms(self):
         '''
-        Returns both the numerator and the denominator.
+        **property**
+
+        Returns both the :meth:`numerator` and the :meth:`denominator`::
+
+            >>> AlgebraicFraction(a, b).terms
+            (+ 3x - 5, + 2a)
         '''
 
         return (self._numerator, self._denominator)
 
     def invert(self):
+        '''
+        Returns a new :class:`AlgebraicFraction` object with the numerator and the denominator swapped::
+
+            >>> c = AlgebraicFraction(a, b)
+            >>> c
+            AlgebraicFraction(+ 3x - 5, + 2a)
+            >>> d = c.swap()
+            >>> d
+            AlgebraicFraction(+ 2a, + 3x - 5)
+            >>> c.swap() == AlgebraicFraction(b, a)
+            True
+
+        .. seealso::
+            :meth:`Polynomial.invert`
+        '''
+
         return AlgebraicFraction(self._denominator, self._numerator)
 
     def simplify(self):
+        '''
+        Simplifies the algebraic fraction. This is done automatically on the __init__ and on the :meth:`update` methods if self._simplify is True.
+        Actually we can simplify some algebraic fractions only.
+        ::
+
+            >>> c, d = polynomial('12a - 6a^3'), polynomial('2a - 4a^2')
+            >>> f = AlgebraicFraction(c, d)
+            >>> f
+            AlgebraicFraction(- 3a² + 6, - 2a + 1)
+            >>> f = AlgebraicFraction(c, d, simplify=False)
+            >>> f
+            AlgebraicFraction(- 6a³ + 12a, - 4a² + 2a)
+            >>> f.simplify()
+            AlgebraicFraction(- 3a² + 6, - 2a + 1)
+        '''
+
         common_poly = gcd(self._numerator.gcd, self._denominator.gcd)
         self._numerator = self._numerator.div_all(common_poly)
         self._denominator = self._denominator.div_all(common_poly)
@@ -895,7 +1481,7 @@ class AlgebraicFraction(object):
         return 'AlgebraicFraction({0[0]}, {0[1]})'.format(self.terms)
 
     def __str__(self):
-        a, b = str(self._numerator), str(self._denominator)
+        a, b = map(str, self.terms)
         la, lb = len(a), len(b)
         n = max(la, lb)
         sep = n*u'\u2212'.encode('utf-8')
@@ -945,44 +1531,3 @@ class AlgebraicFraction(object):
 
     def __div__(self, other):
         return self * other.invert()
-
-
-
-class _Decomposer(object):
-
-    __slots__ = ('poly', 'factors',)
-    ONE = monomial(1)
-
-    def __init__(self, polynomial):
-        self.poly = polynomial
-        self.factors = []
-        self._decompose()
-
-    def ruffini(self):
-        if self.poly.zeros:
-            letter = self.poly.letters[0]
-            factor = Polynomial(((1, {letter: 1}), (self.poly.zeros[0]),))
-            self.poly /= factor
-            self.factors.append(factor)
-            self.ruffini()
-        return False
-
-    def total(self):
-        factor = self.poly.div_all(self.poly.gcd)
-        if factor == self.ONE:
-            return False
-        self.poly /= factor
-        self.factors.append(factor)
-        return True
-
-    def square_diff(self):
-        a, b = self.poly.monomials
-        return NotImplemented
-
-    def _decompose(self):
-        if len(self.poly.letters) == 1:
-            self.ruffini()
-        elif self.poly.gcd != self.ONE:
-            self.total()
-        elif self.poly.is_square_diff():
-            self.square_diff()

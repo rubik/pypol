@@ -1,3 +1,5 @@
+.. currentmodule:: pypol
+
 Utility functions
 =================
 
@@ -12,214 +14,69 @@ pypol module has some utility functions to work with polynomials:
     * :func:`make_polynomial`
     * :func:`parse_polynomial`
     * :func:`random_poly`
+    * :func:`root`
 
 polynomial
 ++++++++++
 
-.. function:: polynomial([string=None[, simplify=True]])
-
-    Returns a :class:`Polynomial` object.
-
-    string is a string that represent a polynomial, default is None.
-    If simplify is True, the polynomial will be simplified on __init__ and on update.
-
-    **Syntax rules**
-        Powers can be expressed using the *^* symbol. If a digit follows a letter then it is interpreted as an exponent. So the following expressions are be equal::
-
-            >>> polynomial('2x^3y^2 + 1') == polynomial('2x3y2 + 1')
-            True
-
-        but if there is a white space after the letter then the digit is interpreted as a positive coefficient.
-        So this:::
-
-            >>> polynomial('2x3y 2 + 1')
-
-        represents this polynomial:::
-
-             2x^3y + 3
-
-        ::
-
-            >>> polynomial('2x3y 2 + 1')
-            + 2x^3y + 3
+.. autofunction:: polynomial
 
 algebraic_fraction
 ++++++++++++++++++
 
-.. function:: algebraic_fraction(s1, s2)
-
-    Wrapper function that returns an :class:AlgebraicFraction object.
-    *s1* and *s2* are two strings that represent a polynomial::
-
-        >>> algebraic_fraction('3x^2 - 4xy', 'x + y')
-        AlgebraicFraction(+ 3x² - 4xy, + x + y)
-        >>> algebraic_fraction('3x^2 - 4xy', 'x + y').terms
-        (+ 3x^2 - 4xy, + x + y)
+.. autofunction:: algebraic_fraction
 
 monomial
 ++++++++
 
-.. function:: monomial(c, \*\*vars)
-
-    Simple function that returns a :class:`Polynomial` object.
-    *c* is the coefficient of the polynomial, *\*\*vars* are the monomial's letters::
-
-       >>> monomial(5, a=3, b=4)
-       + 5a^3b^4
-       >>> m = monomial(5, a=3, b=4)
-       >>> m
-       + 5a^3b^4
-       >>> type(m)
-       <class 'pypol.src.pypol.Polynomial'>
-       >>> m.monomials
-       ((5, {'a': 3, 'b': 4}),)
-
-    This function is useful when you need a monomial. If there isn't this function you should do::
-
-       >>> Polynomial(((5, {'a': 3, 'b': 4}),))
-       + 5a^3b^4
-
-    *\*\*vars* is optional::
-
-       >>> monomial(1)
-       + 1
-
-    Equivalent to::
-
-        def monomial(c, **vars):
-            return Polynomial(((c, vars)))
+.. autofunction:: monomial
 
 gcd
 +++
 
-.. function:: gcd(a, b):
-
-    Returns the Greatest Common Divisor of the two polynomials::
-
-       >>> gcd(polynomial('3x'), polynomial('6x^2'))
-       + 3x
-
-    See also: :func:`gcd_p`, :func:`lcm`, :func:`lcm_p`. 
+.. autofunction:: gcd
 
 gcd_p
 +++++
 
-.. function:: gcd_p(\*polynomials)
-
-    Like :func:`gcd`, but accepts many arguments::
-
-        >>> gcd_p(polynomial('3x'), polynomial('6x^2'), polynomial('8x^3'))
-        + x
-
-    Equivalent to::
-
-        def gcd_p(*polynomials):
-            return reduce(gcd, polynomials)
-
-    See also: :func:`gcd`, :func:`lcm`, :func:`lcm_p`. 
+.. autofunction:: gcd_p
 
 lcm
 +++
 
-.. function:: lcm(a, b):
-
-    Returns the Least Common Multiple of the two polynomials::
-
-        >>> lcm(p('3x'), p('6x^2'))
-        + 6x^2
-
-    See also: :func:`gcd`, :func:`gcd_p`, :func:`lcm_p`.
+.. autofunction:: lcm
 
 lcm_p
 +++++
 
-.. function:: lcm_p(*polynomials)
-
-    Like :func:`lcm`, but accepts many arguments::
-
-        >>> lcm_p(polynomial('3x'), polynomial('6x^2'), polynomial('8x^3'))
-        + 24x^3
-
-    Equivalent to::
-
-        def lcm_p(*polynomials):
-            return reduce(lcm, polynomials)
-
-    See also: :func:`gcd`, :func:`gcd_p`, :func:`lcm`.
+.. autofunction:: lcm_p
 
 make_polynomial
 +++++++++++++++
 
-.. function:: make_polynomial(monomials[, simplify=True])
-
-    Make a polynomial from a list of tuples.
-    For example::
-
-        >>> make_polynomial(parse_polynomial('2x + 3y - 4'))
-        2x + 3y - 4
-        >>> make_polynomial(((2, {'x': 1}), (3, {'y': 1}), (-4, {})))
-        2x + 3y - 4
+.. autofunction:: make_polynomial
 
 are_similar
 +++++++++++
 
-.. function:: are_similar(a, b)
-
-    Returns True whether the two monomials *a* and *b* are similar, i.e. they have the same literal part, False otherwise.
-    An example::
-
-        >>> are_similar((-2, {'x': 2, 'y': 2}), (-2, {'x': 3}))
-        False
-        >>> are_similar((3, {'y': 4}), (4, {'y': 4}))
-        True
+.. autofunction:: are_similar
 
 parse_polynomial
 ++++++++++++++++
 
-.. function:: parse_polynomial(string[, max_length=None])
-
-    Parses a string that represent a polynomial.
-    It can parse integer coefficients, float coefficient and fractional coefficient.
-    max_length represent the maximum length that the polynomial can have.
-
-    See :func:`polynomial`'s syntax rules.
-    An example:::
-
-        >>> parse_polynomial('2x^3 - 3y + 2')
-        [(2, {'x': 3}), (-3, {'y': 1}), (2, {})]
-        >>> parse_polynomial('x3 - 3y2 + 2')
-        [(1, {'x': 3}), (-3, {'y': 2}), (2, {})]
+.. autofunction:: parse_polynomial
 
 random_poly
 +++++++++++
 
-.. function:: random_poly([, coeff_range=xrange(-10, 11)[, len_=None[, letters='xyz'[, \
-                            max_letters=3[, exp_range=xrange(1, 6)[, right_hand_side=None]]]]]])
+.. autofunction:: random_poly
 
-    Returns a polynomial generated randomly.
+root
+++++
 
-    coeff_range is the range of the polynomial's coefficients, default is ``xrange(-10, 11)``.
-    len\_ is the len of the polynomial. Default is None, in this case len\_ will be a random number chosen in coeff_range.
-    letters are the letters that appear in the polynomial.
-    max_letter is the maximum number of letter for every monomial.
-    exp_range is the range of the exponents.
-    if right_hand_side is True the polynomial will have a right_hand_side. Default is None, that means the right_hand_side will be chosen randomly.
-    ::
+.. autofunction:: root
 
-        >>> random_poly()
-         + 2x^4y^5 + 3y^5 + 5xy^5 + 10x^2y^3z^3 - 5z
-    
-        >>> random_poly()
-         + 7xy^5 - 3z^4 - 2
-        >>> random_poly(len_=3, letters='ab')
-         + 9a^5 + 7a^2b^4 - 8ab^2
-        >>> qw_(letters='abcdef', max_letters=1)
-        - 9
-        >>> qw_(letters='abcdef', max_letters=1)
-        - 5e^5 + 2f^4 + 5a^2
-        >>> qw_(letters='abcdef', max_letters=2)
-        - 9f^5 - d - 10
-        >>> qw_(letters='abcdef', max_letters=2)
-        - 9de^5 - 4a^3d^5 - 5d^5 + 4af^3 + 2e^2f - 3f^2
-        >>> qw_(letters='abcdef', max_letters=2, exp_range=xrange(0, 20, 5))
-        - 7e^15 + 5d^15 - 10c^15 - 9b^10 - 12e^5 - 12c^5 - 2f^5
+
+.. rubric:: Footnotes
+
+.. [#f1] See 'wikipedia http://en.wikipedia.org/wiki/Bisection_method'_

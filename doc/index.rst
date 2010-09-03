@@ -3,6 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+.. module:: pypol
+
 Welcome to pypol's documentation!
 =================================
 
@@ -16,3 +18,4 @@ Contents:
    tutorial.rst
    classes.rst
    functions.rst
+   operations.rst
