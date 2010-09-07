@@ -4,6 +4,9 @@ Utility functions
 =================
 
 pypol module has some utility functions to work with polynomials:
+
+.. hlist::
+
     * :func:`polynomial`
     * :func:`algebraic_fraction`
     * :func:`monomial`

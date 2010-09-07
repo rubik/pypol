@@ -40,11 +40,11 @@ def polynomial(string=None, simplify=True):
     '''
     Returns a :class:`Polynomial` object.
 
-    string is a string that represent a polynomial, default is None.
-    If simplify is True, the polynomial will be simplified on __init__ and on update.
+    *string* is a string that represent a polynomial, default is None.
+    If *simplify* is True, the polynomial will be simplified on __init__ and on update.
 
     **Syntax rules**
-        Powers can be expressed using the *^* symbol. If a digit follows a letter then it is interpreted as an exponent. So the following expressions are be equal::
+        Powers can be expressed using the *^* symbol. If a digit follows a letter then it is interpreted as an exponent. So the following expressions are equal::
 
             >>> polynomial('2x^3y^2 + 1') == polynomial('2x3y2 + 1')
             True
@@ -112,7 +112,7 @@ def monomial(c, **vars):
     Equivalent to::
 
         def monomial(c, **vars):
-            return Polynomial(((c, vars)))
+            return Polynomial(((c, vars),))
     '''
 
     return Polynomial(((c, vars),))
@@ -369,7 +369,7 @@ class Polynomial(object):
 
     *monomials* is a tuple of tuples that represents all the polynomial's monomials.
 
-    If *simplify* is True, then the polynomial will be simplified on __init__ and on :meth:`update`.
+    If *simplify* is True, then the polynomial will be simplified on __init__ and on :meth:`Polynomial.update`.
 
     .. seealso::
         :meth:`simplify`
