@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 '''
-pypol - a Python library to manipulate polynomials (and monomails too)
+pypol - a Python library to manipulate polynomials (and monomials too)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
@@ -70,13 +70,16 @@ def polynomial(string=None, simplify=True):
 
 def algebraic_fraction(s1, s2='1', simplify=True):
     '''
-    Wrapper function that returns an :class:AlgebraicFraction object.
+    Wrapper function that returns an :class:`AlgebraicFraction` object.
     *s1* and *s2* are two strings that represent a polynomial::
 
         >>> algebraic_fraction('3x^2 - 4xy', 'x + y')
         AlgebraicFraction(+ 3x² - 4xy, + x + y)
         >>> algebraic_fraction('3x^2 - 4xy', 'x + y').terms
         (+ 3x^2 - 4xy, + x + y)
+
+    .. seealso::
+        :class:`AlgebraicFraction`
     '''
 
     return AlgebraicFraction(polynomial(s1), polynomial(s2), simplify)
@@ -223,7 +226,8 @@ def parse_polynomial(string, max_length=None):
         >>> parse_polynomial('x3 - 3y2 + 2')
         [(1, {'x': 3}), (-3, {'y': 2}), (2, {})]
     
-    See :func:`polynomial`'s syntax rules.
+    .. seealso::
+        :func:`polynomial`'s syntax rules.
     '''
 
     monomials = []
@@ -289,7 +293,8 @@ def random_poly(coeff_range=xrange(-10, 11), len_=None, letters='xyz', max_lette
 
 def root(poly, k=0.5, epsilon=10**-8):
     '''
-    Finds the root of the polynomial *poly* using the *bisection* method [#f1]_.
+    Finds the root of the polynomial *poly* using the *bisection method* [#f1]_.
+    Before it tries ``poly.zeros``.
     When it finds the root, it checks if -root is a root too. If so, it returns a two-length tuple, else a tuple
     with one root.
     *k* is the increment of the two extreme point. The increment is calculated with the following formula::
@@ -308,6 +313,9 @@ def root(poly, k=0.5, epsilon=10**-8):
     if epsilon > 5:
         raise ValueError('epsilon cannot be greater than 5')
 
+    if poly.zeros and poly.zeros != NotImplemented:
+        return poly.zeros
+
     _d = lambda a, b: a * b < 0 # Check if discordant
     a, b = -50, 45
     while abs(a - b) > 2*epsilon:
@@ -318,9 +326,7 @@ def root(poly, k=0.5, epsilon=10**-8):
             a = media
         else: # Not discordant
             a, b = a + a*k, b + b*k
-    if media != 0 and not poly(-int(media)):
-        return (int(media), -int(media))
-    return (int(media),)
+    return int(media)
 
 def _parse_coeff(c):
     if not c:
@@ -363,7 +369,11 @@ class Polynomial(object):
 
     *monomials* is a tuple of tuples that represents all the polynomial's monomials.
 
-    If *simplify* is True, then the polynomial will be simplified on __init__ and on :meth:`update`. See also :meth:`simplify`
+    If *simplify* is True, then the polynomial will be simplified on __init__ and on :meth:`update`.
+
+    .. seealso::
+        :meth:`simplify`
+
     An example::
 
         >>> monomials = ((2, {'x': 3}), (4, {'x': 1, 'y': 1}))
@@ -377,6 +387,12 @@ class Polynomial(object):
         >>> p = Polynomial(parse_polynomial('2x^3 + 4xy'))
         >>> p
         + 2x^3 + 4xy
+        >>> p = Polynomial(parse_polynomial('2x^3 + 4xy - 2xy + 4 - 3'), simplify=False)
+        >>> p
+        + 2x^3 + 4xy - 2xy + 4 - 3
+        >>> p.simplify()
+        >>> p
+        + 2x^3 + 2xy + 1
 
     We can use the :func:`parse_polynomial` function too.
     '''
@@ -674,7 +690,8 @@ class Polynomial(object):
              'x': [3, 0, 1, 0],
              }
 
-        See also :meth:`powers`.
+        ..seealso::
+            :meth:`powers`.
         '''
 
         if not letter:
@@ -703,7 +720,8 @@ class Polynomial(object):
             KeyError: 'letter not in polynomial'
 
         It raises KeyError if the letter is not in the polynomial.
-        See also :meth:`min_power`.
+        ..seealso::
+            :meth:`min_power`.
         '''
 
         if letter not in self.letters:
@@ -728,7 +746,8 @@ class Polynomial(object):
             KeyError: 'letter not in polynomial'
 
         It raises KeyError if the letter is not in the polynomial.
-        See also :meth:`max_power`.
+        ..seealso::
+            :meth:`max_power`.
         '''
 
         if letter not in self.letters:
@@ -835,7 +854,8 @@ class Polynomial(object):
             >>> Polynomial(parse_polynomial('3x^3 - a^2 + a - 5')).isordered('a')
             True
 
-        See also :meth:`iscomplete`.
+        .. seealso::
+            :meth:`iscomplete`.
         '''
 
         if not letter:
@@ -899,7 +919,7 @@ class Polynomial(object):
         return wrapper
 
     @ check_other
-    def update(self, pol_or_monomials=None):
+    def update(self, pol_or_monomials=None, simplify=None):
         '''
         Updates the polynomial with another polynomial.
         This does not create a new instance, but replaces self.monomials with others monomials, then it simplifies.
@@ -948,9 +968,12 @@ class Polynomial(object):
             :meth:`append`.
         '''
 
+        if simplify is None:
+            simplify = self._simplify
+
         if not pol_or_monomials:
             self._monomials = ()
-            if self._simplify:
+            if simplify:
                 self.simplify()
             return self
 
@@ -1353,6 +1376,9 @@ class AlgebraicFraction(object):
 
         >>> AlgebraicFraction(a, b)
         AlgebraicFraction(+ 3x - 5, + 2a)
+
+    .. seealso::
+        :func:`algebraic_fraction`
     '''
 
     __slots__ = ('_numerator', '_denominator', '_simplify',)
