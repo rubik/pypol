@@ -304,7 +304,11 @@ def root(poly, k=0.5, epsilon=10**-8):
     So, if *a* is 50, after the increment ``50 + 50*0.5`` *a* will be 75.
     *epsilon* sets the precision of the calculation. Smaller it is, greater is the precision.
 
-    .. warning:: If *epsilon* is bigger than 5 :exc:`ValueError` is raised.
+    .. warning:: If *epsilon* is bigger than 5 or *k* is negative, :exc:`ValueError` is raised.
+    .. warning:: NotImplemented is returned when:
+
+            * *poly* has more than one letter
+            * the root is a complex number
     '''
 
     if k < 0:
@@ -315,6 +319,12 @@ def root(poly, k=0.5, epsilon=10**-8):
 
     if poly.zeros and poly.zeros != NotImplemented:
         return poly.zeros
+
+    if len(poly.letters) != 1:
+        return NotImplemented
+
+    if all(coeff > 0 for coeff in poly.coefficient) and all(exp & 1 == 0 for exp in poly.powers(poly.letters[0])):
+        return NotImplemented
 
     _d = lambda a, b: a * b < 0 # Check if discordant
     a, b = -50, 45
@@ -644,11 +654,12 @@ class Polynomial(object):
         **property**
 
         Returns a tuple containing all the polynomial's zeros.
-        Returns NotImplemented when:
+        .. warning::
+            Returns NotImplemented when:
 
-        * there are more than one letters
-        * there isn't the right-hand side and there are more than one letters or the sum of the polynomial's
-            coefficients is not 0
+            * there are more than one letter
+            * there isn't the right-hand side and there are more than one letter or the sum of the polynomial's
+                coefficients is not 0
 
         For example::
 

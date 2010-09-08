@@ -82,4 +82,4 @@ root
 
 .. rubric:: Footnotes
 
-.. [#f1] See 'wikipedia http://en.wikipedia.org/wiki/Bisection_method'_
+.. [#f1] See `wikipedia <http://en.wikipedia.org/wiki/Bisection_method>`_
