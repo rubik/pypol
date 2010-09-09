@@ -5,17 +5,20 @@
 
 .. module:: pypol
 
-Welcome to pypol's documentation!
-=================================
+Welcome to pypol v0.1 documentation!
+====================================
 
 pypol is a Python library that allows you to manipulate polynomials. This is the main page of the documentation.
 
 Contents:
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 3
+   :numbered:
    
    tutorial.rst
    classes.rst
    functions.rst
    operations.rst
+   overloading.rst
+   contacts.rst

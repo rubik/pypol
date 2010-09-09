@@ -245,18 +245,46 @@ def parse_polynomial(string, max_length=None):
 
     return monomials
 
-def random_poly(coeff_range=xrange(-10, 11), len_=None, letters='xyz', max_letters=3, exp_range=xrange(1, 6), right_hand_side=None):
+def random_poly(coeff_range=xrange(-10, 11), len_=None, letters='xyz', max_letters=3, unique=False, exp_range=xrange(1, 6), right_hand_side=None):
     '''
     Returns a polynomial generated randomly.
 
-    * coeff_range is the range of the polynomial's coefficients, default is ``xrange(-10, 11)``.
-    * len\_ is the len of the polynomial. Default is None, in this case len\_ will be a random number chosen in coeff_range.
-    * letters are the letters that appear in the polynomial.
-    * max_letter is the maximum number of letter for every monomial.
-    * exp_range is the range of the exponents.
-    * if right_hand_side is True the polynomial will have a right_hand_side. Default is None, that means the right_hand_side will be chosen randomly.
+    *coeff_range* is the range of the polynomial's coefficients, default is ``xrange(-10, 11)``.
 
-    ::
+    *len\_* is the len of the polynomial. Default is None, in this case len\_ will be a random number chosen in coeff_range. If *len\_* is negative it will be coerced to be positive: ``len_ = -len_``.
+
+    *letters* are the letters that appear in the polynomial.
+
+    *max_letter* is the maximum number of letter for every monomial.
+
+    if *unique* is True all the polynomial's monomials will have the same letter (chosen randomly).
+    For example, if you want to generate a polynomial with a letter only, you can do::
+
+        >>> random_poly(letters='x')
+        + 3x^5 - 10x^4 - 4x^3 + x - 9
+        >>> random_poly(letters='x')
+        - 12x^4 - 6x^2
+        >>> random_poly(letters='z')
+        + 8z^5 - 7z^3 + 10z^2 + 10
+        >>> random_poly(letters='y')
+        - 12y^5 - 15y^4 - y^3 + 9y^2 + 4y
+
+    or::
+
+        >>> random_poly(unique=True)
+        + 6z^5 - 8z^4 + 6z^3 + 7z^2 + 2z
+        >>> random_poly(unique=True)
+        - 2z^5 + 3
+        >>> random_poly(unique=True)
+        - 19y^5 - y^4 - 8y^3 - 5y^2 - 4y
+        >>> random_poly(unique=True)
+        - 2x^4 - 10x^3 + 2x^2 + 3
+
+    *exp_range* is the range of the exponents.
+
+    if *right_hand_side* is True the polynomial will have a right-hand side. Default is None, that means the right-hand side will be chosen randomly.
+
+    Some examples::
 
         >>> random_poly()
          + 2x^4y^5 + 3y^5 + 5xy^5 + 10x^2y^3z^3 - 5z
@@ -275,18 +303,28 @@ def random_poly(coeff_range=xrange(-10, 11), len_=None, letters='xyz', max_lette
         >>> random_poly(letters='abcdef', max_letters=2, exp_range=xrange(0, 20, 5))
         - 7e^15 + 5d^15 - 10c^15 - 9b^10 - 12e^5 - 12c^5 - 2f^5
     '''
+
     if not len_:
         len_ = random.choice(coeff_range)
-    if len_ < 0:
-        len_ = -len_
-    monomials = []
-    for _ in xrange((len_ - 1 if right_hand_side else len_)):
-        vars = {} ## Change on Py2.7
-        for __ in xrange(random.randint(1, max_letters)):
-            vars[random.choice(letters)] = random.choice(exp_range)
-        monomials.append((random.choice(coeff_range), vars))
     if not right_hand_side:
         right_hand_side = random.choice((True, False,))
+    if len_ < 0:
+        len_ = -len_
+
+    if unique:
+        letter = random.choice(letters)
+
+    monomials = []
+    for _ in xrange((len_ - 1 if right_hand_side else len_)):
+        vars = {}
+
+        if unique:
+            vars[letter] = random.choice(exp_range)
+        else:
+            for __ in xrange(random.randint(1, max_letters)):
+                vars[random.choice(letters)] = random.choice(exp_range)
+
+        monomials.append((random.choice(coeff_range), vars))
     if right_hand_side:
         monomials.append((random.choice(coeff_range), {}))
     return Polynomial(monomials)
@@ -305,10 +343,10 @@ def root(poly, k=0.5, epsilon=10**-8):
     *epsilon* sets the precision of the calculation. Smaller it is, greater is the precision.
 
     .. warning:: If *epsilon* is bigger than 5 or *k* is negative, :exc:`ValueError` is raised.
-    .. warning:: NotImplemented is returned when:
+    .. warning:: NotImplemented is returned if:
 
             * *poly* has more than one letter
-            * the root is a complex number
+            * or the root is a complex number
     '''
 
     if k < 0:
@@ -323,7 +361,7 @@ def root(poly, k=0.5, epsilon=10**-8):
     if len(poly.letters) != 1:
         return NotImplemented
 
-    if all(coeff > 0 for coeff in poly.coefficient) and all(exp & 1 == 0 for exp in poly.powers(poly.letters[0])):
+    if all(coeff > 0 for coeff in poly.coefficients) and all(exp & 1 == 0 for exp in poly.powers(poly.letters[0])):
         return NotImplemented
 
     _d = lambda a, b: a * b < 0 # Check if discordant
@@ -379,7 +417,7 @@ class Polynomial(object):
 
     *monomials* is a tuple of tuples that represents all the polynomial's monomials.
 
-    If *simplify* is True, then the polynomial will be simplified on __init__ and on :meth:`Polynomial.update`.
+    If *simplify* is True, then the polynomial will be simplified on __init__ and on :meth:`update`.
 
     .. seealso::
         :meth:`simplify`
@@ -442,7 +480,7 @@ class Polynomial(object):
 
     def ordered_monomials(self, cmp=None, key=None, reverse=False):
         '''
-        Applies :func:`sorted` to self.monomials, with *cmp*, *key* and *reverse* arguments.
+        Applies :func:`sorted` to the polynomial's monomials, with *cmp*, *key* and *reverse* arguments.
         '''
 
         return sorted(self._monomials, cmp, key, reverse)
