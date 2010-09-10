@@ -30,8 +30,8 @@ import re                          ## 2 used times
 
 
 __author__ = 'Michele Lacchia'
-__version__ = (0, 1)
-__version_str__ = '0.1'
+__version__ = (0, 2)
+__version_str__ = '0.2'
 
 __all__ = ['polynomial', 'algebraic_fraction', 'monomial', 'gcd', 'lcm', 'gcd_p', 'lcm_p', 'are_similar', 'make_polynomial', 'parse_polynomial', 'random_poly', 'root', 'Polynomial', 'AlgebraicFraction',]
 
@@ -40,28 +40,11 @@ def polynomial(string=None, simplify=True):
     '''
     Returns a :class:`Polynomial` object.
 
-    *string* is a string that represent a polynomial, default is None.
-    If *simplify* is True, the polynomial will be simplified on __init__ and on update.
-
-    **Syntax rules**
-        Powers can be expressed using the *^* symbol. If a digit follows a letter then it is interpreted as an exponent. So the following expressions are equal::
-
-            >>> polynomial('2x^3y^2 + 1') == polynomial('2x3y2 + 1')
-            True
-
-        but if there is a white space after the letter then the digit is interpreted as a positive coefficient.
-        So this::
-
-            >>> polynomial('2x3y 2 + 1')
-
-        represents this polynomial::
-
-             2x^3y + 3
-
-        ::
-
-            >>> polynomial('2x3y 2 + 1')
-            + 2x^3y + 3
+    :param string: a string that represent a polynomial, default is None.
+    :param simplify: if True, the polynomial will be simplified on __init__ and on update.
+    :type string: string or None
+    :type simplify: bool
+    :rtype: :class:`Polynomial`
     '''
 
     if not string:
@@ -71,7 +54,10 @@ def polynomial(string=None, simplify=True):
 def algebraic_fraction(s1, s2='1', simplify=True):
     '''
     Wrapper function that returns an :class:`AlgebraicFraction` object.
-    *s1* and *s2* are two strings that represent a polynomial::
+
+    :parameters s1, s2: two strings that represent a polynomial
+
+    ::
 
         >>> algebraic_fraction('3x^2 - 4xy', 'x + y')
         AlgebraicFraction(+ 3x² - 4xy, + x + y)
@@ -84,35 +70,44 @@ def algebraic_fraction(s1, s2='1', simplify=True):
 
     return AlgebraicFraction(polynomial(s1), polynomial(s2), simplify)
 
-def monomial(c, **vars):
+def monomial(c=1, **vars):
     '''
     Simple function that returns a :class:`Polynomial` object.
-    *c* is the coefficient of the polynomial, *\*\*vars* are the monomial's letters::
 
-       >>> monomial(5, a=3, b=4)
-       + 5a^3b^4
-       >>> m = monomial(5, a=3, b=4)
-       >>> m
-       + 5a^3b^4
-       >>> type(m)
-       <class 'pypol.src.pypol.Polynomial'>
-       >>> m.monomials
-       ((5, {'a': 3, 'b': 4}),)
+    :param c: the coefficient of the polynomial
+    :param \*\*vars: the monomial's letters
+
+    ::
+
+        >>> monomial(5, a=3, b=4)
+        + 5a^3b^4
+        >>> m = monomial(5, a=3, b=4)
+        >>> m
+        + 5a^3b^4
+        >>> type(m)
+        <class 'pypol.src.pypol.Polynomial'>
+        >>> m.monomials
+        ((5, {'a': 3, 'b': 4}),)
 
     This function is useful when you need a monomial. If there isn't this function you should do::
 
        >>> Polynomial(((5, {'a': 3, 'b': 4}),))
        + 5a^3b^4
 
-    *\*\*vars* is optional::
+    Either *c* or *\*\*vars* is optional::
 
-       >>> monomial(1)
-       + 1
+        >>> monomial()
+        + 1
+        >>> monomial(1)
+        + 1
+
 
     Equivalent to::
 
-        def monomial(c, **vars):
+        def monomial(c=1, **vars):
             return Polynomial(((c, vars),))
+
+    .. versionadded:: 0.2
     '''
 
     return Polynomial(((c, vars),))
@@ -120,6 +115,12 @@ def monomial(c, **vars):
 def make_polynomial(monomials, simplify=True):
     '''
     Make a polynomial from a list of tuples.
+
+    :param monomials: list of monomials
+    :param simplify: if True, it simplifies the monomial on __init__ and :meth:`Polynomial.update`
+    :type monomials: list of tuples
+    :type simplify: bool
+
     For example::
 
         >>> make_polynomial(parse_polynomial('2x + 3y - 4'))
@@ -217,17 +218,20 @@ def parse_polynomial(string, max_length=None):
     '''
     Parses a string that represent a polynomial.
     It can parse integer coefficients, float coefficient and fractional coefficient.
-    max_length represent the maximum length that the polynomial can have.
 
-    An example:::
+    :param string: a string that represent a polynomial
+    :param max_length: represents the maximum length that the polynomial can have.
+    :type max_length: integer or None
+
+    An example::
 
         >>> parse_polynomial('2x^3 - 3y + 2')
         [(2, {'x': 3}), (-3, {'y': 1}), (2, {})]
         >>> parse_polynomial('x3 - 3y2 + 2')
         [(1, {'x': 3}), (-3, {'y': 2}), (2, {})]
-    
+
     .. seealso::
-        :func:`polynomial`'s syntax rules.
+        :ref:`_syntax-rules`
     '''
 
     monomials = []
@@ -249,40 +253,44 @@ def random_poly(coeff_range=xrange(-10, 11), len_=None, letters='xyz', max_lette
     '''
     Returns a polynomial generated randomly.
 
-    *coeff_range* is the range of the polynomial's coefficients, default is ``xrange(-10, 11)``.
+    :param coeff_range: the range of the polynomial's coefficients, default is ``xrange(-10, 11)``.
 
-    *len\_* is the len of the polynomial. Default is None, in this case len\_ will be a random number chosen in coeff_range. If *len\_* is negative it will be coerced to be positive: ``len_ = -len_``.
+    :param len\_: the len of the polynomial. Default is None, in this case len\_ will be a random number chosen in coeff_range. If *len\_* is negative it will be coerced to be positive: ``len_ = -len_``.
 
-    *letters* are the letters that appear in the polynomial.
+    :param letters: the letters that appear in the polynomial.
 
-    *max_letter* is the maximum number of letter for every monomial.
+    :param max_letter: is the maximum number of letter for every monomial.
 
-    if *unique* is True all the polynomial's monomials will have the same letter (chosen randomly).
-    For example, if you want to generate a polynomial with a letter only, you can do::
+    :param unique: if True, all the polynomial's monomials will have the same letter (chosen randomly).
+        For example, if you want to generate a polynomial with a letter only, you can do::
 
-        >>> random_poly(letters='x')
-        + 3x^5 - 10x^4 - 4x^3 + x - 9
-        >>> random_poly(letters='x')
-        - 12x^4 - 6x^2
-        >>> random_poly(letters='z')
-        + 8z^5 - 7z^3 + 10z^2 + 10
-        >>> random_poly(letters='y')
-        - 12y^5 - 15y^4 - y^3 + 9y^2 + 4y
+            >>> random_poly(letters='x')
+            + 3x^5 - 10x^4 - 4x^3 + x - 9
+            >>> random_poly(letters='x')
+            - 12x^4 - 6x^2
+            >>> random_poly(letters='z')
+            + 8z^5 - 7z^3 + 10z^2 + 10
+            >>> random_poly(letters='y')
+            - 12y^5 - 15y^4 - y^3 + 9y^2 + 4y
 
-    or::
+        or::
 
-        >>> random_poly(unique=True)
-        + 6z^5 - 8z^4 + 6z^3 + 7z^2 + 2z
-        >>> random_poly(unique=True)
-        - 2z^5 + 3
-        >>> random_poly(unique=True)
-        - 19y^5 - y^4 - 8y^3 - 5y^2 - 4y
-        >>> random_poly(unique=True)
-        - 2x^4 - 10x^3 + 2x^2 + 3
+            >>> random_poly(unique=True)
+            + 6z^5 - 8z^4 + 6z^3 + 7z^2 + 2z
+            >>> random_poly(unique=True)
+            - 2z^5 + 3
+            >>> random_poly(unique=True)
+            - 19y^5 - y^4 - 8y^3 - 5y^2 - 4y
+            >>> random_poly(unique=True)
+            - 2x^4 - 10x^3 + 2x^2 + 3
 
-    *exp_range* is the range of the exponents.
+        .. versionadded:: 0.2
 
-    if *right_hand_side* is True the polynomial will have a right-hand side. Default is None, that means the right-hand side will be chosen randomly.
+    :param exp_range: the range of the exponents.
+
+    :param right_hand_side: if True, the polynomial will have a right-hand side. Default is None, that means the right-hand side will be chosen randomly.
+
+    :rtype: :class:`Polynomial`
 
     Some examples::
 
@@ -325,8 +333,10 @@ def random_poly(coeff_range=xrange(-10, 11), len_=None, letters='xyz', max_lette
                 vars[random.choice(letters)] = random.choice(exp_range)
 
         monomials.append((random.choice(coeff_range), vars))
+
     if right_hand_side:
         monomials.append((random.choice(coeff_range), {}))
+
     return Polynomial(monomials)
 
 def root(poly, k=0.5, epsilon=10**-8):
@@ -347,6 +357,8 @@ def root(poly, k=0.5, epsilon=10**-8):
 
             * *poly* has more than one letter
             * or the root is a complex number
+
+    .. versionadded:: 0.2
     '''
 
     if k < 0:
@@ -366,14 +378,19 @@ def root(poly, k=0.5, epsilon=10**-8):
 
     _d = lambda a, b: a * b < 0 # Check if discordant
     a, b = -50, 45
-    while abs(a - b) > 2*epsilon:
-        media = (a + b) / 2 # Midpoint
-        if _d(poly(a), poly(media)):
-            b = media
-        elif _d(poly(b), poly(media)):
-            a = media
-        else: # Not discordant
-            a, b = a + a*k, b + b*k
+
+    try:
+        while abs(a - b) > 2*epsilon:
+            media = (a + b) / 2 # Midpoint
+            if _d(poly(a), poly(media)):
+                b = media
+            elif _d(poly(b), poly(media)):
+                a = media
+            else: # Not discordant
+                a, b = a + a*k, b + b*k
+    except OverflowError:
+        return NotImplemented
+
     return int(media)
 
 def _parse_coeff(c):
