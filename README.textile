@@ -12,7 +12,7 @@ Then you can import it normally:
 >>> </pre>
 
 For examples see the github wiki:
-<a href="http://wiki.github.com/rubik/pypol/">here</a>
+<a href="http://www.pypol.altervista.org/">here</a>
 
 
 h2. Documentation

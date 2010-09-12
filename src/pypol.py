@@ -479,7 +479,7 @@ class Polynomial(object):
 
     def __init__(self, monomials=(), simplify=True):
         self._monomials = monomials
-        self._monomials = tuple(sorted(monomials, key=self._key, reverse=True))
+        self.sort(key=self._key, reverse=True)
         self._simplify = simplify
         if self._simplify:
             self.simplify()
@@ -507,7 +507,7 @@ class Polynomial(object):
 
     @ monomials.setter
     def monomials(self, values):
-        self._monomials = tuple(sorted(values, key=self._key, reverse=True))
+        self.sort(values, key=self._key, reverse=True)
 
     def ordered_monomials(self, cmp=None, key=None, reverse=False):
         '''
@@ -515,6 +515,21 @@ class Polynomial(object):
         '''
 
         return sorted(self._monomials, cmp, key, reverse)
+
+    def sort(self, cmp=None, key=None, reverse=False):
+        '''
+        Sort the polynomial's monomials in-place::
+
+            >>> k = Polynomial(parse_polynomial('x2 -y2 xy'))
+            >>> k.sort()
+            >>> k
+            - y^2 + x^2 + xy
+            >>> k.sort(key=k._key, reverse=True) ## 
+            >>> k
+            + x^2 + xy - y^2
+        '''
+
+        self._monomials = tuple(self.ordered_monomials(cmp, key, reverse))
 
     @ property
     def coefficients(self):
@@ -808,7 +823,7 @@ class Polynomial(object):
              'x': [3, 0, 1, 0],
              }
 
-        ..seealso::
+        .. seealso::
             :meth:`powers`.
         '''
 
@@ -838,7 +853,7 @@ class Polynomial(object):
             KeyError: 'letter not in polynomial'
 
         It raises KeyError if the letter is not in the polynomial.
-        ..seealso::
+        .. seealso::
             :meth:`min_power`.
         '''
 
@@ -864,7 +879,7 @@ class Polynomial(object):
             KeyError: 'letter not in polynomial'
 
         It raises KeyError if the letter is not in the polynomial.
-        ..seealso::
+        .. seealso::
             :meth:`max_power`.
         '''
 
@@ -1137,7 +1152,7 @@ class Polynomial(object):
             :meth:`update`.
         '''
 
-        self._monomials = tuple(sorted(pol_or_monomials._monomials + self._monomials, key=self._key, reverse=True))
+        self.sort(pol_or_monomials._monomials + self._monomials, key=self._key, reverse=True)
         self.simplify()
 
     def div_all(self, poly):
@@ -1200,14 +1215,16 @@ class Polynomial(object):
         self._monomials = tuple(tmp_monomials)
         self.simplify()
 
-    def _key(self, a):
+    def _key(self, letter=None):
         '''
         Comparator function used to sort the polynomial's monomials. You should not change it nor call it.
             See (NotImplemented)
         '''
 
-        letter = self.max_letter()
-        return a[1].get(letter, 0)
+        if not letter:
+            letter = self.max_letter()
+
+        return (lambda item: item[1].get(letter, 0))
 
     def _make_complete(self, letter):
         '''
@@ -1320,7 +1337,7 @@ class Polynomial(object):
     def __setitem__(self, b, v):
         tmp_monomials = list(self._monomials)
         tmp_monomials[b] = v
-        self._monomials = tuple(sorted(tmp_monomials, key=self._key, reverse=True))
+        self.sort(tmp_monomials, key=self._key, reverse=True)
 
     def __delitem__(self, b):
         tmp_monomials = list(self._monomials)

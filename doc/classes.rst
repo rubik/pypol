@@ -43,6 +43,8 @@ The main class in pypol is :class:`Polynomial`:
 
     .. automethod:: joint_letters()
 
+    .. automethod:: max_letter(alphabetically=True)
+
     .. automethod:: eval_form()
 
     .. automethod:: right_hand_side()
