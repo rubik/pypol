@@ -10,14 +10,17 @@ pypol module has some utility functions to work with polynomials:
     * :func:`polynomial`
     * :func:`algebraic_fraction`
     * :func:`monomial`
-    * :func:`gcd`
-    * :func:`gcd_p`
-    * :func:`lcm`
-    * :func:`lcm_p`
     * :func:`make_polynomial`
     * :func:`parse_polynomial`
     * :func:`random_poly`
     * :func:`root`
+
+.. Temporary down:
+    * :func:`gcd`
+    * :func:`gcd_p`
+    * :func:`lcm`
+    * :func:`lcm_p`
+
 
 polynomial
 ----------

@@ -75,7 +75,7 @@ def monomial(c=1, **vars):
     Simple function that returns a :class:`Polynomial` object.
 
     :param c: the coefficient of the polynomial
-    :param \*\*vars: the monomial's letters
+    :key \*\*vars: the monomial's letters
 
     ::
 
@@ -231,7 +231,7 @@ def parse_polynomial(string, max_length=None):
         [(1, {'x': 3}), (-3, {'y': 2}), (2, {})]
 
     .. seealso::
-        :ref:`_syntax-rules`
+        :ref:`syntax-rules`
     '''
 
     monomials = []
@@ -342,7 +342,7 @@ def random_poly(coeff_range=xrange(-10, 11), len_=None, letters='xyz', max_lette
 def root(poly, k=0.5, epsilon=10**-8):
     '''
     Finds the root of the polynomial *poly* using the *bisection method* [#f1]_.
-    Before it tries ``poly.zeros``.
+    Before trying to find the root, it tries ``poly.zeros``.
     When it finds the root, it checks if -root is a root too. If so, it returns a two-length tuple, else a tuple
     with one root.
     *k* is the increment of the two extreme point. The increment is calculated with the following formula::
@@ -389,9 +389,22 @@ def root(poly, k=0.5, epsilon=10**-8):
             else: # Not discordant
                 a, b = a + a*k, b + b*k
     except OverflowError:
+        print 'Errore!'
         return NotImplemented
 
     return int(media)
+
+def factors(poly):
+    '''
+    
+    '''
+
+    r = root(poly)
+    if r in (0, NotImplemented):
+        return (poly,)
+
+    p = polynomial(poly.letters[0]) - r
+    return (poly / p, p)
 
 def _parse_coeff(c):
     if not c:
@@ -465,7 +478,8 @@ class Polynomial(object):
     __slots__ = ('_monomials', '_simplify',)
 
     def __init__(self, monomials=(), simplify=True):
-        self._monomials = tuple(sorted(monomials, cmp=self._cmp, reverse=True))
+        self._monomials = monomials
+        self._monomials = tuple(sorted(monomials, key=self._key, reverse=True))
         self._simplify = simplify
         if self._simplify:
             self.simplify()
@@ -493,7 +507,7 @@ class Polynomial(object):
 
     @ monomials.setter
     def monomials(self, values):
-        self._monomials = sorted(values, cmp=self._cmp, reverse=True)
+        self._monomials = tuple(sorted(values, key=self._key, reverse=True))
 
     def ordered_monomials(self, cmp=None, key=None, reverse=False):
         '''
@@ -609,10 +623,7 @@ class Polynomial(object):
             3
         '''
 
-        try:
-            return max([sum(monomial[1].values()) for monomial in self._monomials])
-        except ValueError:
-            return 0
+        return max([sum(monomial[1].values()) for monomial in self._monomials] + [0])
 
     @ property
     def eval_form(self):
@@ -685,6 +696,41 @@ class Polynomial(object):
             return self.letters
         return tuple(reduce(operator.and_, [set(monomial[1].keys()) for monomial in self.monomials]))
 
+    def max_letter(self, alphabetically=True):
+        '''
+        Returns the letter with the maximum power in the polynomial.
+
+        :param bool alphabetically: if True and if there is more than one letter with the same exponent, will be chosen the first letter in alphabetical order, the last otherwise (when ``alphabetically=False``).
+        :rtype: string
+
+        Some examples::
+
+            
+        '''
+
+        if alphabetically:
+            cmp = operator.lt
+        else:
+            cmp = operator.gt
+
+        if not self.letters:
+            max_, letter_ = float('-inf'), chr(255)
+        else:
+            max_ = self.max_power(self.letters[0])
+            letter_ = self.letters[0]
+
+        for letter in self.letters[1:]:
+            power = self.max_power(letter)
+            if power > max_:
+                max_ = power
+                letter_ = letter
+            elif power == max_:
+                if cmp(letter, letter_):
+                    max_ = power
+                    letter_ = letter
+
+        return letter_
+
     @ property
     def right_hand_side(self):
         '''
@@ -708,18 +754,24 @@ class Polynomial(object):
         '''
         **property**
 
-        Returns a tuple containing all the polynomial's zeros.
+        Returns a tuple containing all the polynomial's zeros, based on the right-hand side.
+
         .. warning::
             Returns NotImplemented when:
 
-            * there are more than one letter
-            * there isn't the right-hand side and there are more than one letter or the sum of the polynomial's
+            * there is more than one letter
+            * there isn't the right-hand side and there is more than one letter or the sum of the polynomial's
                 coefficients is not 0
 
         For example::
 
             >>> Polynomial(parse_polynomial('2x - 4')).zeros
             (2,)
+            >>> Polynomial(parse_polynomial('2x')).zeros
+            NotImplemented
+            >>> Polynomial(parse_polynomial('2xy')).zeros
+            NotImplemented
+            >>> 
         '''
 
         if len(self.letters) - 1: ## Polynomial has more than one letter or none
@@ -1085,7 +1137,7 @@ class Polynomial(object):
             :meth:`update`.
         '''
 
-        self._monomials = tuple(sorted(pol_or_monomials._monomials + self._monomials, cmp=self._cmp, reverse=True))
+        self._monomials = tuple(sorted(pol_or_monomials._monomials + self._monomials, key=self._key, reverse=True))
         self.simplify()
 
     def div_all(self, poly):
@@ -1148,20 +1200,14 @@ class Polynomial(object):
         self._monomials = tuple(tmp_monomials)
         self.simplify()
 
-    def _cmp(self, a, b):
+    def _key(self, a):
         '''
         Comparator function used to sort the polynomial's monomials. You should not change it nor call it.
             See (NotImplemented)
         '''
 
-        ma = max(a[1].values() + [0])
-        mb = max(b[1].values() + [0])
-        if ma > mb:
-            return 1
-        elif ma == mb:
-            return 0
-        else:
-            return -1
+        letter = self.max_letter()
+        return a[1].get(letter, 0)
 
     def _make_complete(self, letter):
         '''
@@ -1216,7 +1262,7 @@ class Polynomial(object):
 
         if print_format:
             return tmp_coefficient + ''.join(var_list).replace('^', '') \
-                .replace('0', unichr(8304)).replace('1', unichr(185)) \
+                .replace('0', unichr(8304)).replace('1', unichr(8305)) \
                 .replace('2', unichr(178)).replace('3', unichr(179)) \
                 .replace('4', unichr(8308)).replace('5', unichr(8309)) \
                 .replace('6', unichr(8310)).replace('7', unichr(8311)) \
@@ -1274,7 +1320,7 @@ class Polynomial(object):
     def __setitem__(self, b, v):
         tmp_monomials = list(self._monomials)
         tmp_monomials[b] = v
-        self._monomials = tuple(sorted(tmp_monomials, cmp=self._cmp, reverse=True))
+        self._monomials = tuple(sorted(tmp_monomials, key=self._key, reverse=True))
 
     def __delitem__(self, b):
         tmp_monomials = list(self._monomials)

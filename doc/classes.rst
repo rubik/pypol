@@ -155,7 +155,7 @@ The main class in pypol is :class:`Polynomial`:
 
     .. automethod:: simplify
 
-    .. automethod:: _cmp
+    .. automethod:: _key
 
     .. automethod:: _make_complete
 
