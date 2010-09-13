@@ -8,6 +8,10 @@
 Welcome to pypol v0.1 documentation!
 ====================================
 
+:Author: Michele Lacchia (michelelacchia@gmail.com)
+:Release: |release|
+:Date: |today|
+
 pypol is a Python library that allows you to manipulate polynomials. This is the main page of the documentation.
 
 Contents:

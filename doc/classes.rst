@@ -74,7 +74,7 @@ The main class in pypol is :class:`Polynomial`:
         Updates the polynomial with another polynomial.
         This does not create a new instance, but replaces self.monomials with others monomials, then it simplifies.
 
-        pol_or_monomials can be:
+        *pol_or_monomials* can be:
           * a polynomial
           * a tuple of monomials
           * a string that will be passed to :func:`parse_polynomial`
@@ -112,46 +112,48 @@ The main class in pypol is :class:`Polynomial`:
 
             >>> p.update('2c - 4a').raw_powers()
             {'a': [0, 1], 'c': [1, 0]}
-            >>> p
-            + 2c - 4a
-            >>> p.update('3x^2 - x + 5').iscomplete()
-            True
-            >>> p
-            + 3x^2 - x + 5
+           >>> p
+           + 2c - 4a
+           >>> p.update('3x^2 - x + 5').iscomplete()
+           True
+           >>> p
+           + 3x^2 - x + 5
 
-        .. seealso::
-            :meth:`append`.
+       .. seealso::
+           :meth:`append`.
 
     .. method:: append(pol_or_monomials)
 
-        Appends the given monomials to self.monomials, then simplifies.
+       Appends the given monomials to self.monomials, then simplifies.
 
-        pol_or_monomials can be:
+       *pol_or_monomials* can be:
           * a polynomial
           * a string
           * a tuple of monomials
           * an integer
 
-        ::
+       ::
 
-            >>> p = Polynomial(parse_polynomial('3x^2 - ax + 5'))
-            >>> p
-            + 3x^2 - ax + 5
-            >>> p.append('x^3')
-            >>> p
-            + x^3 + 3x^2 - ax + 5
-            >>> p.append(-4)
-            >>> p
-            + x^3 + 3x^2 - ax + 1
-            >>> p.append(((-1, {'a': 1, 'x': 1}),)) ## The comma!
-            >>> p
-            + x^3 + 3x^2 - 2ax + 1
-            >>> p.append(Polynomial(parse_polynomial('-x^3 + ax + 4')))
-            >>> p
-            + 3x^2 - ax + 5
+           >>> p = Polynomial(parse_polynomial('3x^2 - ax + 5'))
+           >>> p
+           + 3x^2 - ax + 5
+           >>> p.append('x^3')
+           >>> p
+           + x^3 + 3x^2 - ax + 5
+           >>> p.append(-4)
+           >>> p
+           + x^3 + 3x^2 - ax + 1
+           >>> p.append(((-1, {'a': 1, 'x': 1}),)) ## The comma!
+           >>> p
+           + x^3 + 3x^2 - 2ax + 1
+           >>> p.append(Polynomial(parse_polynomial('-x^3 + ax + 4')))
+           >>> p
+           + 3x^2 - ax + 5
 
-        .. seealso::
-            :meth:`update`.
+       .. seealso::
+           :meth:`update`.
+
+    .. automethod:: insert
 
     .. automethod:: div_all
 

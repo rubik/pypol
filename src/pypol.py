@@ -284,8 +284,6 @@ def random_poly(coeff_range=xrange(-10, 11), len_=None, letters='xyz', max_lette
             >>> random_poly(unique=True)
             - 2x^4 - 10x^3 + 2x^2 + 3
 
-        .. versionadded:: 0.2
-
     :param exp_range: the range of the exponents.
 
     :param right_hand_side: if True, the polynomial will have a right-hand side. Default is None, that means the right-hand side will be chosen randomly.
@@ -310,6 +308,9 @@ def random_poly(coeff_range=xrange(-10, 11), len_=None, letters='xyz', max_lette
         - 9de^5 - 4a^3d^5 - 5d^5 + 4af^3 + 2e^2f - 3f^2
         >>> random_poly(letters='abcdef', max_letters=2, exp_range=xrange(0, 20, 5))
         - 7e^15 + 5d^15 - 10c^15 - 9b^10 - 12e^5 - 12c^5 - 2f^5
+
+    .. versionadded:: 0.2
+        The *unique* parameter.
     '''
 
     if not len_:
@@ -389,7 +390,6 @@ def root(poly, k=0.5, epsilon=10**-8):
             else: # Not discordant
                 a, b = a + a*k, b + b*k
     except OverflowError:
-        print 'Errore!'
         return NotImplemented
 
     return int(media)
@@ -479,7 +479,7 @@ class Polynomial(object):
 
     def __init__(self, monomials=(), simplify=True):
         self._monomials = monomials
-        self.sort(key=self._key, reverse=True)
+        self.sort(key=self._key(), reverse=True)
         self._simplify = simplify
         if self._simplify:
             self.simplify()
@@ -507,7 +507,7 @@ class Polynomial(object):
 
     @ monomials.setter
     def monomials(self, values):
-        self.sort(values, key=self._key, reverse=True)
+        self.sort(key=self._key(), reverse=True)
 
     def ordered_monomials(self, cmp=None, key=None, reverse=False):
         '''
@@ -709,7 +709,7 @@ class Polynomial(object):
 
         if len(self) == 1:
             return self.letters
-        return tuple(reduce(operator.and_, [set(monomial[1].keys()) for monomial in self.monomials]))
+        return tuple(reduce(operator.and_, [set(monomial[1].keys()) for monomial in self.monomials], ()))
 
     def max_letter(self, alphabetically=True):
         '''
@@ -729,10 +729,10 @@ class Polynomial(object):
             cmp = operator.gt
 
         if not self.letters:
-            max_, letter_ = float('-inf'), chr(255)
-        else:
-            max_ = self.max_power(self.letters[0])
-            letter_ = self.letters[0]
+            return False
+
+        max_ = self.max_power(self.letters[0])
+        letter_ = self.letters[0]
 
         for letter in self.letters[1:]:
             power = self.max_power(letter)
@@ -1057,11 +1057,11 @@ class Polynomial(object):
         Updates the polynomial with another polynomial.
         This does not create a new instance, but replaces self.monomials with others monomials, then it simplifies.
 
-        pol_or_monomials can be:
-          * a polynomial
-          * a tuple of monomials
-          * a string that will be passed to :func:`parse_polynomial`
-          * an integer
+        *pol_or_monomials* can be:
+            * a polynomial
+            * a tuple of monomials
+            * a string that will be passed to :func:`parse_polynomial`
+            * an integer
 
         default is None. In this case self.monomials will be updated with an empty tuple.
         ::
@@ -1085,6 +1085,11 @@ class Polynomial(object):
             + 3
             >>> p
             + 3
+
+        If *simplify*, the polynomial will be simplified. Default is None, in this case *simplify* will be equal to self._simplify.
+
+        .. seealso::
+            The __init__ method: :class:`Polynomial`
 
         This method returns the instance, so we can use it::
 
@@ -1152,7 +1157,7 @@ class Polynomial(object):
             :meth:`update`.
         '''
 
-        self.sort(pol_or_monomials._monomials + self._monomials, key=self._key, reverse=True)
+        self._monomials = sorted(pol_or_monomials._monomials + self._monomials, key=self._key(), reverse=True)
         self.simplify()
 
     def div_all(self, poly):
@@ -1207,9 +1212,15 @@ class Polynomial(object):
 
     def insert(self, index, monomial):
         '''
-        Deprecated method
+        Insert a monomial into the polynomial
+
+        :param integer index: the monomial will be inserted before index *index*
+        :param tuple monomial: the monomial that will be inserted
+        
+        .. deprecated:: 0.2
+            Use :meth:`append` instead.
         '''
-        raise DeprecationWarning('This method is deprecated, use append instead')
+        raise DeprecationWarning('This method is deprecated since version 0.2, use append instead')
         tmp_monomials = list(self._monomials)
         tmp_monomials.insert(index, monomial)
         self._monomials = tuple(tmp_monomials)
@@ -1218,13 +1229,13 @@ class Polynomial(object):
     def _key(self, letter=None):
         '''
         Comparator function used to sort the polynomial's monomials. You should not change it nor call it.
-            See (NotImplemented)
+            See (** - 404 Error - **)
         '''
 
         if not letter:
             letter = self.max_letter()
 
-        return (lambda item: item[1].get(letter, 0))
+        return lambda item: item[1].get(letter, 0)
 
     def _make_complete(self, letter):
         '''
@@ -1337,7 +1348,7 @@ class Polynomial(object):
     def __setitem__(self, b, v):
         tmp_monomials = list(self._monomials)
         tmp_monomials[b] = v
-        self.sort(tmp_monomials, key=self._key, reverse=True)
+        self.sort(key=self._key(), reverse=True)
 
     def __delitem__(self, b):
         tmp_monomials = list(self._monomials)
@@ -1347,28 +1358,28 @@ class Polynomial(object):
     def __call__(self, *args, **kwargs):
         '''
         It's also possible to call the polynomial.
-           You can pass the arguments in two ways:
+        You can pass the arguments in two ways:
 
-              * positional way, using *args*
-                * keyword way, using *kwargs*
+            * positional way, using *args*
+            * keyword way, using *kwargs*
 
-            ::
+        ::
 
-                >>> Polynomial(parse_polynomial('3xy + x^2 - 4'))(2, 3)  ## Positional way, x=2, y=3
-                18
-                >>> Polynomial(parse_polynomial('3xy + x^2 - 4'))(y=2, x=3)  ## Keyword way: y=2, x=3
-                23
+            >>> Polynomial(parse_polynomial('3xy + x^2 - 4'))(2, 3)  ## Positional way, x=2, y=3
+            18
+            >>> Polynomial(parse_polynomial('3xy + x^2 - 4'))(y=2, x=3)  ## Keyword way: y=2, x=3
+            23
 
-            When you use *args*, the dictionary is built in this way::
+        When you use *args*, the dictionary is built in this way::
 
-                dict(zip(self.letters[:len(args)], args))
+            dict(zip(self.letters[:len(args)], args))
 
-            *args* has a major priority of *kwargs*, so if you try them both at the same time::
+        *args* has a major priority of *kwargs*, so if you try them both at the same time::
 
-                >>> Polynomial(parse_polynomial('3xy + x^2 - 4'))(2, 3, y=5, x=78)
-                18
+            >>> Polynomial(parse_polynomial('3xy + x^2 - 4'))(2, 3, y=5, x=78)
+            18
 
-            *args* is predominant.
+        *args* is predominant.
         '''
 
         if args:
