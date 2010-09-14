@@ -1,0 +1,16 @@
+0.2:
+    + monomial
+    + Polynomial.sort
+    + Polynomial.coeff_gcd
+    + Polynomial.coeff_lcm
+    + Polynomial.gcd
+    + Polynomial.lcm
+    + Polynomial.joint_letters
+    + Polynomial.max_letter
+    + Polynomial.is_square_diff
+    + Polynomial._key
+    + Polynomial.div_all
+    + testpypol.run
+
+0.1:
+    Initial release

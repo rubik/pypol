@@ -46,8 +46,39 @@ class PolynomialTestCase(unittest.TestCase):
     def testPow(self):
         self.assertEqual(pypol.polynomial('x^2 -2x + 1'), self.c ** 2)
 
+    def testOrderedMonomials(self):
+        self.assertEqual([(-2, {'x': 2}), (1, {'a': 3}), (-1, {'b': 1}), (3, {})], \
+                        self.b.ordered_monomials(key=self.b._key('x'), reverse=True))
+
+    def testSort(self):
+        self.b.sort(key=self.b._key('x'), reverse=True)
+        self.assertEqual(((-2, {'x': 2}), (1, {'a': 3}), (-1, {'b': 1}), (3, {})), self.b.monomials)
+
+    def testCoeffGcd(self):
+        pass
+
+    def testCoeffLcm(self):
+        pass
+
+    def testGcd(self):
+        pass
+
+    def testLcm(self):
+        pass
+
+    def testIsSquareDiff(self):
+        pass
+
+    def testDivAll(self):
+        self.assertEqual(pypol.polynomial('2x^3 + 4xy - 16').div_all(-2), pypol.polynomial('- x^3 - 2xy + 8'))
+
     def testLetters(self):
         self.assertEqual(('a', 'b', 'x'), self.b.letters)
+        self.assertEqual((), pypol.polynomial().letters)
+
+    def testJointLetters(self):
+        self.assertEqual(('a',), self.d.joint_letters)
+        self.assertEqual((), self.a.joint_letters)
 
     def testEvalForm(self):
         self.assertEqual('2*y**5*x**3-4*x**2+2', pypol.polynomial('2x^3y^5 - 4x^2 +2').eval_form)
@@ -68,7 +99,11 @@ class PolynomialTestCase(unittest.TestCase):
         self.assertTrue(self.c.islinear())
 
     def testOrdered(self):
-        pass
+        self.assertTrue(pypol.polynomial('4a3+6a2+4a+5').isordered())
+        self.assertTrue(pypol.polynomial('4a3+6a2+4a+5').isordered('a'))
+        self.assertFalse(pypol.polynomial('a3+b3+c+ab ').isordered())
+        self.assertFalse(pypol.polynomial('a3+b3+c+ab ').isordered('a'))
+        self.assertFalse(pypol.polynomial('a3+b3+c+ab ').isordered('b'))
 
     def testComplete(self):
         self.assertTrue(self.c.iscomplete('x'))
@@ -79,7 +114,7 @@ class PolynomialTestCase(unittest.TestCase):
         self.assertEqual(pypol.polynomial('3x - y + 2'), self.d)
 
     def testEq(self):
-        self.assertTrue(pypol.polynomial('x^3 - 2^x + x - 5'))
+        self.assertTrue(pypol.polynomial('x^3 - 2x^2 + x - 5') == self.a)
 
     def testNe(self):
         self.assertTrue(self.a != self.b)
@@ -110,7 +145,7 @@ class PolynomialTestCase(unittest.TestCase):
 
     def testSetitem(self):
         self.a[2] = (3, {'x': 3, 'y': 4})
-        self.assertEqual(pypol.polynomial('x^3 - 2x^2 + 3x^3y^4 -5'), self.a)
+        self.assertEqual(pypol.polynomial('x^3 + 3x3y4 - 2x^2 -5'), self.a)
 
     def testDelitem(self):
         del self.a[1:3]
@@ -137,6 +172,10 @@ class FunctionsTestCase(unittest.TestCase):
     def testLcm(self):
         pass
 
+
+def run():
+    suite = unittest.TestSuite([PolynomialTestCase(), FunctionsTestCase()])
+    suite.run()
 
 if __name__ == '__main__':
     unittest.main()

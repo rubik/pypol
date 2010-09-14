@@ -527,6 +527,8 @@ class Polynomial(object):
             >>> k.sort(key=k._key, reverse=True) ## 
             >>> k
             + x^2 + xy - y^2
+
+        .. versionadded:: 0.2
         '''
 
         self._monomials = tuple(self.ordered_monomials(cmp, key, reverse))
@@ -560,6 +562,8 @@ class Polynomial(object):
             >>> reduce(fractions.gcd, Polynomial(parse_polynomial('2x^3 + 4xy - 16')).coefficients)
             -2
 
+        .. versionadded:: 0.2
+
         .. seealso::
             :meth:`coeff_lcm`
         '''
@@ -583,6 +587,8 @@ class Polynomial(object):
             >>> reduce(lambda a, b: operator.truediv(a*b, fractions.gcd(a, b), Polynomial(parse_polynomial('2x^3 + 4xy - 16')).coefficients)
             16.0
 
+        .. versionadded:: 0.2
+
         .. seealso::
             :meth:`coeff_gcd`
         '''
@@ -599,10 +605,12 @@ class Polynomial(object):
         '''
         **property**
 
-        Returns the Greatest Common Divisor of the polynomial::
+        Returns the Greatest Common Divisor of the polynomial's monomials::
 
             >>> Polynomial(parse_polynomial('3x^4 - 9x')).gcd
             - 3x
+
+        .. versionadded:: 0.2
         '''
 
         vars = {} ## Change for Py2.7
@@ -615,10 +623,12 @@ class Polynomial(object):
         '''
         **property**
 
-        Returns the Least Common Multiple of the polynomial::
+        Returns the Least Common Multiple of the polynomial's monomials::
 
             >>> Polynomial(parse_polynomial('3x^4 - 9x')).lcm
             + 9x^4
+
+        .. versionadded:: 0.2
         '''
 
         vars = {} ## Change for Py2.7
@@ -709,18 +719,31 @@ class Polynomial(object):
 
         if len(self) == 1:
             return self.letters
-        return tuple(reduce(operator.and_, [set(monomial[1].keys()) for monomial in self.monomials], ()))
+        return tuple(reduce(operator.and_, [set(monomial[1].keys()) for monomial in self.monomials], set()))
 
     def max_letter(self, alphabetically=True):
         '''
         Returns the letter with the maximum power in the polynomial.
 
         :param bool alphabetically: if True and if there is more than one letter with the same exponent, will be chosen the first letter in alphabetical order, the last otherwise (when ``alphabetically=False``).
-        :rtype: string
+        :rtype: string or False, when :meth:`letters` is an empty tuple
 
         Some examples::
 
-            
+            >>> polynomial('2x^3 + 4xy - 16').max_letter()
+            'x'
+            >>> polynomial('2x^3 + 4x2y2 - 16').max_letter()
+            'x'
+            >>> polynomial('2x^3 + 4x2y3 - 16').max_letter(False)
+            'y'
+            >>> polynomial('2x^3 + 4x2y3 - 16').max_letter()
+            'x'
+            >>> polynomial('2x^3 + 4x2y4 - 16').max_letter()
+            'y'
+            >>> polynomial('2x^3 + 4x2y4 - 16').max_letter(False)
+            'y'
+
+        .. versionadded:: 0.2
         '''
 
         if alphabetically:
@@ -950,6 +973,8 @@ class Polynomial(object):
             True
             >>> Polynomial(parse_polynomial('25x^4 - 9')).is_square_diff()
             True
+
+        .. versionadded:: 0.2
         '''
 
         def is_square(n):
@@ -1169,9 +1194,11 @@ class Polynomial(object):
             - 3x
             >>> a.div_all(a.gcd)
             - x^3 + 3
+
+        .. versionadded:: 0.2
         '''
 
-        return sum([Polynomial((monomial,)) / poly for monomial in self._monomials])
+        return sum([Polynomial((monomial,)) / poly for monomial in self._monomials], Polynomial())
 
     def simplify(self):
         '''
@@ -1228,8 +1255,10 @@ class Polynomial(object):
 
     def _key(self, letter=None):
         '''
-        Comparator function used to sort the polynomial's monomials. You should not change it nor call it.
+        Comparator function used to sort the polynomial's monomials. You should neither change it nor call it.
             See (** - 404 Error - **)
+
+        .. versionadded:: 0.2
         '''
 
         if not letter:
@@ -1340,7 +1369,7 @@ class Polynomial(object):
         return Polynomial(self._monomials)
 
     def __deepcopy__(self, p):
-        return Polynomial(self._monomials)
+        return Polynomial(self._monomials, self._simplify)
 
     def __getitem__(self, b):
         return self._monomials[b]
@@ -1348,7 +1377,7 @@ class Polynomial(object):
     def __setitem__(self, b, v):
         tmp_monomials = list(self._monomials)
         tmp_monomials[b] = v
-        self.sort(key=self._key(), reverse=True)
+        self._monomials = sorted(tmp_monomials, key=self._key(), reverse=True)
 
     def __delitem__(self, b):
         tmp_monomials = list(self._monomials)
@@ -1380,6 +1409,9 @@ class Polynomial(object):
             18
 
         *args* is predominant.
+
+        .. versionchanged:: 0.2
+            Added the support for positional and keyword arguments.
         '''
 
         if args:
@@ -1490,9 +1522,6 @@ class Polynomial(object):
         return divmod(self, other)[1]
 
     def __pow__(self, exp, mod=None):
-        '''
-        '''
-
         if exp == 0:
             return Polynomial()
         elif exp < 0:
@@ -1670,7 +1699,7 @@ class AlgebraicFraction(object):
         return AlgebraicFraction(self._numerator, self._denominator)
 
     def __deepcopy__(self, algebraicfraction):
-        return AlgebraicFraction(self._numerator, self._denominator)
+        return AlgebraicFraction(self._numerator, self._denominator, self._simplify)
 
     def __add__(self, other):
         least_multiple = lcm(self._denominator.lcm, other._denominator.lcm)
