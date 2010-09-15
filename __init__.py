@@ -1,5 +1,5 @@
 from .src import *
-from .tests import testpypol as tests
+from .tests import testpypol
 
 ONE = monomial()
 TWO = monomial(2)

@@ -54,20 +54,28 @@ class PolynomialTestCase(unittest.TestCase):
         self.b.sort(key=self.b._key('x'), reverse=True)
         self.assertEqual(((-2, {'x': 2}), (1, {'a': 3}), (-1, {'b': 1}), (3, {})), self.b.monomials)
 
-    def testCoeffGcd(self):
-        pass
-
-    def testCoeffLcm(self):
-        pass
-
     def testGcd(self):
         pass
 
     def testLcm(self):
         pass
 
-    def testIsSquareDiff(self):
+    def testCoeffGcd(self):
         pass
+
+    def testCoeffLcm(self):
+        pass
+
+    def testIsSquareDiff(self):
+        self.assertTrue(pypol.polynomial('a6 - 9').is_square_diff())
+        self.assertTrue(pypol.polynomial('a2 - 9').is_square_diff())
+        self.assertFalse(pypol.polynomial('a').is_square_diff())
+        self.assertFalse(pypol.polynomial('a2').is_square_diff())
+        self.assertFalse(pypol.polynomial('a2 - 3').is_square_diff())
+        self.assertFalse(pypol.polynomial('a2 + 9').is_square_diff())
+        self.assertFalse(pypol.polynomial('a6 + 9').is_square_diff())
+        self.assertFalse(pypol.polynomial('a6 - 6').is_square_diff())
+        self.assertFalse(self.a.is_square_diff())
 
     def testDivAll(self):
         self.assertEqual(pypol.polynomial('2x^3 + 4xy - 16').div_all(-2), pypol.polynomial('- x^3 - 2xy + 8'))
@@ -156,11 +164,21 @@ class FunctionsTestCase(unittest.TestCase):
     def setUp(self):
         pass
 
+    def testPolynomial(self):
+        self.assertTrue(type(pypol.polynomial()) == pypol.Polynomial)
+
     def testMakePolynomial(self):
         self.assertEqual(pypol.make_polynomial(((2, {'x': 3}), (-3, {'x': 1, 'y': 1}), (-2, {}))), pypol.polynomial('2x^3 -3xy - 2'))
 
     def testParsePolynomial(self):
         self.assertEqual([(2, {'x': 3}), (-3, {'x': 1}), (2, {})], pypol.parse_polynomial('2x^3 -3x + 2'))
+
+    def testMonomial(self):
+        vars = {'a': 3, 'b': 4}
+        m = pypol.monomial(5, **vars)
+        self.assertTrue(type(pypol.monomial()) == pypol.Polynomial)
+        self.assertEqual(('a', 'b'), m.letters)
+        self.assertEqual([5], m.coefficients)
 
     def testAreSimilar(self):
         self.assertTrue(pypol.are_similar((3, {'x': 2}), (4, {'x': 2})))
@@ -172,10 +190,30 @@ class FunctionsTestCase(unittest.TestCase):
     def testLcm(self):
         pass
 
+    def testRandomPoly(self):
+        for _ in xrange(100):
+            self.assertEqual(pypol.Polynomial, type(pypol.random_poly()))
+        self.assertEqual(('x',), pypol.random_poly(letters='x').letters)
+        try:
+            self.assertTrue(pypol.random_poly(unique=True).letters[0] in ('x', 'y', 'z'))
+        except IndexError:  ## random_poly is an empty polynomial
+            pass
+        self.assertTrue(all(-10 <= c < 11 for c in pypol.random_poly().coefficients))
+
+    def testRoot(self):
+        pass
+
 
 def run():
-    suite = unittest.TestSuite([PolynomialTestCase(), FunctionsTestCase()])
-    suite.run()
+    loader = unittest.TestLoader()
+    test1 = loader.getTestCaseNames(PolynomialTestCase)
+    test2 = loader.getTestCaseNames(FunctionsTestCase)
+    suite = unittest.TestSuite()
+    for test in test1:
+        suite.addTest(PolynomialTestCase(test))
+    for test in test2:
+        suite.addTest(FunctionsTestCase(test))
+    unittest.TextTestRunner(verbosity=2).run(suite)
 
 if __name__ == '__main__':
     unittest.main()

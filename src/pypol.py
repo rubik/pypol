@@ -632,7 +632,7 @@ class Polynomial(object):
         '''
 
         vars = {} ## Change for Py2.7
-        for letter in self.joint_letters:
+        for letter in self.letters:
             vars[letter] = self.max_power(letter)
         return monomial(self.coeff_lcm, **vars)
 
@@ -977,14 +977,14 @@ class Polynomial(object):
         .. versionadded:: 0.2
         '''
 
-        def is_square(n):
+        def is_p_square(n):
             return n & 1 == 0 ## n % 2
         def is_perfect_square(n):
             return int(n ** 0.5) ** 2 == n
         def _check(a):
             first = self[a][1]
             power = first[first.keys()[0]]
-            if len(first) == 1 and is_square(power):
+            if len(first) == 1 and is_p_square(power):
                 if a == 1:
                     return self[a][0] < 0
                 if is_perfect_square(self[a][0]):
