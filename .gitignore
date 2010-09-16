@@ -1,6 +1,7 @@
 *.pyc
-pypol.py.html
-pypol.py.pdf
-/doc/_build/
+*.html
+*.pdf
+*.zip
+/src/doc/_build/
 /dist/
 /build/
