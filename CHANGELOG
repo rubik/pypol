@@ -11,6 +11,7 @@
     + Polynomial._key
     + Polynomial.div_all
     + testpypol.run
+    - Polynomial._cmp
 
 0.1:
     Initial release

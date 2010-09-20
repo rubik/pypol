@@ -1,1 +1,3 @@
-from .src.pypol import *
+from .src import *
+
+del src ## Double package

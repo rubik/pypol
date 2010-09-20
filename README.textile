@@ -11,7 +11,7 @@ Then you can import it normally:
 <pre>>>> import pypol
 >>> </pre>
 
-For examples see the github wiki:
+For examples see the documentation:
 <a href="http://www.pypol.altervista.org/">here</a>
 
 

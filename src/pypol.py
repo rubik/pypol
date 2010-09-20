@@ -22,18 +22,20 @@ Requirements:
 '''
 
 from __future__ import division       ## STATS ##
-import copy                        ## used 6 times
+import random                      ## used 7 times
 import fractions                   ## used 6 times
 import operator                    ## used 6 times
-import random                      ## used 7 times
-import re                          ## 2 used times
+import copy                        ## used 6 times
+import re                          ## used 2 times
 
 
 __author__ = 'Michele Lacchia'
 __version__ = (0, 2)
 __version_str__ = '0.2'
 
-__all__ = ['polynomial', 'algebraic_fraction', 'monomial', 'gcd', 'lcm', 'gcd_p', 'lcm_p', 'are_similar', 'make_polynomial', 'parse_polynomial', 'random_poly', 'root', 'Polynomial', 'AlgebraicFraction',]
+__all__ = ['polynomial', 'algebraic_fraction', 'monomial', 'gcd', 'lcm', 'gcd_p',
+           'lcm_p', 'are_similar', 'make_polynomial', 'parse_polynomial',
+           'random_poly', 'root', 'Polynomial', 'AlgebraicFraction']
 
 
 def polynomial(string=None, simplify=True):
@@ -188,7 +190,8 @@ def lcm(a, b):
         :func:`gcd`, :func:`gcd_p`, :func:`lcm_p`.
     '''
 
-    coefficient = (operator.truediv(a.coeff_lcm*b.coeff_lcm, fractions.gcd(a.coeff_lcm, b.coeff_lcm)))
+    coefficient = (operator.truediv(a.coeff_lcm*b.coeff_lcm,
+                                    fractions.gcd(a.coeff_lcm, b.coeff_lcm)))
     if coefficient == int(coefficient):
         coefficient = int(coefficient)
     else:
@@ -249,7 +252,8 @@ def parse_polynomial(string, max_length=None):
 
     return monomials
 
-def random_poly(coeff_range=xrange(-10, 11), len_=None, letters='xyz', max_letters=3, unique=False, exp_range=xrange(1, 6), right_hand_side=None):
+def random_poly(coeff_range=xrange(-10, 11), len_=None, letters='xyz',
+                max_letters=3, unique=False, exp_range=xrange(1, 6), right_hand_side=None):
     '''
     Returns a polynomial generated randomly.
 
@@ -340,6 +344,22 @@ def random_poly(coeff_range=xrange(-10, 11), len_=None, letters='xyz', max_lette
 
     return Polynomial(monomials)
 
+def true_poly(**kwargs):
+    '''
+    Because :func:`random_poly` could return a null polynomial, this functions generates a new random polynomial until the polynomial is false and returns it.
+
+    :params: the same as :func:`random_poly`
+    :rtype: :class:`Polynomial`
+
+    .. versionaddedd:: 0.3
+    '''
+
+    poly = random_poly(**kwargs)
+    while not poly:
+        poly = random_poly(**kwargs)
+
+    return poly
+
 def root(poly, k=0.5, epsilon=10**-8):
     '''
     Finds the root of the polynomial *poly* using the *bisection method* [#f1]_.
@@ -374,7 +394,8 @@ def root(poly, k=0.5, epsilon=10**-8):
     if len(poly.letters) != 1:
         return NotImplemented
 
-    if all(coeff > 0 for coeff in poly.coefficients) and all(exp & 1 == 0 for exp in poly.powers(poly.letters[0])):
+    if all(coeff > 0 for coeff in poly.coefficients) and \
+        all(exp & 1 == 0 for exp in poly.powers(poly.letters[0])): #complex root
         return NotImplemented
 
     _d = lambda a, b: a * b < 0 # Check if discordant
@@ -593,7 +614,8 @@ class Polynomial(object):
             :meth:`coeff_gcd`
         '''
 
-        c_lcm = reduce(lambda a, b: operator.truediv(a*b, fractions.gcd(a, b)), self.coefficients)
+        c_lcm = reduce(lambda a, b: operator.truediv(a*b, fractions.gcd(a, b)),
+                                                     self.coefficients)
         if c_lcm == int(c_lcm):
             c_lcm = int(c_lcm)
         else:
@@ -666,11 +688,9 @@ class Polynomial(object):
             '4*y**5*z**2+2*y**4*x**2-4*a*x*c*b'
         '''
 
-        ## We can replace the code below with this:
-        #return '+'.join(['%s*%s' % (str(c), '*'.join(['%s**%s' % (letter, exp) for letter, exp in vars.iteritems()]))
-                        #for c, vars in (self._monomials[:-1] if self.right_hand_side else self._monomials)]) \
-                    #.replace('+-', '-').replace('**1', '') + (str((self.right_hand_side if self.right_hand_side < 0 \
-                                            #else '+' + str(self.right_hand_side))) if self.right_hand_side else '')
+        ## We could replace the following code with this:
+        #return '+'.join(['%s*%s' % (str(c), '*'.join(['%s**%s' % (letter, exp) for letter, exp in vars.iteritems()])) for c, vars in (self._monomials[:-1] if self.right_hand_side else self._monomials)]).replace('+-', '-').replace('**1', '') + (str((self.right_hand_side if self.right_hand_side < 0 else '+' + str(self.right_hand_side))) if self.right_hand_side else '')
+
         tmp = []
         for c, vars in self._monomials:
             ll = []
@@ -681,7 +701,9 @@ class Polynomial(object):
                     ll.append('%s**%s' % (letter, exp))
                 tmp.append('%s*%s' % (str(c), '*'.join(ll)))
 
-        evallable = '+'.join(tmp).replace('+-', '-').replace('**1', '').replace('-1*', '-')
+        evallable = '+'.join(tmp).replace('+-', '-') \
+                                 .replace('**1', '') \
+                                 .replace('-1*', '-')
         return evallable
 
     @ property
@@ -699,7 +721,8 @@ class Polynomial(object):
             :meth:`join_letters`.
         '''
 
-        return tuple(sorted(reduce(operator.or_, [set(m[1].keys()) for m in self._monomials if m[1]], set())))
+        return tuple(sorted(reduce(operator.or_, [set(m[1].keys()) \
+                                    for m in self._monomials if m[1]], set())))
 
     @ property
     def joint_letters(self):
@@ -719,7 +742,8 @@ class Polynomial(object):
 
         if len(self) == 1:
             return self.letters
-        return tuple(reduce(operator.and_, [set(monomial[1].keys()) for monomial in self.monomials], set()))
+        return tuple(reduce(operator.and_, [set(monomial[1].keys()) \
+                                        for monomial in self.monomials], set()))
 
     def max_letter(self, alphabetically=True):
         '''
@@ -740,16 +764,16 @@ class Polynomial(object):
             'x'
             >>> polynomial('2x^3 + 4x2y4 - 16').max_letter()
             'y'
-            >>> polynomial('2x^3 + 4x2y4 - 16').max_letter(False)
+            >>> polynomial('2x^3 + 4x2y3 - 16').max_letter(False)
             'y'
 
         .. versionadded:: 0.2
         '''
 
         if alphabetically:
-            cmp = operator.lt
+            cmp_ = operator.lt
         else:
-            cmp = operator.gt
+            cmp_ = operator.gt
 
         if not self.letters:
             return False
@@ -763,7 +787,7 @@ class Polynomial(object):
                 max_ = power
                 letter_ = letter
             elif power == max_:
-                if cmp(letter, letter_):
+                if cmp_(letter, letter_) == 1:
                     max_ = power
                     letter_ = letter
 
@@ -823,9 +847,11 @@ class Polynomial(object):
                     return 1
             return NotImplemented
 
-        divisors = lambda n: ([1] if n != 1 else []) + [x for x in xrange(2, n//2 +1) if not n % x] + [n]
+        divisors = lambda n: ([1] if n != 1 else []) + \
+                        [x for x in xrange(2, n//2 +1) if not n % x] + [n]
 
-        divs = divisors((-self.right_hand_side if self.right_hand_side < 0 else self.right_hand_side))
+        divs = divisors((-self.right_hand_side if self.right_hand_side < 0 \
+                                               else self.right_hand_side))
         negdivs = map(operator.neg, divs)
         return tuple([x for x in divs + negdivs if not self(x)])
 
@@ -851,7 +877,7 @@ class Polynomial(object):
         '''
 
         if not letter:
-            d={}  # change for Py2.7
+            d = {}  # change for Py2.7
             for l in self.letters:
                 d[l] = self.raw_powers(l)
             return d
@@ -931,7 +957,7 @@ class Polynomial(object):
         '''
 
         if not letter:
-            d={}  # change for Py2.7
+            d = {}  # change for Py2.7
             for l in self.letters:
                 d[l] = self.powers(l)
             return d
@@ -978,10 +1004,19 @@ class Polynomial(object):
         '''
 
         def is_p_square(n):
+            '''
+            Internal method used to check if a power is divisible by 2
+            '''
             return n & 1 == 0 ## n % 2
         def is_perfect_square(n):
+            '''
+            Internal method to check if an integer is a perfect square
+            '''
             return int(n ** 0.5) ** 2 == n
         def _check(a):
+            '''
+            Check if a monomial is a square
+            '''
             first = self[a][1]
             power = first[first.keys()[0]]
             if len(first) == 1 and is_p_square(power):
@@ -994,7 +1029,8 @@ class Polynomial(object):
         if len(self) != 2:
             return False
         if self.right_hand_side:
-            if self.right_hand_side < 0 and is_perfect_square(-self.right_hand_side):
+            if self.right_hand_side < 0 and \
+                                       is_perfect_square(-self.right_hand_side):
                 return _check(0)
             else:
                 return False
@@ -1066,6 +1102,9 @@ class Polynomial(object):
         return AlgebraicFraction(monomial(v), self)
 
     def check_other(wrapped):
+        '''
+        If the second term is not a polynomial, it is coerced.
+        '''
         def wrapper(self, other):
             if isinstance(other, int):
                 other = monomial(other)
@@ -1182,7 +1221,8 @@ class Polynomial(object):
             :meth:`update`.
         '''
 
-        self._monomials = sorted(pol_or_monomials._monomials + self._monomials, key=self._key(), reverse=True)
+        self._monomials = sorted(pol_or_monomials._monomials + self._monomials,
+                                 key=self._key(), reverse=True)
         self.simplify()
 
     def div_all(self, poly):
@@ -1247,7 +1287,8 @@ class Polynomial(object):
         .. deprecated:: 0.2
             Use :meth:`append` instead.
         '''
-        raise DeprecationWarning('This method is deprecated since version 0.2, use append instead')
+        raise DeprecationWarning('This method is deprecated since version 0.2, '
+                                 'use append instead')
         tmp_monomials = list(self._monomials)
         tmp_monomials.insert(index, monomial)
         self._monomials = tuple(tmp_monomials)
@@ -1293,11 +1334,19 @@ class Polynomial(object):
         return True
 
     def _format(self, print_format=False):
+        '''
+        Format the polynomial for __repr__.
+        '''
+
         return ' '.join([self._m_format(monomial, print_format).replace('-', '- ') if monomial[0] < 0 \
                     else ('+ ' + self._m_format(monomial, print_format) if self._m_format(monomial, print_format) \
                     else '') for monomial in self._monomials]).strip()
 
     def _m_format(self, monomial, print_format):
+        '''
+        Format a single monomial.
+        '''
+
         tmp_coefficient = monomial[0]
         if tmp_coefficient == 0:
             return ''
@@ -1323,7 +1372,8 @@ class Polynomial(object):
                 .replace('2', unichr(178)).replace('3', unichr(179)) \
                 .replace('4', unichr(8308)).replace('5', unichr(8309)) \
                 .replace('6', unichr(8310)).replace('7', unichr(8311)) \
-                .replace('8', unichr(8312)).replace('9', unichr(8313)).encode('utf-8')
+                .replace('8', unichr(8312)).replace('9', unichr(8313)) \
+                .encode('utf-8')
         return tmp_coefficient + ''.join(var_list)
 
     def __repr__(self):
@@ -1369,6 +1419,7 @@ class Polynomial(object):
         return Polynomial(self._monomials)
 
     def __deepcopy__(self, p):
+        print p
         return Polynomial(self._monomials, self._simplify)
 
     def __getitem__(self, b):
@@ -1446,8 +1497,9 @@ class Polynomial(object):
             new_coeff = a[0] * b[0]
             if not a[1] and not b[1]:
                 return (new_coeff, {})
-            #new_vars = {letter: (a[1].get(letter, 0) + b[1].get(letter, 0)) \
-                       #for letter in set(a[1].keys()).union(b[1].keys())} # uncomment later for Py2.7
+       ## The following code can be replaced with this (only for Py2.7):
+       #new_vars = {letter: (a[1].get(letter, 0) + b[1].get(letter, 0)) \
+       #for letter in set(a[1].keys()).union(b[1].keys())} # uncomment for Py2.7
 
             new_vars = {}
             for letter in set(a[1].keys()).union(b[1].keys()): ## by Bakuriu
@@ -1509,8 +1561,7 @@ class Polynomial(object):
         return Q, A
 
     def __div__(self, other):
-        quotient, remainder = divmod(self, other)
-        return quotient
+        return divmod(self, other)[0]
 
     def __truediv__(self, other):
         quotient, remainder = divmod(self, other)
@@ -1698,8 +1749,10 @@ class AlgebraicFraction(object):
     def __copy__(self):
         return AlgebraicFraction(self._numerator, self._denominator)
 
-    def __deepcopy__(self, algebraicfraction):
-        return AlgebraicFraction(self._numerator, self._denominator, self._simplify)
+    def __deepcopy__(self, a):
+        return AlgebraicFraction(self._numerator,
+                                 self._denominator,
+                                 self._simplify)
 
     def __add__(self, other):
         least_multiple = lcm(self._denominator.lcm, other._denominator.lcm)
