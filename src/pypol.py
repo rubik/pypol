@@ -1410,7 +1410,11 @@ class Polynomial(object):
         return self * -1
 
     def __nonzero__(self):
-        return bool(len(self))
+        if not len(self):
+            return False
+        if all(not m[0] for m in self._monomials):
+            return False
+        return True
 
     def __contains__(self, other):
         return other in self._monomials
@@ -1518,18 +1522,6 @@ class Polynomial(object):
 
     @ check_other
     def __divmod__(self, other):
-        def _set_up(pol):
-            if not pol.letters:
-                #for letter in set(self.letters).union(other.letters):
-                    #pol._make_complete(letter)
-                return
-            for m in pol._monomials:
-                for var in self.letters:
-                    if var not in m[1]:
-                        m[1][var] = 0
-            #for letter in set(self.letters).union(other.letters):
-                #pol._make_complete(letter)
-
         def _div(a, b):
             new_coefficient = fractions.Fraction(str(a[0] / b[0]))
             new_vars = copy.copy(a[1])
@@ -1545,19 +1537,24 @@ class Polynomial(object):
         Q = Polynomial()
 
         if A.degree < B.degree:
-            raise ValueError('The polynomials are not divisible')
+            raise ValueError('The polynomials are not divisible.')
 
-        _set_up(A); _set_up(B)
+        letter = B.max_letter()
         while A.degree >= B.degree:
+            A.sort(key=self._key(letter), reverse=True)
             quotient = _div(A._monomials[0], B._monomials[0])
-            Q.append(quotient)
             del A[0]
+            Q.append(quotient)
 
             m = Polynomial(B[1:])
             if not m:
-                return Q, A
+                return Q, Polynomial()
             A += (-quotient * m)
+            if not A:
+                return Q, Polynomial()
 
+        if not A and A.monomials: ## When A has 0 coefficients but some letters
+            return Q, Polynomial()
         return Q, A
 
     def __div__(self, other):

@@ -1,4 +1,8 @@
+0.3:
+    + true_poly
+
 0.2:
+    + testpypol.run
     + monomial
     + Polynomial.sort
     + Polynomial.coeff_gcd
@@ -8,9 +12,8 @@
     + Polynomial.joint_letters
     + Polynomial.max_letter
     + Polynomial.is_square_diff
-    + Polynomial._key
     + Polynomial.div_all
-    + testpypol.run
+    + Polynomial._key
     - Polynomial._cmp
 
 0.1:
