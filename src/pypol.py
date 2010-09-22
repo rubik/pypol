@@ -33,7 +33,7 @@ __author__ = 'Michele Lacchia'
 __version__ = (0, 2)
 __version_str__ = '0.2'
 
-__all__ = ['polynomial', 'algebraic_fraction', 'monomial', 'poly1d', 'gcd', 'lcm',
+__all__ = ['polynomial', 'algebraic_fraction', 'monomial', 'poly1d', 'poly2d', 'gcd', 'lcm',
            'gcd_p', 'lcm_p', 'are_similar', 'make_polynomial', 'parse_polynomial',
            'random_poly', 'root', 'Polynomial', 'AlgebraicFraction']
 
@@ -114,21 +114,27 @@ def monomial(c=1, **vars):
 
     return Polynomial(((c, vars),))
 
-def poly1d(coeffs, letter='x', right_hand_side=None):
+def poly1d(coeffs, variable='x', right_hand_side=True):
     '''
     Make a single-letter polynomial from a list of coefficients.
 
     :param list coeffs: the list of the polynomial coefficients
-    :param string letter: the letter of the polynomial, default ``x``
+    :param string variable: the letter of the polynomial, default ``x``
     :param right_hand_side: if True, the last term of *coeffs* will be the right hand-side of the polynomial
     :type right_hand_side: bool or None
     '''
 
     if right_hand_side:
-        poly = Polynomial([(c, {letter: i+1}) for i, c in enumerate(reversed(coeffs[:-1]))])
+        poly = Polynomial([(c, {variable: i+1}) for i, c in enumerate(reversed(coeffs[:-1]))])
         poly.append(coeffs[-1])
         return poly
-    return Polynomial([(c, {letter: i+1}) for i, c in enumerate(reversed(coeffs))])
+    return Polynomial([(c, {variable: i+1}) for i, c in enumerate(reversed(coeffs))])
+
+def poly2d(monomials, variable='x'):
+    '''
+    '''
+
+    return Polynomial([(c, {variable: exp}) for (c, exp) in monomials])
 
 def make_polynomial(monomials, simplify=True):
     '''
@@ -783,6 +789,8 @@ class Polynomial(object):
 
         if not self.letters:
             return False
+        if len(self.letters) == 1:
+            return self.letters[0]
 
         max_ = self.max_power(self.letters[0])
         letter_ = self.letters[0]
@@ -975,6 +983,18 @@ class Polynomial(object):
             return filter(None, raw[:-1]) + [raw[-1]]
         except IndexError:
             return []
+
+    def derivative(self):
+        if len(self.letters) > 1:
+            return NotImplemented
+
+        letter = self.letters[0]
+        plist = [[m[0], m[1].get(letter, 0)] for m in self._monomials]
+        for term in plist:
+            term[0] *= term[1]
+            term[1] -= 1
+
+        return poly2d(plist)
 
     def islinear(self):
         '''

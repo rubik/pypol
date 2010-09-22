@@ -1,5 +1,7 @@
 0.3:
     + random_poly :: not_null
+    + poly1d
+    + poly2d
 
 0.2:
     + testpypol.run

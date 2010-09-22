@@ -192,16 +192,16 @@ class TestFunctions(object):
         pass
 
     def testRandomPoly(self):
-        def true_poly(**kwargs):
-            poly = pypol.random_poly(**kwargs)
-            while not poly:
-                poly = pypol.random_poly(**kwargs)
-            return poly
-
         for _ in xrange(100):
             assert_equal(pypol.Polynomial, type(pypol.random_poly()))
 
-        poly1, poly2, poly3 = true_poly(letters='x'), true_poly(unique=True), true_poly()
+        poly1, poly2, poly3 = random_poly(letters='x', not_null=True), \
+                              random_poly(unique=True, not_null=True), \
+                              random_poly(not_null=True)
+
+        assert poly1
+        assert poly2
+        assert poly3
         assert_equal(('x',), poly1.letters)
         assert_true(poly2.letters[0] in ('x', 'y', 'z'))
         assert_true(all(-10 <= c < 11 for c in poly3.coefficients))
