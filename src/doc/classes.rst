@@ -21,11 +21,13 @@ Where *polynomial* is the function :func:`polynomial` of the pypol module.
 
 The main class in pypol is :class:`Polynomial`:
 
-.. autoclass:: Polynomial([, monomials=()[, simplify=True]])
+.. class:: Polynomial([, monomials=()[, simplify=True]])
 
     .. automethod:: monomials()
 
     .. automethod:: ordered_monomials()
+
+    .. automethod:: sort()
 
     .. automethod:: coefficients()
 

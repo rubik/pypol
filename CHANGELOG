@@ -1,9 +1,10 @@
 0.3:
-    + true_poly
+    + random_poly :: not_null
 
 0.2:
     + testpypol.run
     + monomial
+    + random_poly :: unique
     + Polynomial.sort
     + Polynomial.coeff_gcd
     + Polynomial.coeff_lcm

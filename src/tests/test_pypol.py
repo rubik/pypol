@@ -7,7 +7,7 @@ import operator
 import copy
 import pypol
 
-class PolynomialTestCase(object):
+class TestPolynomial(object):
     def setUp(self):
         self.a = pypol.polynomial('x^3 - 2x^2 + x -5')
         self.b = pypol.polynomial('a^3 - 2x^2 - b + 3')
@@ -70,13 +70,13 @@ class PolynomialTestCase(object):
     def testIsSquareDiff(self):
         assert_true(pypol.polynomial('a6 - 9').is_square_diff())
         assert_true(pypol.polynomial('a2 - 9').is_square_diff())
-        self.assertFalse(pypol.polynomial('a').is_square_diff())
-        self.assertFalse(pypol.polynomial('a2').is_square_diff())
-        self.assertFalse(pypol.polynomial('a2 - 3').is_square_diff())
-        self.assertFalse(pypol.polynomial('a2 + 9').is_square_diff())
-        self.assertFalse(pypol.polynomial('a6 + 9').is_square_diff())
-        self.assertFalse(pypol.polynomial('a6 - 6').is_square_diff())
-        self.assertFalse(self.a.is_square_diff())
+        assert_false(pypol.polynomial('a').is_square_diff())
+        assert_false(pypol.polynomial('a2').is_square_diff())
+        assert_false(pypol.polynomial('a2 - 3').is_square_diff())
+        assert_false(pypol.polynomial('a2 + 9').is_square_diff())
+        assert_false(pypol.polynomial('a6 + 9').is_square_diff())
+        assert_false(pypol.polynomial('a6 - 6').is_square_diff())
+        assert_false(self.a.is_square_diff())
 
     def testDivAll(self):
         assert_equal(pypol.polynomial('2x^3 + 4xy - 16').div_all(-2), pypol.polynomial('- x^3 - 2xy + 8'))
@@ -104,19 +104,19 @@ class PolynomialTestCase(object):
         assert_equal([3, 0], self.b.powers('a'))
 
     def testLinear(self):
-        self.assertFalse(self.a.islinear())
+        assert_false(self.a.islinear())
         assert_true(self.c.islinear())
 
     def testOrdered(self):
         assert_true(pypol.polynomial('4a3+6a2+4a+5').isordered())
         assert_true(pypol.polynomial('4a3+6a2+4a+5').isordered('a'))
-        self.assertFalse(pypol.polynomial('a3+b3+c+ab ').isordered())
-        self.assertFalse(pypol.polynomial('a3+b3+c+ab ').isordered('a'))
-        self.assertFalse(pypol.polynomial('a3+b3+c+ab ').isordered('b'))
+        assert_false(pypol.polynomial('a3+b3+c+ab ').isordered())
+        assert_false(pypol.polynomial('a3+b3+c+ab ').isordered('a'))
+        assert_false(pypol.polynomial('a3+b3+c+ab ').isordered('b'))
 
     def testComplete(self):
         assert_true(self.c.iscomplete('x'))
-        self.assertFalse(self.b.iscomplete('x'))
+        assert_false(self.b.iscomplete('x'))
 
     def testUpdate(self):
         self.d.update('3x - y + 2')
@@ -127,7 +127,7 @@ class PolynomialTestCase(object):
 
     def testNe(self):
         assert_true(self.a != self.b)
-        self.assertFalse(self.c != self.c)
+        assert_false(self.c != self.c)
 
     def testPos(self):
         assert_equal(self.a, +self.a)
@@ -142,11 +142,11 @@ class PolynomialTestCase(object):
     def testNonzero(self):
         p = pypol.polynomial()
         assert_true(self.a)
-        self.assertFalse(p)
+        assert_false(p)
 
     def testContains(self):
         assert_true((1, {'x': 3}) in self.a)
-        self.assertFalse((1, {'x': 5}) in self.a)
+        assert_false((1, {'x': 5}) in self.a)
 
     def testGetitem(self):
         assert_equal((1, {'a': 1}), self.d[0])
@@ -161,7 +161,7 @@ class PolynomialTestCase(object):
         assert_equal(pypol.polynomial('x^3 - 5'), self.a)
 
 
-class FunctionsTestCase(object):
+class TestFunctions(object):
     def setUp(self):
         pass
 
@@ -183,7 +183,7 @@ class FunctionsTestCase(object):
 
     def testAreSimilar(self):
         assert_true(pypol.are_similar((3, {'x': 2}), (4, {'x': 2})))
-        self.assertFalse(pypol.are_similar((2, {'y': 3}), (2, {'y': 2})))
+        assert_false(pypol.are_similar((2, {'y': 3}), (2, {'y': 2})))
 
     def testGcd(self):
         pass
@@ -202,9 +202,9 @@ class FunctionsTestCase(object):
             assert_equal(pypol.Polynomial, type(pypol.random_poly()))
 
         poly1, poly2, poly3 = true_poly(letters='x'), true_poly(unique=True), true_poly()
-        assert_equal(('x',), poly.letters)
-        assert_true(poly.letters[0] in ('x', 'y', 'z'))
-        assert_true(all(-10 <= c < 11 for c in poly.coefficients))
+        assert_equal(('x',), poly1.letters)
+        assert_true(poly2.letters[0] in ('x', 'y', 'z'))
+        assert_true(all(-10 <= c < 11 for c in poly3.coefficients))
 
     def testRoot(self):
         pass

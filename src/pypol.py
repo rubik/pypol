@@ -33,8 +33,8 @@ __author__ = 'Michele Lacchia'
 __version__ = (0, 2)
 __version_str__ = '0.2'
 
-__all__ = ['polynomial', 'algebraic_fraction', 'monomial', 'gcd', 'lcm', 'gcd_p',
-           'lcm_p', 'are_similar', 'make_polynomial', 'parse_polynomial',
+__all__ = ['polynomial', 'algebraic_fraction', 'monomial', 'poly1d', 'gcd', 'lcm',
+           'gcd_p', 'lcm_p', 'are_similar', 'make_polynomial', 'parse_polynomial',
            'random_poly', 'root', 'Polynomial', 'AlgebraicFraction']
 
 
@@ -113,6 +113,22 @@ def monomial(c=1, **vars):
     '''
 
     return Polynomial(((c, vars),))
+
+def poly1d(coeffs, letter='x', right_hand_side=None):
+    '''
+    Make a single-letter polynomial from a list of coefficients.
+
+    :param list coeffs: the list of the polynomial coefficients
+    :param string letter: the letter of the polynomial, default ``x``
+    :param right_hand_side: if True, the last term of *coeffs* will be the right hand-side of the polynomial
+    :type right_hand_side: bool or None
+    '''
+
+    if right_hand_side:
+        poly = Polynomial([(c, {letter: i+1}) for i, c in enumerate(reversed(coeffs[:-1]))])
+        poly.append(coeffs[-1])
+        return poly
+    return Polynomial([(c, {letter: i+1}) for i, c in enumerate(reversed(coeffs))])
 
 def make_polynomial(monomials, simplify=True):
     '''
@@ -252,19 +268,16 @@ def parse_polynomial(string, max_length=None):
 
     return monomials
 
-def random_poly(coeff_range=xrange(-10, 11), len_=None, letters='xyz',
-                max_letters=3, unique=False, exp_range=xrange(1, 6), right_hand_side=None):
+def random_poly(coeff_range=xrange(-10, 11), len_=None, len_range=xrange(-10, 11),
+                letters='xyz', max_letters=3, unique=False, exp_range=xrange(1, 6),
+                right_hand_side=None, not_null=None):
     '''
     Returns a polynomial generated randomly.
 
     :param coeff_range: the range of the polynomial's coefficients, default is ``xrange(-10, 11)``.
-
     :param len\_: the len of the polynomial. Default is None, in this case len\_ will be a random number chosen in coeff_range. If *len\_* is negative it will be coerced to be positive: ``len_ = -len_``.
-
     :param letters: the letters that appear in the polynomial.
-
     :param max_letter: is the maximum number of letter for every monomial.
-
     :param unique: if True, all the polynomial's monomials will have the same letter (chosen randomly).
         For example, if you want to generate a polynomial with a letter only, you can do::
 
@@ -289,8 +302,8 @@ def random_poly(coeff_range=xrange(-10, 11), len_=None, letters='xyz',
             - 2x^4 - 10x^3 + 2x^2 + 3
 
     :param exp_range: the range of the exponents.
-
     :param right_hand_side: if True, the polynomial will have a right-hand side. Default is None, that means the right-hand side will be chosen randomly.
+    :param not_null: if True, the polynomial will not be an empty polynomial
 
     :rtype: :class:`Polynomial`
 
@@ -315,8 +328,12 @@ def random_poly(coeff_range=xrange(-10, 11), len_=None, letters='xyz',
 
     .. versionadded:: 0.2
         The *unique* parameter.
+
+    .. versionadded:: 0.3
+        The *not_null* parameter.
     '''
 
+    kwargs = locals() ## For not_null
     if not len_:
         len_ = random.choice(coeff_range)
     if not right_hand_side:
@@ -330,7 +347,6 @@ def random_poly(coeff_range=xrange(-10, 11), len_=None, letters='xyz',
     monomials = []
     for _ in xrange((len_ - 1 if right_hand_side else len_)):
         vars = {}
-
         if unique:
             vars[letter] = random.choice(exp_range)
         else:
@@ -342,20 +358,8 @@ def random_poly(coeff_range=xrange(-10, 11), len_=None, letters='xyz',
     if right_hand_side:
         monomials.append((random.choice(coeff_range), {}))
 
-    return Polynomial(monomials)
-
-def true_poly(**kwargs):
-    '''
-    Because :func:`random_poly` could return a null polynomial, this functions generates a new random polynomial until the polynomial is false and returns it.
-
-    :params: the same as :func:`random_poly`
-    :rtype: :class:`Polynomial`
-
-    .. versionaddedd:: 0.3
-    '''
-
-    poly = random_poly(**kwargs)
-    while not poly:
+    poly = Polynomial(monomials)
+    if not_null and not poly:
         poly = random_poly(**kwargs)
 
     return poly
@@ -738,6 +742,8 @@ class Polynomial(object):
 
         .. seealso::
             :meth:`letters`.
+
+        .. versionadded:: 0.2
         '''
 
         if len(self) == 1:
@@ -902,6 +908,7 @@ class Polynomial(object):
             KeyError: 'letter not in polynomial'
 
         It raises KeyError if the letter is not in the polynomial.
+
         .. seealso::
             :meth:`min_power`.
         '''
@@ -928,6 +935,7 @@ class Polynomial(object):
             KeyError: 'letter not in polynomial'
 
         It raises KeyError if the letter is not in the polynomial.
+
         .. seealso::
             :meth:`max_power`.
         '''
@@ -1296,8 +1304,8 @@ class Polynomial(object):
 
     def _key(self, letter=None):
         '''
-        Comparator function used to sort the polynomial's monomials. You should neither change it nor call it.
-            See (** - 404 Error - **)
+        Comparator function used to sort the polynomial's monomials. You should neither change it nor overload it.
+        See (**- 404 Error -**)
 
         .. versionadded:: 0.2
         '''
@@ -1447,8 +1455,19 @@ class Polynomial(object):
             * positional way, using *args*
             * keyword way, using *kwargs*
 
-        ::
+        **Raises*:exc:`NameError` if you do not pass any argument::
 
+            >>> Polynomial(parse_polynomial('x^3 - 4x^2 + 3'))()
+
+            Traceback (most recent call last):
+              File "<pyshell#3>", line 1, in <module>
+                Polynomial(parse_polynomial('x^3 - 4x^2 + 3'))()
+              File "/home/miki/pypol/src/pypol.py", line 1466, in __call__
+                return eval(self.eval_form, letters)
+              File "<string>", line 1, in <module>
+            NameError: name 'x' is not defined
+            >>> Polynomial(parse_polynomial('x^3 - 4x^2 + 3'))(2)
+            -5
             >>> Polynomial(parse_polynomial('3xy + x^2 - 4'))(2, 3)  ## Positional way, x=2, y=3
             18
             >>> Polynomial(parse_polynomial('3xy + x^2 - 4'))(y=2, x=3)  ## Keyword way: y=2, x=3
@@ -1458,12 +1477,10 @@ class Polynomial(object):
 
             dict(zip(self.letters[:len(args)], args))
 
-        *args* has a major priority of *kwargs*, so if you try them both at the same time::
+        *args* has a major priority of *kwargs*, so if you try them both at the same time you will see::
 
-            >>> Polynomial(parse_polynomial('3xy + x^2 - 4'))(2, 3, y=5, x=78)
+            >>> Polynomial(parse_polynomial('3xy + x^2 - 4'))(2, 3, y=5, x=78) # args is predominant
             18
-
-        *args* is predominant.
 
         .. versionchanged:: 0.2
             Added the support for positional and keyword arguments.
@@ -1471,7 +1488,7 @@ class Polynomial(object):
 
         if args:
             letters = dict(zip(self.letters[:len(args)], args))
-        elif kwargs:
+        else:
             letters = kwargs
         return eval(self.eval_form, letters)
 
