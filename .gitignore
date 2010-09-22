@@ -3,5 +3,6 @@
 *.pdf
 *.zip
 /src/doc/_build/
+/src/doc/_static/
 /dist/
 /build/
