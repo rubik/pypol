@@ -192,8 +192,8 @@ class TestFunctions(object):
         pass
 
     def testRandomPoly(self):
-        for _ in xrange(100):
-            assert_equal(pypol.Polynomial, type(pypol.random_poly()))
+        for _ in xrange(1000):
+            assert_equal(pypol.Polynomial, type(pypol.utils.random_poly()))
 
         poly1, poly2, poly3 = random_poly(letters='x', not_null=True), \
                               random_poly(unique=True, not_null=True), \

@@ -2,6 +2,7 @@ from setuptools import setup
 
 setup(name='pypol_',
       version='0.2',
+      test_suite='nose.collector',
       description='Python polynomial library',
       author='Michele Lacchia',
       author_email='michelelacchia@gmail.com',

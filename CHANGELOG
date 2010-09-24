@@ -1,7 +1,9 @@
 0.3:
-    + random_poly :: not_null
+    + changed the structure, now there is a new module: utils.py
+    + utils.random_poly :: not_null
     + poly1d
     + poly2d
+    - Polynomial.insert
 
 0.2:
     + testpypol.run

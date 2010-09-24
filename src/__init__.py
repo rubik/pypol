@@ -1,7 +1,4 @@
-from .pypol import *
-from .tests import test_pypol
-
-runtests = test_pypol.run
+from core import *
 
 ONE = monomial()
 TWO = monomial(2)

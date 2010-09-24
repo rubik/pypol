@@ -2,6 +2,8 @@
 *.html
 *.pdf
 *.zip
+*.js
+*.komodoproject
 /src/doc/_build/
 /src/doc/_static/
 /dist/
