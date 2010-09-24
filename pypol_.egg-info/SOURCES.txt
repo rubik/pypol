@@ -1,8 +1,0 @@
-setup.py
-pypol_.egg-info/PKG-INFO
-pypol_.egg-info/SOURCES.txt
-pypol_.egg-info/dependency_links.txt
-pypol_.egg-info/top_level.txt
-src/__init__.py
-src/core.py
-src/utils.py
