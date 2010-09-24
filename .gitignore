@@ -8,3 +8,4 @@
 /src/doc/_static/
 /dist/
 /build/
+/pypol_.egg-info/
