@@ -4,6 +4,7 @@
 *.zip
 *.js
 *.komodoproject
+MANIFEST
 /src/doc/_build/
 /src/doc/_static/
 /dist/
