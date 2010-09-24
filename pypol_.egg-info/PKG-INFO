@@ -1,0 +1,17 @@
+Metadata-Version: 1.0
+Name: pypol-
+Version: 0.2
+Summary: Python polynomial library
+Home-page: http://pypol.altervista.org/
+Author: Michele Lacchia
+Author-email: michelelacchia@gmail.com
+License: GNU GPL v3
+Download-URL: http://github.com/rubik/pypol/downloads/
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: Topic :: Scientific/Engineering :: Mathematics
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: GNU General Public License (GPL)
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 2.6

@@ -34,7 +34,8 @@ __version__ = (0, 2)
 __version_str__ = '0.2'
 
 __all__ = ['polynomial', 'algebraic_fraction', 'monomial','poly1d', 'poly1d_2',
-           'coerce_poly', 'coerce_frac', 'Polynomial', 'AlgebraicFraction']
+           'coerce_poly', 'coerce_frac', 'are_similar', 'parse_polynomial',
+           'Polynomial', 'AlgebraicFraction']
 
 
 def polynomial(string=None, simplify=True):
