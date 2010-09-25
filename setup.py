@@ -9,7 +9,7 @@ setup(name='pypol_',
       license='GNU GPL v3',
       url='http://pypol.altervista.org/',
       download_url='http://github.com/rubik/pypol/downloads/',
-      packages=['pypol'],
+      packages=['pypol', 'pypol.funcs'],
       package_dir={'pypol': 'src'},
       package_data={'pypol':
                                 ['tests/*.py',

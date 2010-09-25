@@ -1,8 +1,9 @@
-0.3:
+0.3 (still in development):
     + changed the structure, now there is a new module: utils.py
     + utils.random_poly :: not_null
     + poly1d
     + poly2d
+    - make_polynomial
     - Polynomial.insert
 
 0.2:

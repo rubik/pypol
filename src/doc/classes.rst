@@ -31,10 +31,6 @@ The main class in pypol is :class:`Polynomial`:
 
     .. automethod:: coefficients()
 
-    .. automethod:: coeff_gcd()
-
-    .. automethod:: coeff_lcm()
-
     .. automethod:: gcd()
 
     .. automethod:: lcm()
@@ -154,8 +150,6 @@ The main class in pypol is :class:`Polynomial`:
 
        .. seealso::
            :meth:`update`.
-
-    .. automethod:: insert
 
     .. automethod:: div_all
 

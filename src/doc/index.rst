@@ -25,4 +25,5 @@ Contents:
    functions.rst
    operations.rst
    overloading.rst
+   funcs.rst
    contacts.rst
