@@ -159,11 +159,17 @@ def poly1d(coeffs, variable='x', right_hand_side=True):
         + 3
 
     ``3`` will be interpreted as the right_hand_side of the polynomial.
+
+    An alternative solution may be::
+
+        >>> poly1d([3, 0])
+        + 3x
     '''
 
     if right_hand_side:
         poly = Polynomial([(c, {variable: i+1}) for i, c in enumerate(reversed(coeffs[:-1]))])
-        poly.append(coeffs[-1])
+        if coeffs[-1]:
+            poly.append(coeffs[-1])
         return poly
     return Polynomial([(c, {variable: i+1}) for i, c in enumerate(reversed(coeffs))])
 
@@ -1101,9 +1107,9 @@ class Polynomial(object):
         Format the polynomial for __repr__.
         '''
 
-        return ' '.join([self._m_format(monomial, print_format).replace('-', '- ') if monomial[0] < 0 \
+        return ' '.join(filter(None, [self._m_format(monomial, print_format).replace('-', '- ') if monomial[0] < 0 \
                     else ('+ ' + self._m_format(monomial, print_format) if self._m_format(monomial, print_format) \
-                    else '') for monomial in self._monomials]).strip()
+                    else '') for monomial in self._monomials])).strip()
 
     def _m_format(self, monomial, print_format):
         '''
@@ -1210,7 +1216,9 @@ class Polynomial(object):
             * positional way, using *args*
             * keyword way, using *kwargs*
 
-        **Raises*:exc:`NameError` if you do not pass any argument::
+        :raises: :exc:`NameError` if you do not pass any argument.
+
+        ::
 
             >>> Polynomial(parse_polynomial('x^3 - 4x^2 + 3'))()
 

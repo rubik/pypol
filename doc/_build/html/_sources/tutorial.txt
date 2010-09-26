@@ -24,13 +24,75 @@ Now run the setup.py script::
 Running the tests
 +++++++++++++++++
 
-If you want to run pypol's tests you only have to run *testpypol.py*, that is in the *tests* directory::
+If you want to run pypol's tests you only have to run *test_pypol.py*, that is in the *tests* directory::
 
-    $ cd pypol_-0.1/tests
-    $ python testpypol.py
+    $ cd pypol_-0.2/tests
+    $ python test_pypol.py
     ...............................
     ----------------------------------------------------------------------
-    Ran 31 tests in 0.036s
+    Ran 44 tests in 0.036s
+    
+    OK
+
+or run setup.py::
+
+    $ cd pypol_-0.2
+    $ sudo python setup.py test
+    running test
+    running egg_info
+    writing pypol_.egg-info/PKG-INFO
+    writing top-level names to pypol_.egg-info/top_level.txt
+    writing dependency_links to pypol_.egg-info/dependency_links.txt
+    reading manifest file 'pypol_.egg-info/SOURCES.txt'
+    writing manifest file 'pypol_.egg-info/SOURCES.txt'
+    running build_ext
+    pypol_.tests.test_pypol.TestFunctions.testAreSimilar ... ok
+    pypol_.tests.test_pypol.TestFunctions.testGcd ... ok
+    pypol_.tests.test_pypol.TestFunctions.testLcm ... ok
+    pypol_.tests.test_pypol.TestFunctions.testMonomial ... ok
+    pypol_.tests.test_pypol.TestFunctions.testParsePolynomial ... ok
+    pypol_.tests.test_pypol.TestFunctions.testPolynomial ... ok
+    pypol_.tests.test_pypol.TestFunctions.testRandomPoly ... ok
+    pypol_.tests.test_pypol.TestFunctions.testRoot ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testAdd ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testCoeffGcd ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testCoeffLcm ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testComplete ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testContains ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testDelitem ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testDiv ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testDivAll ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testDivmod ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testEq ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testEvalForm ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testGcd ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testGetitem ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testIsSquareDiff ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testJointLetters ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testLcm ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testLen ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testLetters ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testLinear ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testMod ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testMul ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testNe ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testNeg ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testNonzero ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testOrdered ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testOrderedMonomials ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testPos ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testPow ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testPowers ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testRawPowers ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testSetitem ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testSort ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testSub ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testTruediv ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testUpdate ... ok
+    pypol_.tests.test_pypol.TestPolynomial.testZeros ... ok
+    
+    ----------------------------------------------------------------------
+    Ran 44 tests in 0.461s
     
     OK
 

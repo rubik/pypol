@@ -12,13 +12,14 @@ from core import Polynomial, poly1d, poly1d_2, polynomial
 
 def divisible(a, b):
     '''
-    Returns True whether a and b are divisible, i.e. ``a % b == 0``
+    Returns True whether *a* and *b* are divisible, i.e. ``a % b == 0``
 
     :params a: the first polynomial
     :params b: the second polynomial
     :rtype: bool
 
-    Example::
+    **Examples**
+    ::
 
         >>> a, b = poly1d([1, 7, 6]), poly1d([1, -5, -6])
         >>> a, b
@@ -260,16 +261,27 @@ def polyint(p):
 
     **Examples**
 
-    Calculate the integrals of the polynomials ``-x`` and 
+    Calculate the integrals of the polynomials ``-x`` and ``x^3 - 7x + 5``
+    ::
+
+        >>> p1, p2 = poly1d([-1, 0]), poly1d([1, 0, -7, 5])
+        >>> p1, p2
+        (- x, + x^3 - 7x + 5)
+        >>> polyint(p1)
+        - 1/2x^2
+        >>> polyint(p2)
+        + 1/4x^4 - 7/2x^2 + 5x
+        >>> polyder(polyint(p2))
+        + x^3 - 7x + 5
+        >>> polyder(polyint(p1))
+        - x
     '''
 
     def _single_int(var):
         n = var[1] + 1
-        j = var[0] / n
+        j = fractions.Fraction(var[0], n)
         if int(j) == j:
             j = int(j)
-        else:
-            j = fractions.Fraction(str(j))
         return [j, n]
 
     return poly1d_2([_single_int(t) for t in p.to_plist()])
@@ -279,28 +291,33 @@ def fib_poly(n):
     Returns the *nth* Fibonacci polynomial. This is the iterative version, and it is extremely faster than the recursive one.
 
     **Examples**
+
     ::
 
-        >>> f(0)
+        >>> fib_poly(0)
         
-        >>> f(1)
+        >>> fib_poly(1)
         + 1
-        >>> f(2)
+        >>> fib_poly(2)
         + x
-        >>> f(3)
+        >>> fib_poly(3)
         + x^2 + 1
-        >>> f(4)
+        >>> fib_poly(4)
         + x^3 + 2x
-        >>> f(5)
+        >>> fib_poly(5)
         + x^4 + 3x^2 + 1
-        >>> f(6)
+        >>> fib_poly(6)
         + x^5 + 4x^3 + 3x
-        >>> f(23)
+        >>> fib_poly(23)
         + x^22 + 21x^20 + 190x^18 + 969x^16 + 3060x^14 + 6188x^12 + 8008x^10 + 6435x^8 + 3003x^6 + 715x^4 + 66x^2 + 1
-        >>> f(100)
-        + x^99 + 98x^97 + 4656x^95 + 142880x^93 + 3183545x^91 + 54891018x^89 + 762245484x^87 + 8760554088x^85 + 84986896995x^83 + 706252528630x^81 + 5085018206136x^79 + 32006008361808x^77 + 177366629671686x^75 + 870366750378300x^73 + 3799541229226200x^71 + 14810760713140560x^69 + 51705423561053205x^67 + 162042085745554410x^65 + 456703981505085600x^63 + 1159120046626942400x^61 + 2651487106659130740x^59 + 5469191608792974920x^57 + 10173461314258261040x^55 + 17061084191613232800x^53 + 25778699578994555700x^51 + 35059031427432595752x^49 + 42858025944553776096x^47 + 47011188276065582912x^45 + 46171702771135840360x^43 + 40498346384007444240x^41 + 31627280033224861216x^39 + 21912870037044995008x^37 + 13413576695470557606x^35 + 7219428434016265740x^33 + 3397378086595889760x^31 + 1388818294740297792x^29 + 489462003181042451x^27 + 147405545359541742x^25 + 37539612570341700x^23 + 7984465725343800x^21 + 1397281501935165x^19 + 197548686920970x^17 + 22057981462440x^15 + 1889912732400x^13 + 119653565850x^11 + 5317936260x^9 + 154143080x^7 + 2598960x^5 + 20825x^3 + 50x
-        >>> f(200)
+        >>> fib_poly(100)
+        + x^99 + 98x^97 + 4656x^95 + 142880x^93 .. cut .. + 197548686920970x^17 + 22057981462440x^15 + 1889912732400x^13 + 119653565850x^11 + 5317936260x^9 + 154143080x^7 + 2598960x^5 + 20825x^3 + 50x
+        >>> fib_poly(200)
         + x^199 + 198x^197 + .. cut .. + 15913388077274800x^13 + 249145778809200x^11 + 2747472247520x^9 + 19813501785x^7 + 83291670x^5 + 166650x^3 + 100x
+        >>> len(fib_poly(300))
+        150
+        >>> len(str(fib_poly(300)))
+        8309
     '''
 
     if n <= 0:

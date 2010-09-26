@@ -73,10 +73,10 @@ The main class in pypol is :class:`Polynomial`:
         This does not create a new instance, but replaces self.monomials with others monomials, then it simplifies.
 
         *pol_or_monomials* can be:
-          * a polynomial
-          * a tuple of monomials
-          * a string that will be passed to :func:`parse_polynomial`
-          * an integer
+            * a polynomial
+            * a tuple of monomials
+            * a string that will be passed to :func:`parse_polynomial`
+            * an integer
 
         default is None. In this case self.monomials will be updated with an empty tuple.
         ::
