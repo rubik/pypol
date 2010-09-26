@@ -168,9 +168,6 @@ class TestFunctions(object):
     def testPolynomial(self):
         assert_true(type(pypol.polynomial()) == pypol.Polynomial)
 
-    def testMakePolynomial(self):
-        assert_equal(pypol.utils.make_polynomial(((2, {'x': 3}), (-3, {'x': 1, 'y': 1}), (-2, {}))), pypol.polynomial('2x^3 -3xy - 2'))
-
     def testParsePolynomial(self):
         assert_equal([(2, {'x': 3}), (-3, {'x': 1}), (2, {})], pypol.parse_polynomial('2x^3 -3x + 2'))
 
@@ -193,11 +190,11 @@ class TestFunctions(object):
 
     def testRandomPoly(self):
         for _ in xrange(1000):
-            assert_equal(pypol.Polynomial, type(pypol.utils.random_poly()))
+            assert_equal(pypol.Polynomial, type(pypol.funcs.random_poly()))
 
-        poly1, poly2, poly3 = pypol.utils.random_poly(letters='x', right_hand_side=False, not_null=True), \
-                              pypol.utils.random_poly(unique=True, right_hand_side=False, not_null=True), \
-                              pypol.utils.random_poly(not_null=True)
+        poly1, poly2, poly3 = pypol.funcs.random_poly(letters='x', right_hand_side=False, not_null=True), \
+                              pypol.funcs.random_poly(unique=True, right_hand_side=False, not_null=True), \
+                              pypol.funcs.random_poly(not_null=True)
 
         assert poly1
         assert poly2
