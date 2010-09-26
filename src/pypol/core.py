@@ -51,6 +51,7 @@ def polynomial(string=None, simplify=True):
         With this function you cannot make polynomials with negative powers. In case you want to use negative powers, use :func:`poly1d_2` instead.
 
         **Examples**
+
         We want to make the polynomial ``2x^-1 + 2``::
 
             >>> polynomial('2x^-1 + 2')
@@ -138,6 +139,7 @@ def poly1d(coeffs, variable='x', right_hand_side=True):
     :type right_hand_side: bool or None
 
     **Examples**
+
     We make the polynomials ``3x^3 - 2x^2 + 4x - 2``, ``2x^3 - 2`` and ``3x``.
     ::
 
@@ -174,6 +176,7 @@ def poly1d_2(monomials, variable='x'):
     :rtype: :class:`Polynomial`
 
     **Examples**
+
     We want to make these two polynomials: ``2x^3 - 2x^2 + x`` and ``x``::
 
         >>> poly1d_2([[2, 3], [-2, 2], [1, 1]])
@@ -297,8 +300,9 @@ class Polynomial(object):
     .. seealso::
         :meth:`simplify`
 
-    An example::
+    **Examples**
 
+    ::
         >>> monomials = ((2, {'x': 3}), (4, {'x': 1, 'y': 1}))
         >>> p = Polynomial(monomials)
         >>> p
@@ -407,7 +411,7 @@ class Polynomial(object):
         vars = {} ## Change for Py2.7
         for letter in self.joint_letters:
             vars[letter] = self.min_power(letter)
-        return monomial(self.coeff_gcd, **vars)
+        return monomial(reduce(fractions.gcd, self.coefficients), **vars)
 
     @ property
     def lcm(self):
@@ -425,7 +429,10 @@ class Polynomial(object):
         vars = {} ## Change for Py2.7
         for letter in self.letters:
             vars[letter] = self.max_power(letter)
-        return monomial(self.coeff_lcm, **vars)
+        l = reduce(lambda a, b: operator.truediv(a, fractions.gcd(a, b)) * b, self.coefficients)
+        if int(l) == l:
+            l = int(l)
+        return monomial(l, **vars)
 
     @ property
     def degree(self):
@@ -865,7 +872,10 @@ class Polynomial(object):
         '''
 
         if not letter:
-            letter = self.letters[0]
+            try:
+                letter = self.letters[0]
+            except IndexError:
+                letter = 'x'
         return [[m[0], m[1].get(letter, 0)] for m in self._monomials]
 
     def invert(self, v=1):
@@ -1471,10 +1481,11 @@ class AlgebraicFraction(object):
             AlgebraicFraction(- 3a² + 6, - 2a + 1)
         '''
 
-        common_poly = gcd(self._numerator.gcd, self._denominator.gcd)
-        self._numerator = self._numerator.div_all(common_poly)
-        self._denominator = self._denominator.div_all(common_poly)
-        return self
+        #common_poly = gcd(self._numerator, self._denominator)
+        #self._numerator = self._numerator.div_all(common_poly)
+        #self._denominator = self._denominator.div_all(common_poly)
+        #return self
+        return NotImplemented
 
     def __repr__(self):
         return 'AlgebraicFraction({0[0]}, {0[1]})'.format(self.terms)

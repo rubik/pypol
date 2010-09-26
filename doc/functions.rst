@@ -1,7 +1,7 @@
 .. currentmodule:: pypol
 
-Utility functions
-=================
+Functions
+=========
 
 pypol module has some functions to work with polynomials :
 
@@ -70,7 +70,4 @@ parse_polynomial
 .. autofunction:: parse_polynomial
 
 
-.. rubric:: Footnotes
-
-.. [#f1] See `wikipedia <http://en.wikipedia.org/wiki/Bisection_method>`_
-.. [#f2] .. seealso:: :mod:`funcs`
+.. seealso:: :mod:`pypol.funcs` for utility functions.

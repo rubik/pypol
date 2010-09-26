@@ -1,8 +1,17 @@
 0.3 (still in development):
-    + changed the structure, now there is a new module: utils.py
+    + changed the structure, now there is a new module: funcs.py
     + utils.random_poly :: not_null
     + poly1d
     + poly2d
+    + pypol.funcs.divisible
+    + pypol.funcs.gcd
+    + pypol.funcs.lcm
+    + pypol.funcs.random_poly
+    + pypol.funcs.root
+    + pypol.funcs.polyder
+    + pypol.funcs.polyint
+    + pypol.funcs.fib_poly
+    + pypol.funcs.fib_poly_rec
     - make_polynomial
     - Polynomial.insert
 

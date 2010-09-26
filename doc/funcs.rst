@@ -1,7 +1,7 @@
 .. module:: pypol.funcs
     :synopsis: Utility functions to work with polynomials
 
-The :mod:`funcs` module
+The :mod:`funcs` module 
 ========================
 
 This module add some utility function to pypol.
@@ -37,3 +37,8 @@ Currently this functions are avaiable:
 .. autofunction:: pypol.funcs.fib_poly
 
 .. autofunction:: pypol.funcs.fib_poly_rec
+
+
+.. rubric:: Footnotes
+
+.. [#f1] See `wikipedia <http://en.wikipedia.org/wiki/Bisection_method>`_
