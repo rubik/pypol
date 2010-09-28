@@ -29,10 +29,6 @@ import copy
 import re
 
 
-__author__ = 'Michele Lacchia'
-__version__ = (0, 2)
-__version_str__ = '0.2'
-
 __all__ = ['polynomial', 'algebraic_fraction', 'monomial','poly1d', 'poly1d_2',
            'coerce_poly', 'coerce_frac', 'are_similar', 'parse_polynomial',
            'Polynomial', 'AlgebraicFraction']
@@ -1058,10 +1054,10 @@ class Polynomial(object):
                 if exp == 0:
                     del simplified[index][1][letter]
 
-            if not monomial[0] and not monomial[1]:
-                del simplified[index]
+            if not monomial[0] and (not monomial[1] or all(not x for x in monomial[1].values())):
+                simplified[index] = None
 
-        self._monomials = tuple(simplified)
+        self._monomials = tuple(filter(lambda i: i is not None, simplified))
 
     def _key(self, letter=None):
         '''

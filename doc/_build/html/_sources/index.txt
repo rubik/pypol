@@ -5,7 +5,7 @@
 
 .. module:: pypol
 
-Welcome to pypol v0.2 documentation!
+Welcome to pypol v0.3 documentation!
 ====================================
 
 :Author: Michele Lacchia (michelelacchia@gmail.com)

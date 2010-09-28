@@ -3,6 +3,7 @@ This file is part of the pypol project.
 (C) Copyright 2010 Michele Lacchia
 '''
 
+from __future__ import division
 import random
 import operator
 import fractions
@@ -170,11 +171,113 @@ def random_poly(coeff_range=xrange(-10, 11), len_=None, len_range=xrange(-10, 11
 
     return poly
 
-def root(poly, k=0.5, epsilon=10**-8):
+def remove_multiple_roots(poly):
+    '''
+    Removes multiple roots, speeding up root-finding.
+    '''
+
+    return poly / gcd(poly, polyder(poly))
+
+def quadratic(poly):
+    '''
+    Returns the two roots of the polynomial *poly* solving the quadratic equation:
+        .. image:: quad_eq.gif
+
+    where the polynomial is: ``ax^2 + bx + c``.
+
+    .. warning::
+        The polynomial must be of the second degree.
+
+    **Examples**
+
+    ::
+
+        >>> p = poly1d([1, 0, -4])
+        >>> p
+        + x^2 - 4
+        >>> quadratic(p)
+        (2.0, -2.0)
+        >>> p(2)
+        0
+        >>> p(-2)
+        0
+        >>> p = poly1d([2, 3, 1])
+        >>> p
+        + 2x^2 + 3x + 1
+        >>> quadratic(p)
+        (-0.5, -1.0)
+        >>> p(-0.5)
+        0.0
+        >>> p(-1.0)
+        0.0
+
+    this functions can return complex numbers too::
+
+        >>> p = poly1d([-4, 5, -3])
+        >>> p
+        - 4x^2 + 5x - 3
+        >>> quadratic(p)
+        ((0.625-0.59947894041408989j), (0.625+0.59947894041408989j))
+
+    but the precision is lower::
+
+        >>> p = poly1d([-4, 5, -3])
+        >>> p
+        - 4x^2 + 5x - 3
+        >>> quadratic(p)
+        ((0.625-0.59947894041408989j), (0.625+0.59947894041408989j))
+        >>> r1 = (0.625-0.59947894041408989j)
+        >>> p(r1)
+        (-4.4408920985006262e-16+0j)
+        >>> r2 = (0.625+0.59947894041408989j)
+        >>> p(r2)
+        (-4.4408920985006262e-16+0j)
+    '''
+
+    def _get(power):
+        if power == 0:
+            return poly.right_hand_side or 0
+        plist = poly.to_plist()
+        c = [None] + plist[::-1]
+        if c[power][1] == power:
+            return c[power][0]
+        else:
+            for t in plist:
+                if t[1] == power:
+                    return t[0]
+            return 0
+
+    assert poly.degree == 2
+    if len(poly.coefficients) == 3:
+        a, b, c = poly.coefficients
+    else:
+        a, b, c = map(_get, [2, 1, 0])
+    r = b ** 2 - 4*a*c
+    if r < 0:
+        r = complex(imag=(-r) ** 0.5)
+    else:
+        r = r ** 0.5
+    return ((-b + r) / (2*a), (-b - r) / (2*a))
+
+def newton(poly, start=1, epsilon=10**-8): ## Still in development
+    poly_d = polyder(poly)
+
+    while True:
+        if poly(start) == 0:
+            break
+        if poly(start) <= epsilon:
+            break
+        n = start - poly(start) / poly_d(start)
+        if start == n:
+            break
+        start = n
+
+    return start
+
+def bisection(poly, k=0.5, epsilon=10**-8):
     '''
     Finds the root of the polynomial *poly* using the *bisection method* [#f1]_.
-    Before trying to find the root, it tries ``poly.zeros``.
-    When it finds the root, it checks if -root is a root too. If so, it returns a two-length tuple, else a tuple
+    When it finds the root, it checks if ``-root`` is a root too. If so, it returns a two-length tuple, else a tuple
     with one root.
 
     :param float k: the increment of the two extreme point. The increment is calculated with the formula ``a + ak``.
@@ -196,9 +299,6 @@ def root(poly, k=0.5, epsilon=10**-8):
 
     if epsilon > 5:
         raise ValueError('epsilon cannot be greater than 5')
-
-    if poly.zeros and poly.zeros != NotImplemented:
-        return poly.zeros
 
     if len(poly.letters) != 1:
         return NotImplemented
@@ -250,7 +350,12 @@ def polyder(p):
     def _single_der(var):
         return [var[0]*var[1], var[1] - 1]
 
-    return poly1d_2([_single_der(t) for t in p.to_plist()])
+    try:
+        variable = p.letters[0]
+    except IndexError:
+        variable = 'x'
+
+    return poly1d_2([_single_der(t) for t in p.to_plist()], variable)
 
 def polyint(p):
     '''
@@ -279,6 +384,8 @@ def polyint(p):
 
     def _single_int(var):
         n = var[1] + 1
+        if not n:
+            return [0, 0]
         j = fractions.Fraction(var[0], n)
         if int(j) == j:
             j = int(j)
@@ -331,7 +438,7 @@ def fib_poly(n):
         p.append(polynomial('x') * p[-1] + p[-2])
     return p[-1]
 
-def fib_poly_rec(n):
+def fib_poly_r(n):
     '''
     Returns the *nth* Fibonacci polynomial in *x* (recursive version)::
 
@@ -363,3 +470,57 @@ def fib_poly_rec(n):
         return poly1d([1], right_hand_side=False)
     elif n > 2:
         return polynomial('x')*fib_poly(n - 1) + fib_poly(n - 2)
+
+def hermite_prob(n):
+    '''
+    '''
+
+    x = poly1d([1, 0])
+    if n < 0:
+        return Polynomial()
+    if n == 0:
+        return poly1d([1])
+    if n == 1:
+        return x
+    p = [x]
+    for _ in xrange(n - 1):
+        p.append(p[-1] * x - polyder(p[-1]))
+    return p[-1]
+
+def hermite_prob_r(n):
+    '''
+    '''
+
+    x = poly1d([1, 0])
+    if n < 0:
+        return Polynomial()
+    if n == 0:
+        return poly1d([1])
+    if n == 1:
+        return x
+    return hermite_prob(n - 1) * x - polyder(hermite_prob(n - 1))
+
+def hermite_phys(n):
+    '''
+    '''
+
+    if n < 0:
+        return Polynomial()
+    if n == 0:
+        return poly1d([1])
+    x = poly1d([1, 0])
+    p = [poly1d([1])]
+    for _ in xrange(n):
+        p.append((p[-1] * x * 2) - polyder(p[-1]))
+    return p[-1]
+
+def hermite_phys_r(n):
+    '''
+    '''
+
+    if n < 0:
+        return Polynomial()
+    if n == 0:
+        return poly1d([1])
+    x = poly1d([1, 0])
+    return (hermite_phys(n - 1) * x * 2) - polyder(hermite_phys(n - 1))

@@ -8,13 +8,14 @@ This module add some utility function to pypol.
 Currently this functions are avaiable:
 
 .. hlist::
-    :columns: 3
+    :columns: 4
 
     * :func:`divisible`
     * :func:`gcd`
     * :func:`lcm`
     * :func:`random_poly`
-    * :func:`root`
+    * :func:`quadratic`
+    * :func:`bisection`
     * :func:`polyder`
     * :func:`polyint`
     * :func:`fib_poly`
@@ -28,7 +29,9 @@ Currently this functions are avaiable:
 
 .. autofunction:: pypol.funcs.random_poly
 
-.. autofunction:: pypol.funcs.root
+.. autofunction:: pypol.funcs.quadratic
+
+.. autofunction:: pypol.funcs.bisection
 
 .. autofunction:: pypol.funcs.polyder
 
@@ -36,7 +39,7 @@ Currently this functions are avaiable:
 
 .. autofunction:: pypol.funcs.fib_poly
 
-.. autofunction:: pypol.funcs.fib_poly_rec
+.. autofunction:: pypol.funcs.fib_poly_r
 
 
 .. rubric:: Footnotes
