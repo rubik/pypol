@@ -7,9 +7,12 @@ from __future__ import division
 import random
 import operator
 import fractions
+import math
 
-from core import Polynomial, poly1d, poly1d_2, polynomial
+from core import Polynomial, poly1d, poly1d_2, polynomial, monomial
 
+ONE = monomial()
+x = poly1d([1, 0])
 
 def divisible(a, b):
     '''
@@ -185,8 +188,8 @@ def quadratic(poly):
 
     where the polynomial is: ``ax^2 + bx + c``.
 
-    .. warning::
-        The polynomial must be of the second degree.
+    :raises: :exc:`AssertionError` if the polynomial's degree is not 2.
+    :rtype: 2 length tuple
 
     **Examples**
 
@@ -247,7 +250,7 @@ def quadratic(poly):
                     return t[0]
             return 0
 
-    assert poly.degree == 2
+    assert poly.degree == 2, 'The polynomial\'s degree must be 2'
     if len(poly.coefficients) == 3:
         a, b, c = poly.coefficients
     else:
@@ -300,12 +303,11 @@ def bisection(poly, k=0.5, epsilon=10**-8):
     if epsilon > 5:
         raise ValueError('epsilon cannot be greater than 5')
 
-    if len(poly.letters) != 1:
-        return NotImplemented
+    assert len(poly.letters) == 1
 
-    if all(coeff > 0 for coeff in poly.coefficients) and \
-        all(exp & 1 == 0 for exp in poly.powers(poly.letters[0])): #complex root
-        return NotImplemented
+    assert  not all(coeff > 0 for coeff in poly.coefficients) and \
+            not all(exp & 1 == 0 for exp in poly.powers(poly.letters[0])), \
+            'The root of the polynomial is a complex number'
 
     _d = lambda a, b: a * b < 0 # Check if discordant
     a, b = -50, 45
@@ -430,10 +432,10 @@ def fib_poly(n):
     if n <= 0:
         return Polynomial()
     elif n == 1:
-        return poly1d([1])
+        return ONE
     elif n == 2:
         return poly1d([1], right_hand_side=False)
-    p = [poly1d([1]), poly1d([1], right_hand_side=False)]
+    p = [ONE, poly1d([1], right_hand_side=False)]
     for x in xrange(n - 2):
         p.append(polynomial('x') * p[-1] + p[-2])
     return p[-1]
@@ -465,7 +467,7 @@ def fib_poly_r(n):
     if n <= 0:
         return Polynomial()
     elif n == 1:
-        return poly1d([1])
+        return ONE
     elif n == 2:
         return poly1d([1], right_hand_side=False)
     elif n > 2:
@@ -473,13 +475,31 @@ def fib_poly_r(n):
 
 def hermite_prob(n):
     '''
+    Returns the *nth* probabilistic Hermite polynomial, that is a polynomial of degree *n*.
+
+    .. seealso::
+        This is the iterative version and is faster than the recursive one; see also :func:`hermite_prob_r` and :func:`hermite_phys`
+
+    **Examples**
+
+    ::
+
+        >>> hermite_prob(0)
+         + 1
+        >>> hermite_prob(1)
+         + x
+        >>> hermite_prob(2)
+         + x^2 - 1
+        >>> hermite_prob(4)
+         + x^4 - 6x^2 + 3
+        >>> hermite_prob(45)
+         + x^45 - 990x^43 + .. cut .. + 390756386568644372393927184375x^5 - 186074469794592558282822468750x^3 + 25373791335626257947657609375x
     '''
 
-    x = poly1d([1, 0])
     if n < 0:
         return Polynomial()
     if n == 0:
-        return poly1d([1])
+        return ONE
     if n == 1:
         return x
     p = [x]
@@ -489,38 +509,197 @@ def hermite_prob(n):
 
 def hermite_prob_r(n):
     '''
+    Returns the *nth* Hermite probabilistic polynomial (recursive version).
+
+    .. seealso::
+        This version is slower than the iterative one, see also :func:`hermite_prob`.
+
+    **Examples**
+
+    ::
+
+        >>> hermite_prob_r(0)
+         + 1
+        >>> hermite_prob_r(1)
+         + x
+        >>> hermite_prob_r(2)
+         + x^2 - 1
+        >>> hermite_prob_r(3)
+         + x^3 - 3x
+        >>> hermite_prob_r(4)
+         + x^4 - 6x^2 + 3
+        >>> hermite_prob_r(42)
+         + x^42 - 861x^40 + 335790x^38 .. cut .. - 747445016088215350396115625x^8 + 1162692247248334989505068750x^6 - 917914932038159202240843750x^4 + 275374479611447760672253125x^2 - 13113070457687988603440625
     '''
 
-    x = poly1d([1, 0])
     if n < 0:
         return Polynomial()
     if n == 0:
-        return poly1d([1])
+        return ONE
     if n == 1:
         return x
     return hermite_prob(n - 1) * x - polyder(hermite_prob(n - 1))
 
 def hermite_phys(n):
     '''
+    Returns the *nth* Hermite polynomial (physicist).
+
+    .. seealso::
+
+        The recursive version: :func:`hermite_phys_r`
+
+    **Examples**
+
+    ::
+
+        >>> hermite_phys(0)
+         + 1
+        >>> hermite_phys(1)
+         + 2x
+        >>> hermite_phys(2)
+         + 4x^2 - 2
+        >>> hermite_phys(3)
+         + 8x^3 - 12x
+        >>> hermite_phys(4)
+         + 16x^4 - 48x^2 + 12
+        >>> hermite_phys(9)
+         + 512x^9 - 9216x^7 + 48384x^5 - 80640x^3 + 30240x
+        >>> hermite_phys(11)
+         + 2048x^11 - 56320x^9 + 506880x^7 - 1774080x^5 + 2217600x^3 - 665280x
     '''
 
     if n < 0:
         return Polynomial()
     if n == 0:
-        return poly1d([1])
-    x = poly1d([1, 0])
-    p = [poly1d([1])]
+        return ONE
+    p = [ONE]
     for _ in xrange(n):
         p.append((p[-1] * x * 2) - polyder(p[-1]))
     return p[-1]
 
 def hermite_phys_r(n):
     '''
+    Returns the *nth* Hermite polynomial (physicist and recursive version).
+
+    **Examples**
+
+    ::
+
+        >>> hermite_phys_r(0)
+        + 1
+        >>> hermite_phys_r(1)
+         + 2x
+        >>> hermite_phys_r(2)
+         + 4x^2 - 2
+        >>> hermite_phys_r(3)
+         + 8x^3 - 12x
+        >>> hermite_phys_r(6)
+         + 64x^6 - 480x^4 + 720x^2 - 120
+        >>> hermite_phys_r(9)
+         + 512x^9 - 9216x^7 + 48384x^5 - 80640x^3 + 30240x
     '''
 
     if n < 0:
         return Polynomial()
     if n == 0:
-        return poly1d([1])
-    x = poly1d([1, 0])
+        return ONE
     return (hermite_phys(n - 1) * x * 2) - polyder(hermite_phys(n - 1))
+
+def chebyshev_t(n):
+    '''
+    Returns the *nth* Chebyshev polynomial of the first kind in ``x``.
+
+    **Examples**
+
+    ::
+
+    >>> chebyshev_t(0)
+     + 1
+    >>> chebyshev_t(1)
+     + x
+    >>> chebyshev_t(2)
+     + 2x^2 - 1
+    >>> chebyshev_t(4)
+     + 8x^4 - 8x^2 + 1
+    >>> chebyshev_t(5)
+     + 16x^5 - 20x^3 + 5x
+    >>> chebyshev_t(9)
+     + 256x^9 - 576x^7 + 432x^5 - 120x^3 + 9x
+    '''
+
+    if n < 0:
+        return Polynomial()
+    if n == 0:
+        return ONE
+    if n == 1:
+        return x
+    return chebyshev_t(n - 1) * '2x' - chebyshev_t(n - 2)
+
+def chebyshev_u(n):
+    '''
+    Returns the *nth* Chebyshev polynomial of the second kind in ``x``.
+
+    **Examples**
+
+    ::
+
+        >>> chebyshev_u(0)
+         + 1
+        >>> chebyshev_u(1)
+         + 2x
+        >>> chebyshev_u(2)
+         + 4x^2 - 1
+        >>> chebyshev_u(4)
+         + 16x^4 - 12x^2 + 1
+        >>> chebyshev_u(6)
+         + 64x^6 - 80x^4 + 24x^2 - 1
+        >>> chebyshev_u(8)
+         + 256x^8 - 448x^6 + 240x^4 - 40x^2 + 1
+        >>> chebyshev_u(11)
+         + 2048x^11 - 5120x^9 + 4608x^7 - 1792x^5 + 280x^3 - 12x
+    '''
+
+    if n < 0:
+        return Polynomial()
+    if n == 0:
+        return ONE
+    if n == 1:
+        return poly1d([2, 0])
+    return chebyshev_u(n - 1) * '2x' - chebyshev_u(n - 2)
+
+def abel(n, variable='a'):
+    '''
+    Returns the *nth* Abel polynomial in ``x`` and *variable*.
+
+    **Examples**
+
+    ::
+
+        >>> abel(0)
+         + 1
+        >>> abel(1)
+         + x
+        >>> abel(2)
+         + x^2 - 2ax
+        >>> abel(5)
+         + x^5 - 20ax^4 + 150a^2x^3 - 500a^3x^2 + 625a^4x
+        >>> abel(9)
+         + x^9 - 72ax^8 + 2268a^2x^7 - 40824a^3x^6 + 459270a^4x^5 - 3306744a^5x^4 + 14880348a^6x^3 - 38263752a^7x^2 + 43046721a^8x
+    '''
+
+    if n < 0:
+        return Polynomial()
+    if n == 0:
+        return ONE
+    if n == 1:
+        return x
+    p = poly1d([n])
+    return x * (x - p*variable) ** (n - 1)
+
+def bernstein(v, n): ## Still in development
+    def _bin_coeff(n, k):
+        return math.factorial(n)/(math.factorial(k)*math.factorial(n - k))
+
+    if not v and not n:
+        return ONE
+    return _bin_coeff(n, v) * (x**v) * poly1d([-1, 1]) ** (n - v)

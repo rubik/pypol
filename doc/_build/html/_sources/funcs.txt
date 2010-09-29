@@ -14,12 +14,20 @@ Currently this functions are avaiable:
     * :func:`gcd`
     * :func:`lcm`
     * :func:`random_poly`
-    * :func:`quadratic`
-    * :func:`bisection`
     * :func:`polyder`
     * :func:`polyint`
     * :func:`fib_poly`
-    * :func:`fib_poly_rec`
+    * :func:`fib_poly_r`
+    * :func:`hermite_prob`
+    * :func:`hermite_prob_r`
+    * :func:`hermite_phys`
+    * :func:`hermite_phys_r`
+    * :func:`quadratic`
+    * :func:`bisection`
+
+
+Functions
+---------
 
 .. autofunction:: pypol.funcs.divisible
 
@@ -29,17 +37,33 @@ Currently this functions are avaiable:
 
 .. autofunction:: pypol.funcs.random_poly
 
-.. autofunction:: pypol.funcs.quadratic
-
-.. autofunction:: pypol.funcs.bisection
-
 .. autofunction:: pypol.funcs.polyder
 
 .. autofunction:: pypol.funcs.polyint
 
+Sequences
+---------
+
 .. autofunction:: pypol.funcs.fib_poly
 
 .. autofunction:: pypol.funcs.fib_poly_r
+
+.. autofunction:: hermite_prob
+
+.. autofunction:: hermite_prob_r
+
+.. autofunction:: hermite_phys
+
+.. autofunction:: hermite_phys_r
+
+
+Root-finding
+------------
+
+.. autofunction:: pypol.funcs.quadratic
+
+.. autofunction:: pypol.funcs.bisection
+
 
 
 .. rubric:: Footnotes
