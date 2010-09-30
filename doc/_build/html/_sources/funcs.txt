@@ -5,10 +5,14 @@ The :mod:`funcs` module
 ========================
 
 This module add some utility function to pypol.
-Currently this functions are avaiable:
+
+Basic functions
+---------------
+
+The :mod:`funcs` offers these basic functions:
 
 .. hlist::
-    :columns: 4
+    :columns: 2
 
     * :func:`divisible`
     * :func:`gcd`
@@ -16,37 +20,40 @@ Currently this functions are avaiable:
     * :func:`random_poly`
     * :func:`polyder`
     * :func:`polyint`
+
+.. autofunction:: divisible
+
+.. autofunction:: gcd
+
+.. autofunction:: lcm
+
+.. autofunction:: random_poly
+
+.. autofunction:: polyder
+
+.. autofunction:: polyint
+
+Series
+------
+
+In this module there are these functions:
+
+.. hlist::
+    :columns: 3
+
     * :func:`fib_poly`
     * :func:`fib_poly_r`
     * :func:`hermite_prob`
     * :func:`hermite_prob_r`
     * :func:`hermite_phys`
     * :func:`hermite_phys_r`
-    * :func:`quadratic`
-    * :func:`bisection`
+    * :func:`chebyshev_t`
+    * :func:`chebyshev_u`
+    * :func:`abel`
 
+.. autofunction:: fib_poly
 
-Functions
----------
-
-.. autofunction:: pypol.funcs.divisible
-
-.. autofunction:: pypol.funcs.gcd
-
-.. autofunction:: pypol.funcs.lcm
-
-.. autofunction:: pypol.funcs.random_poly
-
-.. autofunction:: pypol.funcs.polyder
-
-.. autofunction:: pypol.funcs.polyint
-
-Sequences
----------
-
-.. autofunction:: pypol.funcs.fib_poly
-
-.. autofunction:: pypol.funcs.fib_poly_r
+.. autofunction:: fib_poly_r
 
 .. autofunction:: hermite_prob
 
@@ -56,13 +63,26 @@ Sequences
 
 .. autofunction:: hermite_phys_r
 
+.. autofunction:: chebyshev_t
+
+.. autofunction:: chebyshev_u
+
+.. autofunction:: abel
+
 
 Root-finding
 ------------
 
-.. autofunction:: pypol.funcs.quadratic
+At the moment these functions only are avaiable:
 
-.. autofunction:: pypol.funcs.bisection
+.. hlist::
+
+    * :func:`quadratic`
+    * :func:`bisection`
+
+.. autofunction:: quadratic
+
+.. autofunction:: bisection
 
 
 

@@ -13,7 +13,7 @@ First of all, you need to get the modules. To do this, go to the `github reposit
 
 Unpack it::
 
-    $ tar xzf pypol-0.1.1.tar.gz
+    $ tar xzf pypol-0.3.tar.gz
 
 Now run the setup.py script::
 
@@ -26,7 +26,7 @@ Running the tests
 
 If you want to run pypol's tests you only have to run *test_pypol.py*, that is in the *tests* directory::
 
-    $ cd pypol_-0.2/tests
+    $ cd pypol_-0.3/tests
     $ python test_pypol.py
     ...............................
     ----------------------------------------------------------------------
@@ -36,7 +36,7 @@ If you want to run pypol's tests you only have to run *test_pypol.py*, that is i
 
 or run setup.py::
 
-    $ cd pypol_-0.2
+    $ cd pypol_-0.3
     $ sudo python setup.py test
     running test
     running egg_info

@@ -7,11 +7,20 @@
     + pypol.funcs.gcd
     + pypol.funcs.lcm
     + pypol.funcs.random_poly
-    + pypol.funcs.root
     + pypol.funcs.polyder
     + pypol.funcs.polyint
     + pypol.funcs.fib_poly
-    + pypol.funcs.fib_poly_rec
+    + pypol.funcs.fib_poly_r
+    + pypol.funcs.hermite_prob
+    + pypol.funcs.hermite_prob_r
+    + pypol.funcs.hermite_phys
+    + pypol.funcs.hermite_phys_r
+    + pypol.funcs.chebyshev_t
+    + pypol.funcs.chebyshev_u
+    + pypol.funcs.abel
+    + pypol.funcs.quadratic
+    + pypol.funcs.bisection
+    - pypol.root
     - make_polynomial
     - Polynomial.insert
 

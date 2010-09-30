@@ -35,6 +35,8 @@ def divisible(a, b):
         True
         >>> divisible(b, c)
         True
+
+    .. versionadded:: 0.2
     '''
 
     return a % b == polynomial()
@@ -174,13 +176,6 @@ def random_poly(coeff_range=xrange(-10, 11), len_=None, len_range=xrange(-10, 11
 
     return poly
 
-def remove_multiple_roots(poly):
-    '''
-    Removes multiple roots, speeding up root-finding.
-    '''
-
-    return poly / gcd(poly, polyder(poly))
-
 def quadratic(poly):
     '''
     Returns the two roots of the polynomial *poly* solving the quadratic equation:
@@ -235,6 +230,8 @@ def quadratic(poly):
         >>> r2 = (0.625+0.59947894041408989j)
         >>> p(r2)
         (-4.4408920985006262e-16+0j)
+
+    .. versionadded:: 0.3
     '''
 
     def _get(power):
@@ -262,20 +259,64 @@ def quadratic(poly):
         r = r ** 0.5
     return ((-b + r) / (2*a), (-b - r) / (2*a))
 
-def newton(poly, start=1, epsilon=10**-8): ## Still in development
+def newton(poly, start=1, c=100):
+    '''
+    Returns one root of the polynomial *poly*.
+
+    :param integer start: the start value for evaluate ``poly(x)``.
+    :param integer c: the number of cycles to perform.
+    :rtype: integer of float
+
+    **Examples**
+
+    ::
+
+        >>> k = poly1d([2, 5, 3])
+        >>> k
+        + 2x^2 + 5x + 3
+        >>> funcs.newton(k, -1)
+        -1
+        >>> k(-1)
+        0
+        >>> funcs.newton(k, 1)
+        -1.0000000000000004
+        >>> r = funcs.newton(k, 1)
+        >>> r
+        -1.0000000000000004
+        >>> k(r)
+        0.0
+        >>> funcs.newton(k, -900) ## If the starting value is too far from the root, the precision is lower
+        -1.4999999999999996
+
+    .. versionadded:: 0.3
+    '''
+
     poly_d = polyder(poly)
 
-    while True:
-        if poly(start) == 0:
+    for _ in xrange(c):
+        p_s = poly(start)
+        if not p_s:
+            return start
+        x_n = start - p_s / poly_d(start)
+        if start == x_n:
             break
-        if poly(start) <= epsilon:
-            break
-        n = start - poly(start) / poly_d(start)
-        if start == n:
-            break
-        start = n
+        start = x_n
 
     return start
+
+def ruffini(poly):
+    '''
+    
+    '''
+
+    def _divs(n):
+        d = [1] + [x for x in xrange(2, n // 2 + 1)] + [n]
+        return map(lambda i: i * -1, d) + d
+
+    p = poly.right_hand_side
+    if not p:
+        return []
+    return [x for x in _divs(p) if not poly(x)]
 
 def bisection(poly, k=0.5, epsilon=10**-8):
     '''
@@ -347,6 +388,8 @@ def polyder(p):
          + 2x^3 - 4x^2  + 1
         >>> polyder(p2)
          + 6x^2 - 8x
+
+    .. versionadded:: 0.3
     '''
 
     def _single_der(var):
@@ -382,6 +425,8 @@ def polyint(p):
         + x^3 - 7x + 5
         >>> polyder(polyint(p1))
         - x
+
+    .. versionadded:: 0.3
     '''
 
     def _single_int(var):
@@ -394,6 +439,29 @@ def polyint(p):
         return [j, n]
 
     return poly1d_2([_single_int(t) for t in p.to_plist()])
+
+def interpolate(poly, x_values, y_values):
+    '''
+    Interpolate the polynomial *poly* with the Newton method.
+
+    :param Polynomial poly: the polynomial to interpolate
+    :param list x_values: the list of the *abscissas*
+    :param list y_values: the list of the *ordinates*
+    :rtype: Polynomial
+
+    **Examples**
+
+    ::
+
+        
+    '''
+
+    assert len(x_values) != 0 and (len(x_values) == len(y_values)), 'x and y cannot be empty and must have the same length'
+    b0 = y[0]
+
+    coeffs = []
+    for i, x in enumerate(x_values):
+        return NotImplemented
 
 def fib_poly(n):
     '''
@@ -427,6 +495,8 @@ def fib_poly(n):
         150
         >>> len(str(fib_poly(300)))
         8309
+
+    .. versionadded:: 0.3
     '''
 
     if n <= 0:
@@ -462,6 +532,8 @@ def fib_poly_r(n):
         + x^19 + 18x^17 + 136x^15 + 560x^13 + 1365x^11 + 2002x^9 + 1716x^7 + 792x^5 + 165x^3 + 10x
         >>> fib_poly(25)
         + x^24 + 23x^22 + 231x^20 + 1330x^18 + 4845x^16 + 11628x^14 + 18564x^12 + 19448x^10 + 12870x^8 + 5005x^6 + 1001x^4 + 78x^2 + 1
+
+    .. versionadded:: 0.3
     '''
 
     if n <= 0:
@@ -477,9 +549,6 @@ def hermite_prob(n):
     '''
     Returns the *nth* probabilistic Hermite polynomial, that is a polynomial of degree *n*.
 
-    .. seealso::
-        This is the iterative version and is faster than the recursive one; see also :func:`hermite_prob_r` and :func:`hermite_phys`
-
     **Examples**
 
     ::
@@ -494,6 +563,8 @@ def hermite_prob(n):
          + x^4 - 6x^2 + 3
         >>> hermite_prob(45)
          + x^45 - 990x^43 + .. cut .. + 390756386568644372393927184375x^5 - 186074469794592558282822468750x^3 + 25373791335626257947657609375x
+
+    .. versionadded:: 0.3
     '''
 
     if n < 0:
@@ -511,9 +582,6 @@ def hermite_prob_r(n):
     '''
     Returns the *nth* Hermite probabilistic polynomial (recursive version).
 
-    .. seealso::
-        This version is slower than the iterative one, see also :func:`hermite_prob`.
-
     **Examples**
 
     ::
@@ -530,6 +598,8 @@ def hermite_prob_r(n):
          + x^4 - 6x^2 + 3
         >>> hermite_prob_r(42)
          + x^42 - 861x^40 + 335790x^38 .. cut .. - 747445016088215350396115625x^8 + 1162692247248334989505068750x^6 - 917914932038159202240843750x^4 + 275374479611447760672253125x^2 - 13113070457687988603440625
+
+    .. versionadded:: 0.3
     '''
 
     if n < 0:
@@ -543,10 +613,6 @@ def hermite_prob_r(n):
 def hermite_phys(n):
     '''
     Returns the *nth* Hermite polynomial (physicist).
-
-    .. seealso::
-
-        The recursive version: :func:`hermite_phys_r`
 
     **Examples**
 
@@ -566,6 +632,8 @@ def hermite_phys(n):
          + 512x^9 - 9216x^7 + 48384x^5 - 80640x^3 + 30240x
         >>> hermite_phys(11)
          + 2048x^11 - 56320x^9 + 506880x^7 - 1774080x^5 + 2217600x^3 - 665280x
+
+    .. versionadded:: 0.3
     '''
 
     if n < 0:
@@ -597,6 +665,8 @@ def hermite_phys_r(n):
          + 64x^6 - 480x^4 + 720x^2 - 120
         >>> hermite_phys_r(9)
          + 512x^9 - 9216x^7 + 48384x^5 - 80640x^3 + 30240x
+
+    .. versionadded:: 0.3
     '''
 
     if n < 0:
@@ -613,18 +683,20 @@ def chebyshev_t(n):
 
     ::
 
-    >>> chebyshev_t(0)
-     + 1
-    >>> chebyshev_t(1)
-     + x
-    >>> chebyshev_t(2)
-     + 2x^2 - 1
-    >>> chebyshev_t(4)
-     + 8x^4 - 8x^2 + 1
-    >>> chebyshev_t(5)
-     + 16x^5 - 20x^3 + 5x
-    >>> chebyshev_t(9)
-     + 256x^9 - 576x^7 + 432x^5 - 120x^3 + 9x
+        >>> chebyshev_t(0)
+         + 1
+        >>> chebyshev_t(1)
+         + x
+        >>> chebyshev_t(2)
+         + 2x^2 - 1
+        >>> chebyshev_t(4)
+         + 8x^4 - 8x^2 + 1
+        >>> chebyshev_t(5)
+         + 16x^5 - 20x^3 + 5x
+        >>> chebyshev_t(9)
+         + 256x^9 - 576x^7 + 432x^5 - 120x^3 + 9x
+
+    .. versionadded:: 0.3
     '''
 
     if n < 0:
@@ -657,6 +729,8 @@ def chebyshev_u(n):
          + 256x^8 - 448x^6 + 240x^4 - 40x^2 + 1
         >>> chebyshev_u(11)
          + 2048x^11 - 5120x^9 + 4608x^7 - 1792x^5 + 280x^3 - 12x
+
+    .. versionadded:: 0.3
     '''
 
     if n < 0:
@@ -685,6 +759,8 @@ def abel(n, variable='a'):
          + x^5 - 20ax^4 + 150a^2x^3 - 500a^3x^2 + 625a^4x
         >>> abel(9)
          + x^9 - 72ax^8 + 2268a^2x^7 - 40824a^3x^6 + 459270a^4x^5 - 3306744a^5x^4 + 14880348a^6x^3 - 38263752a^7x^2 + 43046721a^8x
+
+    .. versionadded:: 0.3
     '''
 
     if n < 0:
@@ -703,3 +779,12 @@ def bernstein(v, n): ## Still in development
     if not v and not n:
         return ONE
     return _bin_coeff(n, v) * (x**v) * poly1d([-1, 1]) ** (n - v)
+
+def laguerre(n): ## Still in development
+    if n < 0:
+        return Polynomial()
+    if n == 0:
+        return ONE
+    if n == 1:
+        return ONE - x
+    return (1 / (n + 1))*((2 * n + 1 - x) * laguerre(n - 1) - n * laguerre(n - 2))
