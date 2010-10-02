@@ -1,0 +1,9 @@
+include MANIFEST.in
+include README.textile
+include CHANGELOG
+include LICENSE
+
+recursive-include doc *
+recursive-include tests *
+
+prune doc/_build/*
