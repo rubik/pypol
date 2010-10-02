@@ -4,9 +4,7 @@
 *.zip
 *.js
 *.komodoproject
-MANIFEST
-/src/doc/_build/
-/src/doc/_static/
+/doc/_build/
 /dist/
 /build/
 /pypol_.egg-info/
