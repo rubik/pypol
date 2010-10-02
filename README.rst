@@ -8,8 +8,20 @@ Pypol - A Python library for manupulate polynomials
 How to use it
 -------------
 
-If you want to use this library you only need to put it in a directory that is in
-your PYTHONPATH.
+Installation
+++++++++++++
+
+pypol is on PyPI too, so you can install it with *easy_install*::
+
+    easy_install pypol_
+
+.. warning::
+    Don't forget the underscore after pypol, because with::
+
+        easy_install pypol
+
+    You will install another package and not this!
+
 Then you can import it normally::
 
     >>> import pypol
