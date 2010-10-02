@@ -22,16 +22,16 @@ For examples see the documentation:
 Documentation
 -------------
 
-To build the documentation cd to pypol/doc
+To build the documentation cd to pypol/doc::
 
     $ cd /pypol/doc
 
 and build the documentation files:
-    * if you are on Windows run make.bat
+    * if you are on Windows run make.bat::
 
         $ make.bat html
 
-    * if you are on Unix run make
+    * if you are on Unix run make::
 
         $ make html
 
