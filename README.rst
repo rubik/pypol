@@ -15,9 +15,11 @@ Then you can import it normally::
     >>> import pypol
     >>> 
 
-For examples see the documentation:
+See also the documentation:
 `here <http://www.pypol.altervista.org/>`_
 
+For examples see the Wiki:
+`wiki <http://github.com/rubik/pypol/wiki>`_
 
 Documentation
 -------------
@@ -27,6 +29,7 @@ To build the documentation cd to pypol/doc::
     $ cd /pypol/doc
 
 and build the documentation files:
+
     * if you are on Windows run make.bat::
 
         $ make.bat html
