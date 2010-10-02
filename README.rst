@@ -5,7 +5,8 @@ Pypol - A Python library for manupulate polynomials
 © Copyrigth 2010 Michele Lacchia alias (rubik, Python, python, Pythoner, x-reynik-x)
     See LICENSE file too
 
-h2. How to use it
+How to use it
+-------------
 
 If you want to use this library you only need to put it in a directory that is in
 your PYTHONPATH.
@@ -15,7 +16,7 @@ Then you can import it normally::
     >>> 
 
 For examples see the documentation:
-<a href="http://www.pypol.altervista.org/">here</a>
+`here <http://www.pypol.altervista.org/>`_
 
 
 Documentation
