@@ -15,12 +15,15 @@ pypol is on PyPI too, so you can install it with *easy_install*::
 
     easy_install pypol_
 
-.. warning::
-    Don't forget the underscore after pypol, because with::
+WARNING
+#######
 
-        easy_install pypol
+Don't forget the underscore after pypol, because with::
 
-    You will install another package and not this!
+    easy_install pypol
+
+You will install another package and not this!
+
 
 Then you can import it normally::
 
