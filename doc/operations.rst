@@ -381,9 +381,9 @@ __nonzero__
         >>> bool(p)
         False
         >>> if p:
-            print 'not null'
-        else:
-            print 'null'
+                print 'not null'
+            else:
+                print 'null'
             
         null
         >>> p = poly1d([3, 2, 1, 3])

@@ -240,20 +240,19 @@ def newton(poly, x=1, epsilon=float('-inf')):
         + 2x^2 + 5x + 3
 
     the roots (real) of this polynomial are ``-1`` and ``-1.5``.
-    We start trying with 10::
+    We start with 10::
 
         >>> newton(k, 10)
         -1.0000000000000002
 
-    so we try -1::
+    so we try ``-1``::
 
         >>> newton(k, -1)
         -1
         >>> k(-1)
         0
 
-    We have one root!
-    So we continue::
+    We have one root! We continue::
 
         >>> newton(k, -2)
         -1.5

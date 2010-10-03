@@ -9,7 +9,7 @@ First steps with pypol
 Download and install
 ++++++++++++++++++++
 
-First of all, you need to get the files. To do this, go to the `github repository <http://github.com/rubik/pypol/downloads>`_ or to `PyPI <http://>`_ and download the right file.
+First of all, you need to get the files. To do this, go to the `github repository <http://github.com/rubik/pypol/downloads>`_ or to `PyPI <http://pypi.python.org/pypi/pypol_/0.3>`_ and download the right file.
 
 If you downloaded the source you need to unpack it::
 
@@ -20,7 +20,7 @@ Now run the setup.py script::
     $ python setup.py install
 
 easy_install
-++++++++++++
+############
 
 pypol is on PyPI too. If you have setuptools installed you can get pypol doing this::
 

@@ -571,8 +571,11 @@ class Polynomial(object):
 
         if len(self) == 1:
             return self.letters
-        return tuple(reduce(operator.and_, [set(monomial[1].keys()) \
-                                        for monomial in self.monomials], set()))
+        try:
+            return tuple(reduce(operator.and_, [set(monomial[1].keys()) \
+                                        for monomial in self.monomials]))
+        except TypeError:
+            return ()
 
     def max_letter(self, alphabetically=True):
         '''
@@ -1380,10 +1383,12 @@ class Polynomial(object):
         letter = B.max_letter()
         while A.degree >= B.degree:
             A.sort(key=self._key(letter), reverse=True)
-            quotient = _div(A._monomials[0], B._monomials[0])
+            quotient = _div(A[0], B[0])
             del A[0]
             Q.append(quotient)
 
+            if len(B) == 1:
+                continue
             m = Polynomial(B[1:])
             if not m:
                 return Q, Polynomial()
@@ -1448,8 +1453,8 @@ class AlgebraicFraction(object):
         self._numerator = numerator
         self._denominator = denominator
         self._simplify = simplify
-        if self._simplify:
-            self.simplify()
+        #if self._simplify:
+            #self.simplify()
 
     @ property
     def numerator(self):
