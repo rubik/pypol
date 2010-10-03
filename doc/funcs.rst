@@ -9,6 +9,12 @@ The :mod:`funcs` module
 
 This module add some utility function to pypol.
 
+.. note::
+
+    In all these examples it will be assumed that all items in the ``pypol.funcs`` namespace have been imported::
+
+        from pypol.funcs import *
+
 Basic functions
 ---------------
 
@@ -114,12 +120,24 @@ At the moment these functions only are avaiable:
 .. hlist::
 
     * :func:`quadratic`
+    * :func:`newton`
+    * :func:`ruffini`
     * :func:`bisection`
 
 quadratic
 +++++++++
 
 .. autofunction:: quadratic
+
+newton
+++++++
+
+.. autofunction:: newton
+
+ruffini
++++++++
+
+.. autofunction:: ruffini
 
 bisection
 +++++++++

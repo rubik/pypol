@@ -36,7 +36,7 @@ def divisible(a, b):
         >>> divisible(b, c)
         True
 
-    .. versionadded:: 0.2
+    .. versionadded:: 0.3
     '''
 
     if a.degree < b.degree:
@@ -223,12 +223,12 @@ def quadratic(poly):
         r = r ** 0.5
     return ((-b + r) / (2*a), (-b - r) / (2*a))
 
-def newton(poly, start=1, c=100):
+def newton(poly, x=1, epsilon=float('-inf')):
     '''
     Returns one root of the polynomial *poly*.
 
-    :param integer start: the start value for evaluate ``poly(x)``.
-    :param integer c: the number of cycles to perform.
+    :param integer x: the start value for evaluate ``poly(x)``.
+    :param integer epsilon: the precision of the calculus (default to ``float('-inf')``).
     :rtype: integer of float
 
     **Examples**
@@ -238,44 +238,120 @@ def newton(poly, start=1, c=100):
         >>> k = poly1d([2, 5, 3])
         >>> k
         + 2x^2 + 5x + 3
-        >>> funcs.newton(k, -1)
+
+    the roots (real) of this polynomial are ``-1`` and ``-1.5``.
+    We start trying with 10::
+
+        >>> newton(k, 10)
+        -1.0000000000000002
+
+    so we try -1::
+
+        >>> newton(k, -1)
         -1
         >>> k(-1)
         0
-        >>> funcs.newton(k, 1)
-        -1.0000000000000004
-        >>> r = funcs.newton(k, 1)
-        >>> r
-        -1.0000000000000004
-        >>> k(r)
+
+    We have one root!
+    So we continue::
+
+        >>> newton(k, -2)
+        -1.5
+        >>> k(-1.5)
         0.0
-        >>> funcs.newton(k, -900) ## If the starting value is too far from the root, the precision is lower
-        -1.4999999999999996
+
+    But this function cannot find complex roots::
+
+        >>> k = poly1d([1, -3, 6])
+        >>> k
+        + x^2 - 3x + 6
+        >>> quadratic(k) ## quadratic works for polynomial with degree 2 only
+        ((1.5+1.9364916731037085j), (1.5-1.9364916731037085j))
+        >>> newton(k)
+        
+        Traceback (most recent call last):
+          File "<pyshell#157>", line 1, in <module>
+            newton(k)
+          File "funcs.py", line 261, in newton
+            poly_d = polyder(poly)
+          File "core.py", line 1308, in __call__
+            letters = dict(zip(self.letters[:len(args)], args))
+          File "core.py", line 552, in letters
+            for m in self._monomials if m[1]], set())))
+        KeyboardInterrupt
+        >>> newton(k, -1)
+        
+        Traceback (most recent call last):
+          File "<pyshell#158>", line 1, in <module>
+            newton(k, -1)
+          File "funcs.py", line 261, in newton
+            poly_d = polyder(poly)
+          File "core.py", line 1311, in __call__
+            return eval(self.eval_form, letters)
+          File "core.py", line 522, in eval_form
+            for c, vars in self._monomials:
+        KeyboardInterrupt
+
+    We must interrupt!
 
     .. versionadded:: 0.3
     '''
 
     poly_d = polyder(poly)
 
-    for _ in xrange(c):
-        p_s = poly(start)
+    while True:
+        p_s = poly(x)
         if not p_s:
-            return start
-        x_n = start - p_s / poly_d(start)
-        if start == x_n:
             break
-        start = x_n
+        x_n = x - p_s / poly_d(x)
+        if x == x_n or abs(x - x_n) <= epsilon:
+            break
+        x = x_n
 
-    return start
+    return x
 
 def ruffini(poly):
     '''
-    
+    Returns the zeros of the polynomial basing on the right-hand side. If the polynomial has not the right-hand side, returns an empty list.
+
+    **Examples**
+
+    ::
+
+        >>> p = poly1d([1, 5, 5, -5, -6])
+        >>> p
+        + x^4 + 5x^3 + 5x^2 - 5x - 6
+        >>> ruffini(p)
+        [-1, 1]
+        >>> p(-1), p(1)
+        (0, 0)
+
+    and we can go on::
+
+        >>> p2, p3 = p / (x - 1), p / (x + 1)
+        >>> p2, p3
+        (+ x^3 + 6x^2 + 11x + 6, + x^3 + 4x^2 + x - 6)
+        >>> ruffini(p2), ruffini(p3)
+        ([-1, -2, -3], [1])
+        >>> p2(-1), p2(-2), p2(-3)
+        (0, 0, 0)
+        >>> p3(1)
+        0
+        >>> p4, p5, p6 = p2 / (x - 1), p2 / (x - 2), p / (x - 3)
+        >>> p4, p5, p6
+        (+ x^2 + 7x + 18, + x^2 + 8x + 27, + x^3 + 8x^2 + 29x + 82)
+        >>> ruffini(p4), ruffini(p5), ruffini(p6)
+        ([], [], [])
+
+    there are no more real roots, but if we try :func:`quadratic`::
+
+        >>> quadratic(p4), quadratic(p5)
+        (((-3.5+2.3979157616563596j), (-3.5-2.3979157616563596j)), ((-4+3.3166247903553998j), (-4-3.3166247903553998j)))
     '''
 
     def _divs(n):
         d = [1] + [x for x in xrange(2, n // 2 + 1)] + [n]
-        return map(lambda i: i * -1, d) + d
+        return map(operator.neg, d) + d
 
     p = poly.right_hand_side
     if not p:
