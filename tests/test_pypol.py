@@ -61,12 +61,6 @@ class TestPolynomial(object):
     def testLcm(self):
         pass
 
-    def testCoeffGcd(self):
-        pass
-
-    def testCoeffLcm(self):
-        pass
-
     def testIsSquareDiff(self):
         assert_true(pypol.polynomial('a6 - 9').is_square_diff())
         assert_true(pypol.polynomial('a2 - 9').is_square_diff())
@@ -92,16 +86,29 @@ class TestPolynomial(object):
     def testEvalForm(self):
         assert_equal('2*y**5*x**3-4*x**2+2', pypol.polynomial('2x^3y^5 - 4x^2 +2').eval_form)
 
-    def testZeros(self):
-        assert_equal((1,), self.c.zeros)
-        assert_equal((), self.a.zeros)
-        assert_equal(NotImplemented, self.b.zeros)
+    #def testZeros(self):  ## DEPRECATED
+    #    assert_equal((1,), self.c.zeros)
+    #    assert_equal((), self.a.zeros)
+    #    assert_equal(NotImplemented, self.b.zeros)
 
     def testRawPowers(self):
         assert_equal([3, 0, 0, 0], self.b.raw_powers('a'))
+        assert_equal([0, 2, 0, 0], self.b.raw_powers('x'))
+        assert_equal([0, 0, 1, 0], self.b.raw_powers('b'))
+        assert_equal({'a': [3, 0, 0, 0], 'x': [0, 2, 0, 0], 'b': [0, 0, 1, 0]}, self.b.raw_powers())
+        self.b.append('-3x^3')
+        assert_equal({'a': [3, 0, 0, 0, 0], 'x': [0, 3, 2, 0, 0], 'b': [0, 0, 0, 1, 0]}, self.b.raw_powers())
+        del self.b[-1]
+        assert_equal({'a': [3, 0, 0, 0], 'x': [0, 3, 2, 0], 'b': [0, 0, 0, 1]}, self.b.raw_powers())
 
     def testPowers(self):
         assert_equal([3, 0], self.b.powers('a'))
+        assert_equal([2, 0], self.b.powers('x'))
+        assert_equal([1, 0], self.b.powers('b'))
+        self.b.append('-3x^3')
+        assert_equal({'a': [3, 0], 'x': [3, 2, 0], 'b': [1, 0]}, self.b.powers())
+        del self.b[-1]
+        assert_equal({'a': [3, 0], 'x': [3, 2, 0], 'b': [1]}, self.b.powers())
 
     def testLinear(self):
         assert_false(self.a.islinear())
@@ -162,9 +169,6 @@ class TestPolynomial(object):
 
 
 class TestFunctions(object):
-    def setUp(self):
-        pass
-
     def testPolynomial(self):
         assert_true(type(pypol.polynomial()) == pypol.Polynomial)
 
@@ -188,27 +192,6 @@ class TestFunctions(object):
     def testLcm(self):
         pass
 
-    def testRandomPoly(self):
-        for _ in xrange(1000):
-            assert_equal(pypol.Polynomial, type(pypol.funcs.random_poly()))
-
-        poly1, poly2, poly3 = pypol.funcs.random_poly(letters='x', right_hand_side=False, not_null=True), \
-                              pypol.funcs.random_poly(unique=True, right_hand_side=False, not_null=True), \
-                              pypol.funcs.random_poly(not_null=True)
-
-        assert poly1
-        assert poly2
-        assert poly3
-        assert_equal(('x',), poly1.letters)
-        assert_true(poly2.letters[0] in ('x', 'y', 'z'))
-        assert_true(all(-10 <= c < 11 for c in poly3.coefficients))
-
-    def testRoot(self):
-        pass
-
-
-def run():
-    nose.run()
 
 if __name__ == '__main__':
-    run()
+    nose.runmodule()

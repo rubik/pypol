@@ -414,17 +414,147 @@ __contains__
 __copy__
 --------
 
+.. method:: Polynomial.__copy__
+
+Copies the polynomial monomials::
+
+    >>> import copy
+    >>> p = poly1d([1, 2, 12])
+    >>> p
+    + x^2 + 2x + 12
+    >>> q = copy.copy(p)
+    >>> q
+    + x^2 + 2x + 12
+
+but not self.simplify::
+
+    >>> p = polynomial('3x - 2x + 4 - 9', simplify=False)
+    >>> p
+    + 3x - 2x + 4 - 9
+    >>> q = copy.copy(p)
+    >>> q
+    + x - 5
+
 __deepcopy__
 ------------
+
+.. method:: Polynomial.__deepcopy__
+
+Copies the polynomial monomials and self.simplify too::
+
+    >>> import copy
+    >>> p = poly1d([-3, 3, 5])
+    >>> p
+    - 3x^2 + 3x + 5
+    >>> q = copy.deepcopy(p)
+    >>> q
+    - 3x^2 + 3x + 5
+    >>> p = polynomial('3x - 2x + 4 - 9', simplify=False)
+    >>> p
+    + 3x - 2x + 4 - 9
+    >>> q = copy.deepcopy(p)
+    >>> q
+    + 3x - 2x + 4 - 9
 
 __getitem__
 -----------
 
+.. method:: Polynomial.__getitem__
+
+Returns the monomials in position *p* in self.monomials::
+
+    >>> p = poly1d([23, 32, 1, -0.232, 32])
+    >>> p
+    + 23x^4 + 32x^3 + x^2 - 0.232x + 32
+    >>> p[0]
+    (23, {'x': 4})
+    >>> p[0:2]
+    ((23, {'x': 4}), (32, {'x': 3}))
+    >>> p[0:-1]
+    ((23, {'x': 4}), (32, {'x': 3}), (1, {'x': 2}), (-0.23200000000000001, {'x': 1}))
+    >>> p[-1]
+    (32, {})
+    >>> p[1::-1]
+    ((32, {'x': 3}), (23, {'x': 4}))
+
 __setitem__
 -----------
 
+.. method:: Polynomial.__setitem__
+
+Sets the monomial in position *p* to *v*::
+
+    >>> p = poly1d([2, -2, -1, 3])
+    >>> p
+    + 2x^3 - 2x^2 - x + 3
+    >>> p[0]=(.1, {'x': 2})
+    >>> p
+    + 0.1x^2 - 2x^2 - x + 3
+    >>> p.simplify()
+    >>> p
+    - 1.9x^2 - x + 3
+    >>> p[:2] = ((.3, {'x': 3}), (-2, {'x': 2}))
+    >>> p
+    + 0.3x^3 - 2x^2 + 3
+
+.. warning::
+    *p* must be a monomial-like tuple::
+
+        >>> p[0] = .1
+
+        Traceback (most recent call last):
+          File "<pyshell#36>", line 1, in <module>
+            p[0] = .1
+          File "core.py", line 1209, in __setitem__
+            tmp_monomials[p] = v
+          File "core.py", line 1075, in <lambda>
+        TypeError: 'float' object is unsubscriptable
+
+    or a tuple of tuples if the length of the slice is greater than 1::
+
+        >>> p = poly1d([2, -2, -1, 3])
+        >>> p
+        + 2x^3 - 2x^2 - x + 3
+        >>> p[:3] = (1, 3, .2)
+        
+        Traceback (most recent call last):
+          File "<pyshell#43>", line 1, in <module>
+            p[:3] = (1, 3, .2)
+          File "/home/miki/pypol_/pypol/core.py", line 1209, in __setitem__
+            tmp_monomials[p] = v
+          File "/home/miki/pypol_/pypol/core.py", line 1075, in <lambda>
+        TypeError: 'int' object is unsubscriptable
+        >>> p[:3] = ((3, {'y': 3}),(2, {'y': 2}), (3, {'x': 6}))
+        >>> p
+        + 3x^6 + 3y^3 + 2y^2 + 3
+
+.. warning::
+
+    This method **does not simplify automatically**::
+
+        >>> p[:2] = ((2, {'x': 2}), (3, {}))
+        >>> p
+        + 2x^2 + 3 + 3
+        >>> p.simplify()
+        >>> p
+        + 2x^2 + 6
+
 __delitem__
 -----------
+
+.. method:: Polynomial.__delitem__
+
+Deletes the monomial(s) in position *p*::
+
+    >>> p = poly1d([2, -2, -1, 3])
+    >>> p
+    + 2x^3 - 2x^2 - x + 3
+    >>> del p[0]
+    >>> p
+    - 2x^2 - x + 3
+    >>> del p[:2]
+    >>> p
+    + 3
 
 __call__
 --------

@@ -1,5 +1,8 @@
 .. module:: pypol.funcs
     :synopsis: Utility functions to work with polynomials
+.. moduleauthor:: Michele Lacchia <michelelacchia@gmail.com>
+.. versionadded:: 0.3
+.. sectionauthor:: Michele Lacchia <michelelacchia@gmail.com>
 
 The :mod:`funcs` module 
 ========================
@@ -15,21 +18,27 @@ The :mod:`funcs` offers these basic functions:
     :columns: 2
 
     * :func:`divisible`
-    * :func:`gcd`
-    * :func:`lcm`
     * :func:`random_poly`
     * :func:`polyder`
     * :func:`polyint`
 
+divisible
++++++++++
+
 .. autofunction:: divisible
 
-.. autofunction:: gcd
-
-.. autofunction:: lcm
+random_poly
++++++++++++
 
 .. autofunction:: random_poly
 
+polyder
++++++++
+
 .. autofunction:: polyder
+
+polyint
++++++++
 
 .. autofunction:: polyint
 
@@ -51,21 +60,48 @@ In this module there are these functions:
     * :func:`chebyshev_u`
     * :func:`abel`
 
+fib_poly
+++++++++
+
 .. autofunction:: fib_poly
+
+fib_poly_r
+++++++++++
 
 .. autofunction:: fib_poly_r
 
+hermite_prob
+++++++++++++
+
 .. autofunction:: hermite_prob
+
+hermite_prob_r
+++++++++++++++
 
 .. autofunction:: hermite_prob_r
 
+hermite_phys
+++++++++++++
+
 .. autofunction:: hermite_phys
+
+hermite_phys_r
+++++++++++++++
 
 .. autofunction:: hermite_phys_r
 
+chebyshev_t
++++++++++++
+
 .. autofunction:: chebyshev_t
 
+chebyshev_u
++++++++++++
+
 .. autofunction:: chebyshev_u
+
+abel
+++++
 
 .. autofunction:: abel
 
@@ -80,7 +116,13 @@ At the moment these functions only are avaiable:
     * :func:`quadratic`
     * :func:`bisection`
 
+quadratic
++++++++++
+
 .. autofunction:: quadratic
+
+bisection
++++++++++
 
 .. autofunction:: bisection
 

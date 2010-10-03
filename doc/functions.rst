@@ -12,6 +12,8 @@ pypol module has some functions to work with polynomials :
     * :func:`monomial`
     * :func:`poly1d`
     * :func:`poly1d_2`
+    * :func:`gcd`
+    * :func:`lcm`
 
 
 poly1d
@@ -69,5 +71,14 @@ parse_polynomial
 
 .. autofunction:: parse_polynomial
 
+gcd
+---
+
+.. autofunction:: gcd
+
+lcm
+---
+
+.. autofunction:: lcm
 
 .. seealso:: :mod:`pypol.funcs` for utility functions.

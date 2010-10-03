@@ -1,4 +1,8 @@
-0.3 (still in development):
+0.4:
+    + moved gcd() and lcm() from pypol.funcs to pypol.core
+    - Polynomial.zeros
+
+0.3:
     + changed the structure, now there is a new module: funcs.py
     + utils.random_poly :: not_null
     + poly1d
@@ -20,6 +24,7 @@
     + pypol.funcs.abel
     + pypol.funcs.quadratic
     + pypol.funcs.bisection
+    + pypol.funcs.ruffini
     - pypol.root
     - make_polynomial
     - Polynomial.insert

@@ -5,8 +5,8 @@ pypol classes reference
 
 pypol's classes are two: :class:`Polynomial` and :class:`AlgebraicFraction`.
 
-Polynomial class reference
---------------------------
+:class:`Polynomial` class reference
+-----------------------------------
 
 In all these examples we use this method to make a polynomial::
 
@@ -163,8 +163,12 @@ The main class in pypol is :class:`Polynomial`:
 
 
 
-AlgebraicFraction class reference
----------------------------------
+:class:`AlgebraicFraction` class reference
+------------------------------------------
+
+.. warning::
+
+    This class is still in development and could have some bugs.
 
 pypol supports the algebraic fractions, although now it is very limited. It supports all the four basic operation but at the moment it does not decompose the terms.
 
@@ -182,5 +186,7 @@ In all these examples we assume::
     .. automethod:: terms()
 
     .. automethod:: invert
+
+    .. automethod:: update
 
     .. automethod:: simplify

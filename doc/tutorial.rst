@@ -9,17 +9,28 @@ First steps with pypol
 Download and install
 ++++++++++++++++++++
 
-First of all, you need to get the modules. To do this, go to the `github repository <http://github.com/rubik/pypol/downloads>`_ and download the appropriate file.
+First of all, you need to get the files. To do this, go to the `github repository <http://github.com/rubik/pypol/downloads>`_ or to `PyPI <http://>`_ and download the right file.
 
-Unpack it::
+If you downloaded the source you need to unpack it::
 
-    $ tar xzf pypol-0.3.tar.gz
+    $ tar xzf pypol_-0.3.tar.gz
 
 Now run the setup.py script::
 
     $ python setup.py install
 
+easy_install
+++++++++++++
 
+pypol is on PyPI too. If you have setuptools installed you can get pypol doing this::
+
+    $ easy_install pypol_
+
+and **don't forget the underscore!** Because if you try::
+
+    $ easy_install pypol
+
+you will install **a different** package!
 
 Running the tests
 +++++++++++++++++
@@ -34,7 +45,7 @@ If you want to run pypol's tests you only have to run *test_pypol.py*, that is i
     
     OK
 
-or run setup.py::
+or run them with setup.py::
 
     $ cd pypol_-0.3
     $ sudo python setup.py test
@@ -101,9 +112,9 @@ or run setup.py::
 Building this documentation
 +++++++++++++++++++++++++++
 
-To build, change directory and go to pypol/doc::
+To build the documentation, change directory and go to pypol/doc::
 
-    $ cd pypol_-0.1/doc
+    $ cd pypol_-0.3/doc
 
 * On **Windows**
     Run make.bat *<target>*
@@ -114,8 +125,6 @@ To build, change directory and go to pypol/doc::
 Where *<target>* is one of: 
 
         +-----------+-----------------------------------------------------------+
-        |  Target   |                           Purpose                         |
-        +===========+===========================================================+
         |    html   |  to make standalone HTML files                            |
         +-----------+-----------------------------------------------------------+
         | singlehtml|  to make a single large HTML file                         |

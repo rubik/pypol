@@ -44,45 +44,6 @@ def divisible(a, b):
 
     return a % b == polynomial()
 
-def gcd(a, b):
-    '''
-    Returns the Greatest Common Divisor between the two polynomials::
-
-       >>> gcd(polynomial('3x'), polynomial('6x^2'))
-       + 3x
-
-    .. seealso::
-        :func:`lcm`. 
-    '''
-
-    if not b:
-        return a
-    while True:
-        r = a % b
-        if not r:
-            return b
-        a, b = b, r
-
-def lcm(a, b):
-    '''
-    Returns the Least Common Multiple of the two polynomials::
-
-        >>> lcm(polynomial('3x'), polynomial('6x^2'))
-        + 6x^2
-
-    .. seealso::
-        :func:`gcd`.
-    '''
-
-    try:
-        k = operator.truediv(a, gcd(a, b)) * b
-    except ValueError:
-        k = operator.truediv(b, gcd(b, a)) * a
-
-    if int(k) == k:
-        return int(k)
-    return k
-
 def random_poly(coeff_range=xrange(-10, 11), len_=None, len_range=xrange(-10, 11),
                 letters='xyz', max_letters=3, unique=False, exp_range=xrange(1, 6),
                 right_hand_side=None, not_null=None):
@@ -443,7 +404,7 @@ def polyint(p):
 
     return poly1d_2([_single_int(t) for t in p.to_plist()])
 
-def interpolate(poly, x_values, y_values):
+def interpolate(poly, x_values, y_values): ## Still in development
     '''
     Interpolate the polynomial *poly* with the Newton method.
 

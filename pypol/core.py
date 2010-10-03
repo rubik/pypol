@@ -30,7 +30,7 @@ import re
 
 
 __all__ = ['polynomial', 'algebraic_fraction', 'monomial','poly1d', 'poly1d_2',
-           'coerce_poly', 'coerce_frac', 'are_similar', 'parse_polynomial',
+           'coerce_poly', 'coerce_frac', 'gcd', 'lcm', 'are_similar', 'parse_polynomial',
            'Polynomial', 'AlgebraicFraction']
 
 def polynomial(string=None, simplify=True):
@@ -189,6 +189,48 @@ def poly1d_2(monomials, variable='x'):
 
     return Polynomial([(c, {variable: exp}) for (c, exp) in monomials])
 
+def gcd(a, b):
+    '''
+    Returns the Greatest Common Divisor between the two polynomials::
+
+       >>> gcd(polynomial('3x'), polynomial('6x^2'))
+       + 3x
+
+    .. seealso::
+        :func:`lcm`. 
+    '''
+
+    def _internal(x, y):
+        if not y:
+            return x
+        while True:
+            r = x % y
+            if not r:
+                return y
+            x, y = y, r
+
+    try:
+        return _internal(a, b)
+    except ValueError:
+        return _internal(b, a)
+
+def lcm(a, b):
+    '''
+    Returns the Least Common Multiple of the two polynomials::
+
+        >>> lcm(polynomial('3x'), polynomial('6x^2'))
+        + 6x^2
+
+    .. seealso::
+        :func:`gcd`.
+    '''
+
+    k = operator.truediv(a, gcd(a, b)) * b
+
+    if int(k) == k:
+        return int(k)
+    return k
+
 def are_similar(a, b):
     '''
     Returns True whether the two monomials *a* and *b* are similar, i.e. they have the same literal part, False otherwise.
@@ -227,6 +269,10 @@ def coerce_frac(wrapped):
             other = AlgebraicFraction(other)
         elif isinstance(other, str):
             other = AlgebraicFraction(polynomial(other))
+        elif isinstance(other, int):
+            other = AlgebraicFraction(poly1d([other]))
+        elif isinstance(other, tuple):
+            other = AlgebraicFraction(polynomial([0]), polynomial(other[1]))
         return wrapped(self, other)
     return wrapper
 
@@ -360,6 +406,7 @@ class Polynomial(object):
 
     @ monomials.setter
     def monomials(self, values):
+        self._monomials = list(values)
         self.sort(key=self._key(), reverse=True)
 
     def ordered_monomials(self, cmp=None, key=None, reverse=False):
@@ -377,7 +424,7 @@ class Polynomial(object):
             >>> k.sort()
             >>> k
             - y^2 + x^2 + xy
-            >>> k.sort(key=k._key, reverse=True) ## 
+            >>> k.sort(key=k._key('x'), reverse=True)
             >>> k
             + x^2 + xy - y^2
 
@@ -498,7 +545,7 @@ class Polynomial(object):
             ('x', 'y')
 
         .. seealso::
-            :meth:`join_letters`.
+            :meth:`joint_letters`.
         '''
 
         return tuple(sorted(reduce(operator.or_, [set(m[1].keys()) \
@@ -617,9 +664,12 @@ class Polynomial(object):
             NotImplemented
             >>> Polynomial(parse_polynomial('2xy')).zeros
             NotImplemented
-            >>> 
+
+        .. deprecated:: 0.4
+            Use :func:`pypol.funcs.ruffini` instead.
         '''
 
+        raise DeprecationWarning('This method is deprecated, use pypol.funcs.ruffini instead')
         if len(self.letters) - 1: ## Polynomial has more than one letter or none
             if len(self) == 1 and self.right_hand_side: ## For example polynomial('-4'), i.e. no letters
                 return -self.right_hand_side
@@ -1200,17 +1250,17 @@ class Polynomial(object):
     def __deepcopy__(self, p):
         return Polynomial(self._monomials, self._simplify)
 
-    def __getitem__(self, b):
-        return self._monomials[b]
+    def __getitem__(self, p):
+        return self._monomials[p]
 
-    def __setitem__(self, b, v):
+    def __setitem__(self, p, v):
         tmp_monomials = list(self._monomials)
-        tmp_monomials[b] = v
-        self._monomials = sorted(tmp_monomials, key=self._key(), reverse=True)
+        tmp_monomials[p] = v
+        self._monomials = tmp_monomials
 
-    def __delitem__(self, b):
+    def __delitem__(self, p):
         tmp_monomials = list(self._monomials)
-        del tmp_monomials[b]
+        del tmp_monomials[p]
         self._monomials = tuple(tmp_monomials)
 
     def __call__(self, *args, **kwargs):
@@ -1477,6 +1527,26 @@ class AlgebraicFraction(object):
 
         return AlgebraicFraction(self._denominator, self._numerator)
 
+    @ coerce_frac
+    def update(self, pol_or_string):
+        '''
+        Updates the algebraic fraction with *pol_or_string*.
+        *pol_or_string* can be:
+
+            * a string
+            * a polynomial
+            * 2-length tuple
+
+        **Examples**
+
+        ::
+
+            
+        '''
+
+        self._numerator, self._denominator = pol_or_string.terms
+        return self
+
     def simplify(self):
         '''
         Simplifies the algebraic fraction. This is done automatically on the __init__ and on the :meth:`update` methods if self._simplify is True.
@@ -1494,11 +1564,10 @@ class AlgebraicFraction(object):
             AlgebraicFraction(- 3a² + 6, - 2a + 1)
         '''
 
-        #common_poly = gcd(self._numerator, self._denominator)
-        #self._numerator = self._numerator.div_all(common_poly)
-        #self._denominator = self._denominator.div_all(common_poly)
-        #return self
-        return NotImplemented
+        common_poly = gcd(self._numerator, self._denominator)
+        self._numerator = self._numerator.div_all(common_poly)
+        self._denominator = self._denominator.div_all(common_poly)
+        return self
 
     def __repr__(self):
         return 'AlgebraicFraction({0[0]}, {0[1]})'.format(self.terms)
@@ -1531,6 +1600,7 @@ class AlgebraicFraction(object):
                                  self._denominator,
                                  self._simplify)
 
+    @ coerce_frac
     def __add__(self, other):
         least_multiple = lcm(self._denominator.lcm, other._denominator.lcm)
         num = least_multiple / self._numerator
@@ -1540,6 +1610,7 @@ class AlgebraicFraction(object):
     def __radd__(self, other):
         return self + other
 
+    @ coerce_frac
     def __sub__(self, other):
         return self + -other
 
@@ -1554,5 +1625,6 @@ class AlgebraicFraction(object):
     def __rmul__(self, other):
         return self * other
 
+    @ coerce_frac
     def __div__(self, other):
         return self * other.invert()
