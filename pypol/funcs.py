@@ -12,6 +12,7 @@ import math
 from core import Polynomial, poly1d, poly1d_2, polynomial, monomial
 
 ONE = monomial()
+TWO = monomial(2)
 x = poly1d([1, 0])
 
 def divisible(a, b):
@@ -837,15 +838,26 @@ def spread(n):
         return ONE
     if n == 1:
         return x
-    return (2 - 4*x) * spread(n - 1) - spread(n - 2) + '2x'
+    return 2*x - spread(n - 2) + (2 - 4*x) * spread(n - 1)
 
-def bernstein(v, n): ## Still in development
+def gegenbauer(n, a='a'):
+    a = monomial(**{a: 1})
+    if n < 0:
+        return Polynomial()
+    if n == 0:
+        return ONE
+    if n == 1:
+        return x*2*a
+    return fractions.Fraction(1, n) * ((2*x * (n + a - ONE) * gegenbauer(n - 1) \
+                                    - (n + 2*a - 2) * gegenbauer(n - 2)))
+
+def bernstein(i, n): ## Still in development
     def _bin_coeff(n, k):
         return math.factorial(n)/(math.factorial(k)*math.factorial(n - k))
 
-    if not v and not n:
+    if not i and not n:
         return ONE
-    return _bin_coeff(n, v) * (x**v) * poly1d([-1, 1]) ** (n - v)
+    return _bin_coeff(n, i) * (x**i) * (1 - x) ** (n - i)
 
 def laguerre(n): ## Still in development
     if n < 0:

@@ -257,6 +257,8 @@ def coerce_poly(wrapped):
             other =  Polynomial(other)
         elif isinstance(other, float):
             other = monomial(fractions.Fraction(str(other)))
+        elif isinstance(other, fractions.Fraction):
+            other = monomial(other)
         return wrapped(self, other)
     return wrapper
 
