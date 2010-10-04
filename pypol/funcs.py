@@ -140,6 +140,21 @@ def random_poly(coeff_range=xrange(-10, 11), len_=None, len_range=xrange(-10, 11
 
     return poly
 
+def durand_kerner(poly, start=complex(.4, .9)):
+    roots = []
+    deg = poly.degree
+    for e in xrange(deg):
+        roots.append(start ** e)
+    done = [0] * (deg + 1)
+    while True:
+        for i, r in enumerate(roots):
+            new = r - poly(r) / reduce(operator.mul, [r - r_1 for r_1 in [x for x in roots if x != r]])
+            if str(new) == str(r):
+                done[i] = True
+            roots[i] = new
+            if all(x for x in done):
+                return roots
+
 def quadratic(poly):
     '''
     Returns the two roots of the polynomial *poly* solving the quadratic equation:
@@ -810,6 +825,19 @@ def abel(n, variable='a'):
         return x
     p = poly1d([n])
     return x * (x - p*variable) ** (n - 1)
+
+def spread(n):
+    '''
+    Returns the *nth* Spread polynomial in ``x``.
+    '''
+
+    if n < 0:
+        return Polynomial()
+    if n == 0:
+        return ONE
+    if n == 1:
+        return x
+    return (2 - 4*x) * spread(n - 1) - spread(n - 2) + '2x'
 
 def bernstein(v, n): ## Still in development
     def _bin_coeff(n, k):
