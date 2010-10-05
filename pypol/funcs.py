@@ -375,7 +375,7 @@ def ruffini(poly):
 
 def bisection(poly, k=0.5, epsilon=10**-8):
     '''
-    Finds the root of the polynomial *poly* using the *bisection method* [#f1]_.
+    Finds the root of the polynomial *poly* using the *bisection method*.
     When it finds the root, it checks if ``-root`` is a root too. If so, it returns a two-length tuple, else a tuple
     with one root.
 
@@ -389,6 +389,10 @@ def bisection(poly, k=0.5, epsilon=10**-8):
 
             * *poly* has more than one letter
             * or the root is a complex number
+
+    **References**
+
+    `Wikipedia <http://en.wikipedia.org/wiki/Bisection_method/>`_
 
     .. versionadded:: 0.2
     '''
@@ -840,16 +844,43 @@ def spread(n):
         return x
     return 2*x - spread(n - 2) + (2 - 4*x) * spread(n - 1)
 
-def gegenbauer(n, a='a'):
+def gegenbauer_r(n, a='a'):
+    '''
+    Returns the *nth* Gegenbauer polynomial in ``x``.
+
+    **Examples**
+
+    ::
+
+        >>> gegenbauer_r(0)
+        + 1
+        >>> gegenbauer_r(1)
+        + 2ax
+        >>> gegenbauer_r(2)
+        + 2a^2x^2 + 2ax^2 - a
+        >>> 
+        >>> 
+        >>> gegenbauer_r(4)
+        + 2/3a^4x^4 + 4a^3x^4 - 2a^3x^2 + 22/3a^2x^4 + 1/2a^2 - 6a^2x^2 + 4ax^4 - 4ax^2 + 1/2a
+
+    **References**
+
+    +-----------------------------------------------------------------------+
+    | `Wikipedia <http://en.wikipedia.org/wiki/Gegenbauer_polynomials>`_    |
+    +-----------------------------------------------------------------------+
+    | `MathWorld <http://mathworld.wolfram.com/GegenbauerPolynomial.html>`_ |
+    +-----------------------------------------------------------------------+
+    '''
+
     a = monomial(**{a: 1})
     if n < 0:
         return Polynomial()
     if n == 0:
         return ONE
     if n == 1:
-        return x*2*a
-    return fractions.Fraction(1, n) * ((2*x * (n + a - ONE) * gegenbauer(n - 1) \
-                                    - (n + 2*a - 2) * gegenbauer(n - 2)))
+        return 2*a*x
+    return fractions.Fraction(1, n) * ((2*x * (n + a - ONE) * gegenbauer_r(n - 1) \
+                                    - (n + 2*a - 2) * gegenbauer_r(n - 2)))
 
 def bernstein(i, n): ## Still in development
     def _bin_coeff(n, k):
@@ -859,11 +890,53 @@ def bernstein(i, n): ## Still in development
         return ONE
     return _bin_coeff(n, i) * (x**i) * (1 - x) ** (n - i)
 
-def laguerre(n): ## Still in development
+def laguerre(n, a='a'):
+    '''
+    Returns the *nth* generalized Laguerre polynomial in ``x``.
+
+    **Examples**
+
+    ::
+
+        >>> l(0)
+        + 1
+        >>> l(1)
+        + a + 1 - x
+        >>> l(2)
+        + 1/2a^2 + 3/2a - ax + 1 - 2x + 1/2x^2
+        >>> l(3)
+        + 1/6a^3 + a^2 - 1/2a^2x + 11/6a - 5/2ax + 1/2ax^2 + 1 - 3x - 1/6x^3 + 3/2x^2
+        >>> l(2, 'k')
+        + 1/2k^2 + 3/2k - kx + 1 - 2x + 1/2x^2
+        >>> l(2, 'z')
+        + 1/2x^2 - 2x - xz + 1 + 3/2z + 1/2z^2
+        >>> l(5, 'z')
+        - 1/120x^5 + 5/24x^4 + 1/24x^4z - 5/3x^3 - 3/4x^3z - 1/12x^3z^2 + 5x^2 + 47/12x^2z + x^2z^2 + 1/12x^2z^3 - 5x - 77/12xz - 71/24xz^2 - 7/12xz^3 - 1/24xz^4 + 1 + 137/60z + 15/8z^2 + 17/24z^3 + 1/8z^4 + 1/120z^5
+        >>> l(5)
+        + 1/120a^5 + 1/8a^4 - 1/24a^4x + 17/24a^3 - 7/12a^3x + 1/12a^3x^2 - 71/24a^2x + 15/8a^2 + a^2x^2 - 1/12a^2x^3 + 47/12ax^2 - 77/12ax + 137/60a - 3/4ax^3 + 1/24ax^4 + 5x^2 - 5/3x^3 - 5x + 1 - 1/120x^5 + 5/24x^4
+        >>> l(6)
+        + 1/720a^6 + 7/240a^5 - 1/120a^5x + 35/144a^4 - 1/6a^4x + 1/48a^4x^2 - 31/24a^3x + 49/48a^3 + 3/8a^3x^2 - 1/36a^3x^3 + 119/48a^2x^2 - 29/6a^2x + 203/90a^2 - 5/12a^2x^3 + 1/48a^2x^4 - 37/18ax^3 + 57/8ax^2 + 49/20a - 87/10ax + 11/48ax^4 - 1/120ax^5 + 5/8x^4 - 10/3x^3 + 1 - 6x + 15/2x^2 - 1/20x^5 + 1/720x^6
+
+
+    **References**
+
+    +---------------------------------------------------------------------+
+    | `Wikipedia <http://en.wikipedia.org/wiki/Laguerre_polynomials/>`_   |
+    +---------------------------------------------------------------------+
+    | `MathWorld <http://mathworld.wolfram.com/LaguerrePolynomial.html>`_ |
+    +---------------------------------------------------------------------+
+    '''
+
     if n < 0:
         return Polynomial()
     if n == 0:
         return ONE
     if n == 1:
-        return ONE - x
-    return (1 / (n + 1))*((2 * n + 1 - x) * laguerre(n - 1) - n * laguerre(n - 2))
+        return a + ONE - x
+
+    a = monomial(**{a: 1})
+    l1, ll = Polynomial(), ONE
+    for i in xrange(1, n + 1):
+        l0, l1 = l1, ll
+        ll = ((2*i - 1 + a - x) * l1 - (i - 1 + a) * l0) / monomial(i)
+    return ll

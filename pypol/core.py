@@ -431,9 +431,14 @@ class Polynomial(object):
             + x^2 + xy - y^2
 
         .. versionadded:: 0.2
+        .. versionchanged:: 0.4
+            Now the *key* parameter is for default to ``self._key(self.max_letter())``
         '''
 
-        self._monomials = tuple(self.ordered_monomials(cmp, key, reverse))
+        if len(self) != 1:
+            if not key:
+                key = self._key(self.max_letter())
+            self._monomials = tuple(self.ordered_monomials(cmp, key, reverse))
 
     @ property
     def coefficients(self):
@@ -1079,6 +1084,13 @@ class Polynomial(object):
 
         return sum([Polynomial((monomial,)) / poly for monomial in self._monomials], Polynomial())
 
+    def filter(self):
+        tmp_mons = []
+        for m in self._monomials:
+            if m[0]:
+                tmp_mons.append(m)
+        return Polynomial(tmp_mons)
+
     def simplify(self):
         '''
         Simplifies the polynomial. This is done automatically on the __init__ and on the :meth:`update` methods if self._simplify is True.
@@ -1384,6 +1396,14 @@ class Polynomial(object):
 
         letter = B.max_letter()
         while A.degree >= B.degree:
+            if not A:
+                return Q, Polynomial()
+            if (len(A) == 1 and A.right_hand_side) and (len(B) == 1 and B.right_hand_side):
+                a, b = A.right_hand_side, B.right_hand_side
+                if not a % b:
+                    Q.append(a / b)
+                    return Q, Polynomial()
+                return Q, A.filter()
             A.sort(key=self._key(letter), reverse=True)
             quotient = _div(A[0], B[0])
             del A[0]
@@ -1398,13 +1418,13 @@ class Polynomial(object):
             if not A:
                 return Q, Polynomial()
 
-        if not A and A.monomials: ## When A has 0 coefficients but some letters
-            return Q, Polynomial()
-        return Q, A
+        return Q, A.filter()
 
+    @ coerce_poly
     def __div__(self, other):
         return divmod(self, other)[0]
 
+    @ coerce_poly
     def __truediv__(self, other):
         try:
             quotient, remainder = divmod(self, other)
@@ -1414,8 +1434,12 @@ class Polynomial(object):
             return AlgebraicFraction(self, other)
         return quotient
 
+    @ coerce_poly
     def __mod__(self, other):
         return divmod(self, other)[1]
+
+    def __rmod__(self, other):
+        return self % other
 
     def __pow__(self, exp):
         if exp == 0:

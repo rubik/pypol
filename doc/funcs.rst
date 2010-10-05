@@ -65,6 +65,9 @@ In this module there are these functions:
     * :func:`chebyshev_t`
     * :func:`chebyshev_u`
     * :func:`abel`
+    * :func:`spread`
+    * :func:`gegenbauer_r`
+    * :func:`laguerre`
 
 fib_poly
 ++++++++
@@ -111,6 +114,16 @@ abel
 
 .. autofunction:: abel
 
+gegenbauer_r
+++++++++++++
+
+.. autofunction:: gegenbauer_r
+
+laguerre
+++++++++
+
+.. autofunction:: laguerre
+
 
 Root-finding
 ------------
@@ -143,9 +156,3 @@ bisection
 +++++++++
 
 .. autofunction:: bisection
-
-
-
-.. rubric:: Footnotes
-
-.. [#f1] See `wikipedia <http://en.wikipedia.org/wiki/Bisection_method>`_

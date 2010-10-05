@@ -1,5 +1,6 @@
-0.4:
+0.4: # Still in development
     + moved gcd() and lcm() from pypol.funcs to pypol.core
+    + Polynomial.filter
     - Polynomial.zeros
 
 0.3:
