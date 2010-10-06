@@ -14,6 +14,64 @@ Welcome to pypol v0.3 documentation!
 
 pypol is a Python library that allows you to manipulate polynomials. This is the main page of the documentation.
 
+Overview
+--------
+
+This is what pypol can do (and much more!)::
+
+    >>> from pypol import *
+    >>> p1 = x**3 - 2*x**2 - 4
+    >>> p1
+    + x^3 - 2x^2 - 4
+    >>> p1.degree
+    3
+    >>> p1.letters
+    ('x',)
+    >>> p1.coefficients
+    [1, -2, -4]
+    >>> p1.eval_form
+    '1*x**3-2*x**2-4'
+    >>> p1.right_hand_side
+    -4
+    >>> del p1[-1]
+    >>> p1
+    + x^3 - 2x^2
+    >>> p1.right_hand_side
+    False
+    >>> p1.append(-4)
+    >>> p1
+    + x^3 - 2x^2 - 4
+    >>> p1.to_plist()
+    [[1, 3], [-2, 2], [-4, 0]]
+    >>> p2 = poly1d([2, -4, 3, -1])
+    >>> p2
+    + 2x^3 - 4x^2 + 3x - 1
+    >>> p2 / p1
+    + 2
+    >>> divmod(p2, p1)
+    (+ 2, + 3x + 7)
+    >>> q, r = divmod(p2, p1)
+    >>> q * p1 + r
+    + 2x^3 - 4x^2 + 3x - 1
+    >>> q * p1 + r == p2
+    True
+    >>> funcs ## pypol.funcs
+    <module 'pypol.funcs' from '/home/miki/pypol_/pypol/funcs.py'>
+    >>> del p1[0]
+    >>> p1
+    - 2x^2 - 4
+    >>> funcs.quadratic(p1)
+    (-1.4142135623730951j, 1.4142135623730951j)
+    >>> r1, r2 = funcs.quadratic(p1)
+    >>> p1(r1)
+    (8.8817841970012523e-16-0j)
+    >>> p1(r2)
+    (8.8817841970012523e-16+0j)
+    >>> p1(-1)
+    -6
+    >>> p1(3)
+    -22
+
 Contents
 --------
 
