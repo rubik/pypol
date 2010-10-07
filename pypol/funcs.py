@@ -82,7 +82,7 @@ def random_poly(coeff_range=xrange(-10, 11), len_=None, len_range=xrange(-10, 11
     :param right_hand_side: if True, the polynomial will have a right-hand side. Default is None, that means the right-hand side will be chosen randomly.
     :param not_null: if True, the polynomial will not be an empty polynomial
 
-    :rtype: :class:`Polynomial`
+    :rtype: :class:`pypol.Polynomial`
 
     Some examples::
 
@@ -141,27 +141,11 @@ def random_poly(coeff_range=xrange(-10, 11), len_=None, len_range=xrange(-10, 11
 
     return poly
 
-def durand_kerner(poly, start=complex(.4, .9)):
-    roots = []
-    deg = poly.degree
-    for e in xrange(deg):
-        roots.append(start ** e)
-    done = [0] * (deg + 1)
-    while True:
-        for i, r in enumerate(roots):
-            new = r - poly(r) / reduce(operator.mul, [r - r_1 for r_1 in [x for x in roots if x != r]])
-            if str(new) == str(r):
-                done[i] = True
-            roots[i] = new
-            if all(x for x in done):
-                return roots
-
 def quadratic(poly):
     '''
     Returns the two roots of the polynomial *poly* solving the quadratic equation:
-        .. image:: quad_eq.gif
-
-    where the polynomial is: ``ax^2 + bx + c``.
+        |p1|
+    where the polynomial is |p2|.
 
     :raises: :exc:`AssertionError` if the polynomial's degree is not 2.
     :rtype: 2 length tuple
@@ -392,7 +376,7 @@ def bisection(poly, k=0.5, epsilon=10**-8):
 
     **References**
 
-    `Wikipedia <http://en.wikipedia.org/wiki/Bisection_method/>`_
+    `Wikipedia <http://en.wikipedia.org/wiki/Bisection_method>`_
 
     .. versionadded:: 0.2
     '''
@@ -435,7 +419,7 @@ def polyder(p):
 
     **Examples**
 
-    Calculate the derivative of the polynomials ``x^2`` and ``2x^3 - 4x^2 + 1``::
+    Let's calculate the derivative of the polynomials |p3| and |p4|::
 
         >>> p1 = poly1d([1, 0, 0]) ## or poly1d([1, 0], right_hand_side=False)
         >>> p1
@@ -461,17 +445,18 @@ def polyder(p):
 
     return poly1d_2([_single_der(t) for t in p.to_plist()], variable)
 
-def polyint(p):
+def polyint(p, C=None):
     '''
-    Returns the integral of the polynomial *p*
+    Returns the indefinite integral of the polynomial *p*:
+        |p5|
 
     :param Polynomial p: the polynomial
+    :param integer C: the costant that will be added to the polynomial
     :rtype: :class:`pypol.Polynomial`
 
     **Examples**
 
-    Calculate the integrals of the polynomials ``-x`` and ``x^3 - 7x + 5``
-    ::
+    Calculate the integrals of the polynomials: |p6| and |p7|::
 
         >>> p1, p2 = poly1d([-1, 0]), poly1d([1, 0, -7, 5])
         >>> p1, p2
@@ -497,30 +482,23 @@ def polyint(p):
             j = int(j)
         return [j, n]
 
-    return poly1d_2([_single_int(t) for t in p.to_plist()])
+    p = poly1d_2([_single_int(t) for t in p.to_plist()])
+    if C:
+        p += C
+    return p
 
-def interpolate(poly, x_values, y_values): ## Still in development
+def polyint_(poly, a, b):
     '''
-    Interpolate the polynomial *poly* with the Newton method.
+    Returns the definite integral of the polynomial *poly*, with upper and lower limits:
+        |p8|
 
-    :param Polynomial poly: the polynomial to interpolate
-    :param list x_values: the list of the *abscissas*
-    :param list y_values: the list of the *ordinates*
-    :rtype: Polynomial
-
-    **Examples**
-
-    ::
-
-        
+    :param integer a: the lower limit
+    :param integer b: the upper limit
+    :rtype: :class:`pypol.Polynomial`
     '''
 
-    assert len(x_values) != 0 and (len(x_values) == len(y_values)), 'x and y cannot be empty and must have the same length'
-    b0 = y[0]
-
-    coeffs = []
-    for i, x in enumerate(x_values):
-        return NotImplemented
+    F = polyint(poly)
+    return F(a) - F(b)
 
 def fib_poly(n):
     '''
@@ -870,6 +848,8 @@ def gegenbauer_r(n, a='a'):
     +-----------------------------------------------------------------------+
     | `MathWorld <http://mathworld.wolfram.com/GegenbauerPolynomial.html>`_ |
     +-----------------------------------------------------------------------+
+
+    .. versionadded:: 0.4
     '''
 
     a = monomial(**{a: 1})
@@ -881,14 +861,6 @@ def gegenbauer_r(n, a='a'):
         return 2*a*x
     return fractions.Fraction(1, n) * ((2*x * (n + a - ONE) * gegenbauer_r(n - 1) \
                                     - (n + 2*a - 2) * gegenbauer_r(n - 2)))
-
-def bernstein(i, n): ## Still in development
-    def _bin_coeff(n, k):
-        return math.factorial(n)/(math.factorial(k)*math.factorial(n - k))
-
-    if not i and not n:
-        return ONE
-    return _bin_coeff(n, i) * (x**i) * (1 - x) ** (n - i)
 
 def laguerre(n, a='a'):
     '''
@@ -921,10 +893,12 @@ def laguerre(n, a='a'):
     **References**
 
     +---------------------------------------------------------------------+
-    | `Wikipedia <http://en.wikipedia.org/wiki/Laguerre_polynomials/>`_   |
+    | `Wikipedia <http://en.wikipedia.org/wiki/Laguerre_polynomials>`_    |
     +---------------------------------------------------------------------+
     | `MathWorld <http://mathworld.wolfram.com/LaguerrePolynomial.html>`_ |
     +---------------------------------------------------------------------+
+
+    .. versionadded:: 0.4
     '''
 
     if n < 0:
@@ -940,3 +914,47 @@ def laguerre(n, a='a'):
         l0, l1 = l1, ll
         ll = ((2*i - 1 + a - x) * l1 - (i - 1 + a) * l0) / monomial(i)
     return ll
+
+################################################################################
+##                            Still in development                            ##
+################################################################################
+
+def bernstein(i, n): ## Still in development
+    def _bin_coeff(n, k):
+        return math.factorial(n)/(math.factorial(k)*math.factorial(n - k))
+
+    if not i and not n:
+        return ONE
+    return _bin_coeff(n, i) * (x**i) * (1 - x) ** (n - i)
+
+def interpolate(x_values, y_values): ## Still in development
+    '''
+    Interpolate with the Lagrange method.
+
+    :param list x_values: the list of the *abscissas*
+    :param list y_values: the list of the *ordinates*
+    :rtype: :class:`pypol.Polynomial`
+
+    **Examples**
+
+    ::
+
+        
+    '''
+
+    def _product(i):
+        p = [(x - x_values[k])/(x_values[i] - x_values[k]) for k in xrange(n) if k != i] + [y_values[i]]
+        return reduce(operator.mul, p)
+
+    assert len(x_values) != 0 and (len(x_values) == len(y_values)), 'x and y cannot be empty and must have the same length'
+
+    n = len(x_values)
+    return sum(_product(j) for j in xrange(n))
+
+def durand_kerner(poly, start=complex(.4, .9)):
+    roots = []
+    deg = poly.degree
+    for e in xrange(deg):
+        roots.append(start ** e)
+    while True:
+        pass

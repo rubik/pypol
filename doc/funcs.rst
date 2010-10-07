@@ -4,6 +4,16 @@
 .. versionadded:: 0.3
 .. sectionauthor:: Michele Lacchia <michelelacchia@gmail.com>
 
+.. |p1| image:: images/quad_eq.gif
+.. |p2| image:: images/quad_poly.gif
+.. |p3| image:: images/x2.gif
+.. |p4| image:: images/poly1.gif
+.. |p5| image:: images/indefinite_int.gif
+.. |p6| image:: images/-x.gif
+.. |p7| image:: images/poly2.gif
+.. |p8| image:: images/definite_int.gif
+
+
 The :mod:`funcs` module 
 ========================
 
@@ -27,6 +37,7 @@ The :mod:`funcs` offers these basic functions:
     * :func:`random_poly`
     * :func:`polyder`
     * :func:`polyint`
+    * :func:`polyint_`
 
 divisible
 +++++++++
@@ -48,6 +59,11 @@ polyint
 
 .. autofunction:: polyint
 
+polyint\_
++++++++++
+
+.. autofunction:: polyint_
+
 Series
 ------
 
@@ -65,7 +81,6 @@ In this module there are these functions:
     * :func:`chebyshev_t`
     * :func:`chebyshev_u`
     * :func:`abel`
-    * :func:`spread`
     * :func:`gegenbauer_r`
     * :func:`laguerre`
 

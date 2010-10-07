@@ -324,7 +324,7 @@ def _parse_coeff(c):
     elif c == '-':
         return -1
     elif '.' in c or '/' in c:
-        return fractions.Fraction(c)
+        return fractions.Fraction(c.replace(' ', ''))
     else:
         return int(c)
 
