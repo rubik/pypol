@@ -13,11 +13,87 @@ First of all, you need to get the files. To do this, go to the `github repositor
 
 If you downloaded the source you need to unpack it::
 
-    $ tar xzf pypol_-0.3.tar.gz
+    $ tar -xzfv pypol_-0.3.tar.gz
 
 Now run the setup.py script::
 
     $ python setup.py install
+
+.. note::
+    Sometimes you have to allow :file:`setup.py` to run with root security privileges::
+
+        $ python setup.py install
+            running install
+            error: can't create or remove files in install directory
+            
+            The following error occurred while trying to add or remove files in the
+            installation directory:
+            
+                [Errno 13] Permission denied: '/usr/local/lib/python2.6/dist-packages/test-easy-install-9562.write-test'
+            
+            The installation directory you specified (via --install-dir, --prefix, or
+            the distutils default setting) was:
+            
+                /usr/local/lib/python2.6/dist-packages/
+            
+            Perhaps your account does not have write access to this directory?  If the
+            installation directory is a system-owned directory, you may need to sign in
+            as the administrator or "root" account.  If you do not have administrative
+            access to this machine, you may wish to choose a different installation
+            directory, preferably one that is listed in your PYTHONPATH environment
+            variable.
+            
+            For information on other options, you may wish to consult the
+            documentation at:
+            
+              http://peak.telecommunity.com/EasyInstall.html
+            
+            Please make the appropriate changes for your system and try again.
+
+    So try::
+
+        $ sudo python setup.py install
+            [sudo] password for ~~~~~: 
+            running install
+            running bdist_egg
+            running egg_info
+            writing pypol_.egg-info/PKG-INFO
+            writing top-level names to pypol_.egg-info/top_level.txt
+            writing dependency_links to pypol_.egg-info/dependency_links.txt
+            reading manifest file 'pypol_.egg-info/SOURCES.txt'
+            reading manifest template 'MANIFEST.in'
+            warning: no files found matching 'README.textile'
+            writing manifest file 'pypol_.egg-info/SOURCES.txt'
+            installing library code to build/bdist.linux-i686/egg
+            running install_lib
+            running build_py
+            copying pypol/__init__.py -> build/lib.linux-i686-2.6/pypol
+            copying pypol/funcs.py -> build/lib.linux-i686-2.6/pypol
+            copying pypol/core.py -> build/lib.linux-i686-2.6/pypol
+            creating build/bdist.linux-i686/egg
+            creating build/bdist.linux-i686/egg/pypol
+            copying build/lib.linux-i686-2.6/pypol/__init__.py -> build/bdist.linux-i686/egg/pypol
+            copying build/lib.linux-i686-2.6/pypol/funcs.py -> build/bdist.linux-i686/egg/pypol
+            copying build/lib.linux-i686-2.6/pypol/core.py -> build/bdist.linux-i686/egg/pypol
+            byte-compiling build/bdist.linux-i686/egg/pypol/__init__.py to __init__.pyc
+            byte-compiling build/bdist.linux-i686/egg/pypol/funcs.py to funcs.pyc
+            byte-compiling build/bdist.linux-i686/egg/pypol/core.py to core.pyc
+            creating build/bdist.linux-i686/egg/EGG-INFO
+            copying pypol_.egg-info/PKG-INFO -> build/bdist.linux-i686/egg/EGG-INFO
+            copying pypol_.egg-info/SOURCES.txt -> build/bdist.linux-i686/egg/EGG-INFO
+            copying pypol_.egg-info/dependency_links.txt -> build/bdist.linux-i686/egg/EGG-INFO
+            copying pypol_.egg-info/top_level.txt -> build/bdist.linux-i686/egg/EGG-INFO
+            zip_safe flag not set; analyzing archive contents...
+            creating 'dist/pypol_-0.3-py2.6.egg' and adding 'build/bdist.linux-i686/egg' to it
+            removing 'build/bdist.linux-i686/egg' (and everything under it)
+            Processing pypol_-0.3-py2.6.egg
+            creating /usr/local/lib/python2.6/dist-packages/pypol_-0.3-py2.6.egg
+            Extracting pypol_-0.3-py2.6.egg to /usr/local/lib/python2.6/dist-packages
+            Adding pypol- 0.3 to easy-install.pth file
+            
+            Installed /usr/local/lib/python2.6/dist-packages/pypol_-0.3-py2.6.egg
+            Processing dependencies for pypol-==0.3
+            Finished processing dependencies for pypol-==0.3
 
 easy_install
 ############
@@ -30,7 +106,7 @@ and **don't forget the underscore!** Because if you try::
 
     $ easy_install pypol
 
-you will install **a different** package!
+**you will install a different package!**
 
 Running the tests
 +++++++++++++++++

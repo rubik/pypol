@@ -1,5 +1,12 @@
 .. currentmodule:: pypol
 
+.. |c_1| image:: images/c_1.gif
+.. |c_2| image:: images/c_2.gif
+.. |c_3| image:: images/c_3.gif
+.. |c_4| image:: images/c_4.gif
+.. |c_5| image:: images/c_5.gif
+.. |c_6| image:: images/c_6.gif
+
 Functions
 =========
 

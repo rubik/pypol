@@ -17,7 +17,7 @@ pypol is a Python library that allows you to manipulate polynomials. This is the
 Overview
 --------
 
-This is what pypol can do (and much more!)::
+These are just some features of pypol::
 
     >>> from pypol import *
     >>> p1 = x**3 - 2*x**2 - 4

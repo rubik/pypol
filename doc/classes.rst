@@ -67,6 +67,8 @@ The main class in pypol is :class:`Polynomial`:
 
     .. automethod:: invert
 
+    .. automethod:: filter
+
     .. method:: update([, pol_or_monomials[, simplify=None]])
 
         Updates the polynomial with another polynomial.

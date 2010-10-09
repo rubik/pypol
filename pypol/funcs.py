@@ -11,6 +11,7 @@ import math
 
 from core import Polynomial, poly1d, poly1d_2, polynomial, monomial
 
+NULL = Polynomial()
 ONE = monomial()
 TWO = monomial(2)
 x = poly1d([1, 0])
@@ -346,6 +347,8 @@ def ruffini(poly):
 
         >>> quadratic(p4), quadratic(p5)
         (((-3.5+2.3979157616563596j), (-3.5-2.3979157616563596j)), ((-4+3.3166247903553998j), (-4-3.3166247903553998j)))
+
+    .. versionadded:: 0.3
     '''
 
     def _divs(n):
@@ -356,6 +359,101 @@ def ruffini(poly):
     if not p:
         return []
     return [x for x in _divs(p) if not poly(x)]
+
+def halley(poly, start, epsilon=float('-inf')):
+    '''
+    Finds a root of the polynomial *poly* using the Halley's method, with this iteration formula:
+        |p9|
+
+    :param integer start: the start value to evaluate ``poly(x)``
+    :param epsilon: the precision, default to ``float('-inf')``
+    :type epsilon: integer or float
+    :rtype: integer or float
+
+    **Examples**
+
+    We want to find the roots of the polynomial: ``x^3 - 4x^2 - x - 4``::
+
+        >>> p = (x + 1) * (x - 1) * (x + 4) ## its roots are: -1, 1, -4
+        >>> p
+        + x^3 + 4x^2 - x - 4
+
+    starting from an high number::
+
+        >>> halley(p, 90)
+        1.0
+        >>> p(1.)
+        0.0
+
+    then we get lower::
+
+        >>> halley(p, -1)
+        -1.0
+        >>> p(-1.)
+        0.0
+
+    and lower::
+
+        >>> halley(p, -90)
+        -4.0
+        >>> p(-4.)
+        0.0
+
+    so we can say that the roots are: ``1``, ``-1``, and ``-4``.
+
+    **References**
+
+    +---------------------------------------------------------------------+
+    | `Wikipedia <http://en.wikipedia.org/wiki/Halley's_method>`_         |
+    +---------------------------------------------------------------------+
+    | `MathWorld <http://mathworld.wolfram.com/HalleysMethod.html>`_      |
+    +---------------------------------------------------------------------+
+
+    .. versionadded:: 0.4
+    '''
+
+    p_d = polyder(poly)
+    p_d_ = polyder(p_d)
+    while True:
+        x_n = start - (2 * poly(start) * p_d(start))/(2 * p_d(start) ** 2 - poly(start) * p_d_(start))
+        if x_n == start or abs(x_n - start) < epsilon:
+            return x_n
+        start = x_n
+
+def householder(poly, start, epsilon=float('-inf')):
+    '''
+    Returns a root of the polynomial *poly* using the Householder's method, with the iteration formula:
+        |p10|
+
+    :param integer start: the start value to evaluate ``poly(x)``
+    :param epsilon: the precision, default to ``float('-inf')``
+    :type epsilon: integer or float
+    :rtype: integer or float
+
+    **Examples**
+
+    Let's find the roots of the polynomial ``TODO``::
+
+        TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+
+    **References**
+
+    +---------------------------------------------------------------------+
+    | `Wikipedia <http://en.wikipedia.org/wiki/Householder's_method>`_    |
+    +---------------------------------------------------------------------+
+    | `MathWorld <http://mathworld.wolfram.com/HouseholdersMethod.html>`_ |
+    +---------------------------------------------------------------------+
+
+    .. versionadded:: 0.4
+    '''
+
+    p_d = polyder(poly)
+    p_d_ = polyder(p_d)
+    while True:
+        x_n = start - (poly(start)/p_d(start))*(1 + (poly(start) * p_d_(start)) / (2 * p_d(start) ** 2))
+        if x_n == start or abs(x_n - start) < epsilon:
+            return x_n
+        start = x_n
 
 def bisection(poly, k=0.5, epsilon=10**-8):
     '''
@@ -376,9 +474,12 @@ def bisection(poly, k=0.5, epsilon=10**-8):
 
     **References**
 
-    `Wikipedia <http://en.wikipedia.org/wiki/Bisection_method>`_
+    +--------------------------------------------------------------+
+    | `Wikipedia <http://en.wikipedia.org/wiki/Bisection_method>`_ |
+    +--------------------------------------------------------------+
 
     .. versionadded:: 0.2
+    .. versionchanged:: 0.3
     '''
 
     if k < 0:
@@ -410,11 +511,11 @@ def bisection(poly, k=0.5, epsilon=10**-8):
 
     return int(media)
 
-def polyder(p):
+def polyder(poly, m=1):
     '''
-    Returns the derivative of the polynomial *p*.
+    Returns the derivative of the polynomial *poly*.
 
-    :param Polynomial poly: the polynomial
+    :param integer m: order of differentiation (default 1)
     :rtype: :class:`pypol.Polynomial`
 
     **Examples**
@@ -433,30 +534,50 @@ def polyder(p):
          + 6x^2 - 8x
 
     .. versionadded:: 0.3
+    .. versionadded:: 0.4
+        The *m* parameter.
     '''
+    def _der(poly):
+        def _single_der(var):
+            return [var[0]*var[1], var[1] - 1]
 
-    def _single_der(var):
-        return [var[0]*var[1], var[1] - 1]
+        if not poly:
+            return NULL
+        try:
+            variable = poly.letters[0]
+        except IndexError:
+            variable = 'x'
 
-    try:
-        variable = p.letters[0]
-    except IndexError:
-        variable = 'x'
+        return poly1d_2([_single_der(t) for t in poly.to_plist()], variable)
 
-    return poly1d_2([_single_der(t) for t in p.to_plist()], variable)
+    if m < 0:
+        raise ValueError('order of derivative must be positive (see polyint)')
+    if m == 0:
+        return poly
+    if m == 1:
+        return _der(poly)
+    p_d = _der(poly)
+    for _ in xrange(m - 1):
+        if not p_d:
+            return NULL
+        p_d = _der(p_d)
 
-def polyint(p, C=None):
+    return p_d
+
+def polyint(poly, m=1, C=[]):
     '''
-    Returns the indefinite integral of the polynomial *p*:
+    Returns the indefinite integral of the polynomial *poly*:
         |p5|
 
-    :param Polynomial p: the polynomial
-    :param integer C: the costant that will be added to the polynomial
+    :param Polynomial poly: the polynomial
+    :param integer m: the order of the antiderivative (default 1)
+    :param C: integration costants. They are given in order of integration: those corresponding to highest-order terms come first.
+    :type C: list of integers or integer - if *m* = 1
     :rtype: :class:`pypol.Polynomial`
 
     **Examples**
 
-    Calculate the integrals of the polynomials: |p6| and |p7|::
+    Let's calculate the indefinite integrals of the polynomials: |p6| and |p7|::
 
         >>> p1, p2 = poly1d([-1, 0]), poly1d([1, 0, -7, 5])
         >>> p1, p2
@@ -470,22 +591,81 @@ def polyint(p, C=None):
         >>> polyder(polyint(p1))
         - x
 
+    The integration costants default to zero, but can be specified::
+
+        >>> polyder(p2)
+        + 3x^2 - 7
+        >>> polyint(polyder(p2))
+        + x^3 - 7x ## + 5 is missing!
+        >>> polyint(polyder(p2), [5])
+        + x^3 - 7x + 5
+        >>> p = poly1d([1]*3)
+        >>> p
+        + x^2 + x + 1
+        >>> P = polyint(p, 3, [6, 5, 3])
+        >>> P
+        + 1/60x^5 + 1/24x^4 + 1/6x^3 + 3x^2 + 5x + 3
+        >>> polyint(p, 3, [6, 5, 3]) == polyint(polyint(polyint(p, C=[6]), C=[5]), C=[3])
+        True
+        >>> polyint(poly1d([1, 2, 3]))
+        + 1/3x^3 + x^2 + 3x
+        >>> polyint(poly1d([1, 2, 3]), C=[2])
+        + 1/3x^3 + x^2 + 3x + 2
+        >>> polyint(poly1d([1, 2, 3]), C=2)
+        + 1/3x^3 + x^2 + 3x + 2
+        >>> polyint(poly1d([1, 2, 3]), 2, [4, 2])
+        + 1/12x^4 + 1/3x^3 + 3/2x^2 + 4x + 2
+        >>> polyint(poly1d([1]*4), 3, [3, 2, 1])
+        + 1/120x^6 + 1/60x^5 + 1/24x^4 + 1/6x^3 + 3/2x^2 + 2x + 1
+        >>> polyint(poly1d([1]*4), 3, [3, 2, 1, 5]) ## Take only the first 3
+        + 1/120x^6 + 1/60x^5 + 1/24x^4 + 1/6x^3 + 3/2x^2 + 2x + 1
+
+    **References**
+
+    +---------------------------------------------------------------------+
+    | `MathWorld <http://mathworld.wolfram.com/IndefiniteIntegral.html>`_ |
+    +---------------------------------------------------------------------+
+
     .. versionadded:: 0.3
     '''
 
-    def _single_int(var):
-        n = var[1] + 1
-        if not n:
-            return [0, 0]
-        j = fractions.Fraction(var[0], n)
-        if int(j) == j:
-            j = int(j)
-        return [j, n]
+    def _int(p, c=None):
+        def _single_int(var):
+            n = var[1] + 1
+            if not n:
+                return [0, 0]
+            j = fractions.Fraction(var[0], n)
+            if int(j) == j:
+                j = int(j)
+            return [j, n]
 
-    p = poly1d_2([_single_int(t) for t in p.to_plist()])
+        p = poly1d_2([_single_int(t) for t in p.to_plist()])
+        if c:
+            p += c
+        return p
+
+    if m < 0:
+        raise ValueError('order of antiderivative must be positive (see polyder)')
+    if m == 0:
+        return poly
+    if m == 1:
+        if C:
+            try:
+                return _int(poly, C[0])
+            except TypeError:
+                return _int(poly, C)
+        return _int(poly)
+
     if C:
-        p += C
-    return p
+        p_i = _int(poly, C[0])
+        for i in xrange(1, m):
+            p_i = _int(p_i, C[i])
+    else:
+        p_i = _int(poly)
+        for _ in xrange(m - 1):
+            p_i = _int(poly)
+
+    return p_i
 
 def polyint_(poly, a, b):
     '''
@@ -495,6 +675,20 @@ def polyint_(poly, a, b):
     :param integer a: the lower limit
     :param integer b: the upper limit
     :rtype: :class:`pypol.Polynomial`
+
+    **Examples**
+
+    ::
+
+        
+
+    **References**
+
+    +-------------------------------------------------------------------+
+    | `Wikipedia <http://en.wikipedia.org/wiki/Integral>`_              |
+    +-------------------------------------------------------------------+
+    | `MathWorld <http://mathworld.wolfram.com/DefiniteIntegral.html>`_ |
+    +-------------------------------------------------------------------+
     '''
 
     F = polyint(poly)
@@ -537,7 +731,7 @@ def fib_poly(n):
     '''
 
     if n <= 0:
-        return Polynomial()
+        return NULL
     elif n == 1:
         return ONE
     elif n == 2:
@@ -574,7 +768,7 @@ def fib_poly_r(n):
     '''
 
     if n <= 0:
-        return Polynomial()
+        return NULL
     elif n == 1:
         return ONE
     elif n == 2:
@@ -605,7 +799,7 @@ def hermite_prob(n):
     '''
 
     if n < 0:
-        return Polynomial()
+        return NULL
     if n == 0:
         return ONE
     if n == 1:
@@ -640,7 +834,7 @@ def hermite_prob_r(n):
     '''
 
     if n < 0:
-        return Polynomial()
+        return NULL
     if n == 0:
         return ONE
     if n == 1:
@@ -674,7 +868,7 @@ def hermite_phys(n):
     '''
 
     if n < 0:
-        return Polynomial()
+        return NULL
     if n == 0:
         return ONE
     p = [ONE]
@@ -707,7 +901,7 @@ def hermite_phys_r(n):
     '''
 
     if n < 0:
-        return Polynomial()
+        return NULL
     if n == 0:
         return ONE
     return (hermite_phys(n - 1) * x * 2) - polyder(hermite_phys(n - 1))
@@ -737,7 +931,7 @@ def chebyshev_t(n):
     '''
 
     if n < 0:
-        return Polynomial()
+        return NULL
     if n == 0:
         return ONE
     if n == 1:
@@ -771,7 +965,7 @@ def chebyshev_u(n):
     '''
 
     if n < 0:
-        return Polynomial()
+        return NULL
     if n == 0:
         return ONE
     if n == 1:
@@ -801,7 +995,7 @@ def abel(n, variable='a'):
     '''
 
     if n < 0:
-        return Polynomial()
+        return NULL
     if n == 0:
         return ONE
     if n == 1:
@@ -815,7 +1009,7 @@ def spread(n):
     '''
 
     if n < 0:
-        return Polynomial()
+        return NULL
     if n == 0:
         return ONE
     if n == 1:
@@ -854,7 +1048,7 @@ def gegenbauer_r(n, a='a'):
 
     a = monomial(**{a: 1})
     if n < 0:
-        return Polynomial()
+        return NULL
     if n == 0:
         return ONE
     if n == 1:
@@ -902,14 +1096,14 @@ def laguerre(n, a='a'):
     '''
 
     if n < 0:
-        return Polynomial()
+        return NULL
     if n == 0:
         return ONE
     if n == 1:
         return a + ONE - x
 
     a = monomial(**{a: 1})
-    l1, ll = Polynomial(), ONE
+    l1, ll = NULL, ONE
     for i in xrange(1, n + 1):
         l0, l1 = l1, ll
         ll = ((2*i - 1 + a - x) * l1 - (i - 1 + a) * l0) / monomial(i)
@@ -951,10 +1145,57 @@ def interpolate(x_values, y_values): ## Still in development
     n = len(x_values)
     return sum(_product(j) for j in xrange(n))
 
-def durand_kerner(poly, start=complex(.4, .9)):
+def durand_kerner(poly, start=complex(.4, .9), epsilon=10**-16):#float('-inf')):
     roots = []
     deg = poly.degree
-    for e in xrange(deg):
+    for e in xrange(deg + 1):
         roots.append(start ** e)
     while True:
-        pass
+        new = []
+        for i, r in enumerate(roots):
+            new_r = r - (poly(r))/(reduce(operator.mul, [(r - r_1) for j, r_1 in enumerate(roots) if i != j]))
+            new.append(new_r)
+        if all(n == roots[i] or abs(n - roots[i]) < epsilon for i, n in enumerate(new)):
+            return new
+        roots = new
+
+def brent(poly, a, b, epsilon=float('-inf')):
+    pa, pb = poly(a), poly(b)
+    assert pa * pb < 0, 'poly(a) and poly(b) must have opposite sign'
+    if abs(pa) < abs(pb):
+        a, b = b, a
+    c = a
+    flag = True
+    while True:
+        d = float('+inf')
+        pa, pb, pc = poly(a), poly(b), poly(c)
+        if pa != pc and pb != pc:
+            s = ((a * pb * pc) / ((pa - pb) * (pa - pc))) + ((b * pa * pc) / ((pb - pa) * (pb - pc))) + ((c * pa * pb) / ((pc - pa) * (pc - pb)))
+        else:
+            s = b - pb * ((b - a) / (pb - pa))
+
+        if 0 in (pb, poly(s)) or abs(b - a) < epsilon:
+            break
+
+        _1, _2 = (3 * a + b) / 4, b
+        c_1 = s <= min(_1, _2) and s >= max(_1, _2)
+        c_2 = flag and abs(s - b) >= abs(b - c) / 2
+        c_3 = not flag and abs(s - b) >= (c - d) / 2
+        c_4 = flag and abs(b - c) < abs(d)
+        c_5 = not flag and abs(c - d) < abs(d)
+
+        if c_1 or c_2 or c_3 or c_4 or c_5:
+            s = (a + b) / 2
+            flag = True
+        else:
+            flag = False
+        d = c
+        c = b
+        if poly(a) * poly(s) < 0:
+            b, a = s, s
+        if abs(poly(a)) < abs(poly(b)):
+            a, b = b, a
+
+    if not b:
+        return b
+    return s

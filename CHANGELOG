@@ -1,5 +1,12 @@
+TODO: durand_kerner, brent
+
 0.4: # Still in development
     + moved gcd() and lcm() from pypol.funcs to pypol.core
+    + pypol.funcs.gegenbauer_r
+    + pypol.funcs.laguerre
+    + pypol.funcs.polyint_
+    + pypol.funcs.halley
+    + pypol.funcs.householder
     + Polynomial.filter
     - Polynomial.zeros
 

@@ -46,9 +46,10 @@ def polynomial(string=None, simplify=True):
     .. warning::
         With this function you cannot make polynomials with negative powers. In case you want to use negative powers, use :func:`poly1d_2` instead.
 
+
         **Examples**
 
-        We want to make the polynomial ``2x^-1 + 2``::
+        We want to make the polynomial |c_1|::
 
             >>> polynomial('2x^-1 + 2')
             + 2x + 1 ## Wrong!
@@ -136,7 +137,7 @@ def poly1d(coeffs, variable='x', right_hand_side=True):
 
     **Examples**
 
-    We make the polynomials ``3x^3 - 2x^2 + 4x - 2``, ``2x^3 - 2`` and ``3x``.
+    We create the polynomials |c_2|, |c_3| and |c_4|.
     ::
 
         >>> poly1d([3, -2, 4, -2])
@@ -179,12 +180,33 @@ def poly1d_2(monomials, variable='x'):
 
     **Examples**
 
-    We want to make these two polynomials: ``2x^3 - 2x^2 + x`` and ``x``::
+    We want to create these two polynomials: |c_5| and |c_6|::
 
-        >>> poly1d_2([[2, 3], [-2, 2], [1, 1]])
-        + 2x^3 - 2x^2 + x
+        >>> poly1d_2([[-1, 7], [2, 3], [-2, 2], [1, 1]])
+        - x^7 + 2x^3 - 2x^2 + x
         >>> poly1d_2([[1, 1]])
         + x
+
+    This function is very useful when you need a polynomial with negative powers or with powers very TODO:distant from each other::
+
+        >>> poly1d_2([[1, -1], [2, -3], [3, 5]])
+        + 3x^5 + x^-1 + 2x^-3
+
+    or::
+
+        >>> poly1d_2([[2, 9], [1, 2]])
+        + 2x^9 + x^2
+
+    in this case, if you want to use :func:`poly1d` or :func:`polynomial` you can do this::
+
+        >>> poly1d([2, 0, 0, 0, 0, 0, 0, 1, 0, 0])
+        + 2x^9 + x^2
+        >>> poly1d([2, 0, 0, 0, 0, 0, 0, 1, 0], right_hand_side=False)
+        + 2x^9 + x^2
+        >>> polynomial('2x^9 + x^2')
+        + 2x^9 + x^2
+        >>> polynomial('2x9 x2')
+        + 2x^9 + x^2
     '''
 
     return Polynomial([(c, {variable: exp}) for (c, exp) in monomials])
@@ -963,7 +985,7 @@ class Polynomial(object):
     def update(self, pol_or_monomials=None, simplify=None):
         '''
         Updates the polynomial with another polynomial.
-        This does not create a new instance, but replaces self.monomials with others monomials, then it simplifies.
+        This does not create a new instance, but replaces :meth:`monomials` with others monomials, then it simplifies.
 
         *pol_or_monomials* can be:
             * a polynomial
@@ -971,7 +993,7 @@ class Polynomial(object):
             * a string that will be passed to :func:`parse_polynomial`
             * an integer
 
-        default is None. In this case self.monomials will be updated with an empty tuple.
+        default is None. In this case :meth:`monomials` will be updated with an empty tuple.
         ::
 
             >>> p = Polynomial(parse_polynomial('3x^3 - a^2 + a - 5'))
@@ -1035,7 +1057,7 @@ class Polynomial(object):
     @ coerce_poly
     def append(self, pol_or_monomials):
         '''
-        Appends the given monomials to self.monomials, then simplifies.
+        Appends the given monomials to :meth:`monomials`, then simplifies.
 
         pol_or_monomials can be:
           * a polynomial
@@ -1085,11 +1107,33 @@ class Polynomial(object):
         return sum([Polynomial((monomial,)) / poly for monomial in self._monomials], Polynomial())
 
     def filter(self):
-        tmp_mons = []
-        for m in self._monomials:
-            if m[0]:
-                tmp_mons.append(m)
-        return Polynomial(tmp_mons)
+        '''
+        Returns a new Polynomial instance, with :meth:`monomials` filtered, i.e. with no null term (with 0 coefficient).
+
+        **Examples**
+
+        >>> m = parse_polynomial('0x3 + 0x2 - 1x - 4') ## pypol.parse_polynomial
+        >>> m
+        [(0, {'x': 3}), (0, {'x': 2}), (-1, {'x': 1}), (-4, {})]
+        >>> p = Polynomial(m)
+        >>> p
+        - x - 4
+        >>> p.monomials
+        ((0, {'x': 3}), (0, {'x': 2}), (-1, {'x': 1}), (-4, {}))
+        >>> q = p.filter() ## Polynomial object is immutable
+        >>> q
+        - x - 4
+        >>> q == p
+        True
+        >>> p.monomials
+        ((0, {'x': 3}), (0, {'x': 2}), (-1, {'x': 1}), (-4, {}))
+        >>> q.monomials
+        ((-1, {'x': 1}), (-4, {}))
+
+        .. versionadded:: 0.4
+        '''
+
+        return Polynomial(self._filter())
 
     def simplify(self):
         '''
@@ -1167,6 +1211,9 @@ class Polynomial(object):
             self.append(((0, {letter:exp}),))
         return True
 
+    def _filter(self):
+        return [m for m in self._monomials if m[0]]
+
     def _format(self, print_format=False):
         '''
         Format the polynomial for __repr__.
@@ -1217,18 +1264,11 @@ class Polynomial(object):
         return self._format(True)
 
     def __eq__(self, other):
-        def _filter(mons):
-            tmp_mons = []
-            for m in mons:
-                if m[0]:
-                    tmp_mons.append(m)
-            return tmp_mons
-
         try:
             if not len(self) and not len(other):
                 return True
 
-            return sorted(_filter(self._monomials)) == sorted(_filter(other._monomials))
+            return sorted(self._filter()) == sorted(other._filter())
         except (AttributeError, TypeError):
             return NotImplemented
 
@@ -1236,14 +1276,7 @@ class Polynomial(object):
         return not self == other
 
     def __len__(self):
-        def _filter(mons):
-            tmp_mons = []
-            for m in mons:
-                if m[0]:
-                    tmp_mons.append(m)
-            return tmp_mons
-
-        return len(_filter(self._monomials))
+        return len(self._filter())
 
     def __pos__(self):
         return copy.copy(self)
@@ -1317,14 +1350,22 @@ class Polynomial(object):
             >>> Polynomial(parse_polynomial('3xy + x^2 - 4'))(2, 3, y=5, x=78) # args is predominant
             18
 
+        If no argument is supplied, set automatically all the letters to 1, with::
+
+            dict(zip(self.letters, [1]*len(self.letters)))
+
         .. versionchanged:: 0.2
             Added the support for positional and keyword arguments.
+        .. versionchanged:: 0.4
+            Added the support for no arguments
         '''
 
         if args:
             letters = dict(zip(self.letters[:len(args)], args))
-        else:
+        elif kwargs:
             letters = kwargs
+        else:
+            letters = dict(zip(self.letters, [1]*len(self.letters)))
         return eval(self.eval_form, letters)
 
     @ coerce_poly
