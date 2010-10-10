@@ -1,23 +1,22 @@
 .. module:: pypol.funcs
     :synopsis: Utility functions to work with polynomials
 .. moduleauthor:: Michele Lacchia <michelelacchia@gmail.com>
-.. versionadded:: 0.3
 .. sectionauthor:: Michele Lacchia <michelelacchia@gmail.com>
 
-.. |p1| image:: images/quad_eq.gif
-.. |p2| image:: images/quad_poly.gif
 .. |p3| image:: images/x2.gif
 .. |p4| image:: images/poly1.gif
 .. |p5| image:: images/indefinite_int.gif
+    :alt: Indefinite integral
 .. |p6| image:: images/-x.gif
 .. |p7| image:: images/poly2.gif
 .. |p8| image:: images/definite_int.gif
-.. |p9| image:: images/halley.gif
-.. |p10| image:: images/householder.gif
+    :alt: Definite integral
 
 
 The :mod:`funcs` module 
 ========================
+
+.. versionadded:: 0.3
 
 This module add some utility function to pypol.
 
@@ -140,48 +139,3 @@ laguerre
 ++++++++
 
 .. autofunction:: laguerre
-
-
-Root-finding
-------------
-
-At the moment these functions only are avaiable:
-
-.. hlist::
-
-    * :func:`ruffini`
-    * :func:`quadratic`
-    * :func:`newton`
-    * :func:`halley`
-    * :func:`householder`
-    * :func:`bisection`
-
-ruffini
-+++++++
-
-.. autofunction:: ruffini
-
-quadratic
-+++++++++
-
-.. autofunction:: quadratic
-
-newton
-++++++
-
-.. autofunction:: newton
-
-halley
-++++++
-
-.. autofunction:: halley
-
-householder
-+++++++++++
-
-.. autofunction:: householder
-
-bisection
-+++++++++
-
-.. autofunction:: bisection

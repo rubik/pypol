@@ -55,14 +55,14 @@ These are just some features of pypol::
     + 2x^3 - 4x^2 + 3x - 1
     >>> q * p1 + r == p2
     True
-    >>> funcs ## pypol.funcs
-    <module 'pypol.funcs' from '/home/miki/pypol_/pypol/funcs.py'>
+    >>> roots ## pypol.funcs
+    <module 'pypol.roots' from '/pypol/roots.py'>
     >>> del p1[0]
     >>> p1
     - 2x^2 - 4
-    >>> funcs.quadratic(p1)
+    >>> roots.quadratic(p1)
     (-1.4142135623730951j, 1.4142135623730951j)
-    >>> r1, r2 = funcs.quadratic(p1)
+    >>> r1, r2 = roots.quadratic(p1)
     >>> p1(r1)
     (8.8817841970012523e-16-0j)
     >>> p1(r2)
@@ -84,4 +84,6 @@ Contents
    functions.rst
    operations.rst
    funcs.rst
+   roots.rst
    contacts.rst
+   changelog.rst

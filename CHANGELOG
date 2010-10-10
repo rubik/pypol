@@ -1,57 +1,79 @@
-TODO: durand_kerner, brent
+Release 0.4 (in development)
+----------------------------
 
-0.4: # Still in development
-    + moved gcd() and lcm() from pypol.funcs to pypol.core
-    + pypol.funcs.gegenbauer_r
-    + pypol.funcs.laguerre
-    + pypol.funcs.polyint_
-    + pypol.funcs.halley
-    + pypol.funcs.householder
-    + Polynomial.filter
+Added:
+    + moved gcd() and lcm() from :mod:`pypol.funcs` to :mod:`pypol` (core)
+    + new module: :mod:`pypol.roots`
+    + :func:`pypol.funcs.gegenbauer_r`
+    + :func:`pypol.funcs.laguerre`
+    + :func:`pypol.funcs.polyint_`
+    + :func:`pypol.roots.halley`
+    + :func:`pypol.roots.householder`
+    + :func:`pypol.roots.brent`
+    + :meth:`pypol.Polynomial.filter`
+
+Removed:
     - Polynomial.zeros
 
-0.3:
-    + changed the structure, now there is a new module: funcs.py
-    + utils.random_poly :: not_null
-    + poly1d
-    + poly2d
-    + pypol.funcs.divisible
-    + pypol.funcs.gcd
-    + pypol.funcs.lcm
-    + pypol.funcs.random_poly
-    + pypol.funcs.polyder
-    + pypol.funcs.polyint
-    + pypol.funcs.fib_poly
-    + pypol.funcs.fib_poly_r
-    + pypol.funcs.hermite_prob
-    + pypol.funcs.hermite_prob_r
-    + pypol.funcs.hermite_phys
-    + pypol.funcs.hermite_phys_r
-    + pypol.funcs.chebyshev_t
-    + pypol.funcs.chebyshev_u
-    + pypol.funcs.abel
-    + pypol.funcs.quadratic
-    + pypol.funcs.bisection
-    + pypol.funcs.ruffini
+
+Release 0.3
+-----------
+
+Added:
+    + new module: :mod:`pypol.funcs`
+    + :func:`pypol.funcs.random_poly` :: not_null
+    + :func:`pypol.poly1d`
+    + :func:`pypol.poly1d_2`
+    + :func:`pypol.funcs.divisible`
+    + :func:`pypol.funcs.gcd`
+    + :func:`pypol.funcs.lcm`
+    + :func:`pypol.funcs.random_poly`
+    + :func:`pypol.funcs.polyder`
+    + :func:`pypol.funcs.polyint`
+    + :func:`pypol.funcs.fib_poly`
+    + :func:`pypol.funcs.fib_poly_r`
+    + :func:`pypol.funcs.hermite_prob`
+    + :func:`pypol.funcs.hermite_prob_r`
+    + :func:`pypol.funcs.hermite_phys`
+    + :func:`pypol.funcs.hermite_phys_r`
+    + :func:`pypol.funcs.chebyshev_t`
+    + :func:`pypol.funcs.chebyshev_u`
+    + :func:`pypol.funcs.abel`
+    + :func:`pypol.funcs.quadratic`
+    + :func:`pypol.funcs.bisection`
+    + :func:`pypol.funcs.ruffini`
+
+Removed:
     - pypol.root
     - make_polynomial
     - Polynomial.insert
+    - Polynomial.coeff_gcd
+    - Polynomial.coeff_lcm
 
-0.2:
+
+Release 0.2
+-----------
+
+Added:
     + testpypol.run
-    + monomial
-    + random_poly :: unique
-    + Polynomial.sort
-    + Polynomial.coeff_gcd
-    + Polynomial.coeff_lcm
-    + Polynomial.gcd
-    + Polynomial.lcm
-    + Polynomial.joint_letters
-    + Polynomial.max_letter
-    + Polynomial.is_square_diff
-    + Polynomial.div_all
-    + Polynomial._key
+    + :func:`pypol.monomial`
+    + :func:`pypol.funcs.random_poly` :: unique
+    + :meth:`pypol.Polynomial.sort`
+    + :meth:`pypol.Polynomial.coeff_gcd`
+    + :meth:`pypol.Polynomial.coeff_lcm`
+    + :meth:`pypol.Polynomial.gcd`
+    + :meth:`pypol.Polynomial.lcm`
+    + :meth:`pypol.Polynomial.joint_letters`
+    + :meth:`pypol.Polynomial.max_letter`
+    + :meth:`pypol.Polynomial.is_square_diff`
+    + :meth:`pypol.Polynomial.div_all`
+    + :meth:`pypol.Polynomial._key`
+
+Removed:
     - Polynomial._cmp
 
-0.1:
-    Initial release
+
+Release 0.1
+-----------
+
+    * Initial release

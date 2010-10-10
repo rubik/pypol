@@ -1,5 +1,6 @@
 from core import *
 import funcs
+import roots
 
 __author__ = 'Michele Lacchia'
 __version__ = (0, 3)

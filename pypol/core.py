@@ -1175,7 +1175,6 @@ class Polynomial(object):
     def _key(self, letter=None):
         '''
         Comparator function used to sort the polynomial's monomials. You should neither change it nor overload it.
-        See (**- 404 Error -**)
 
         .. versionadded:: 0.2
         '''
@@ -1263,6 +1262,7 @@ class Polynomial(object):
     def __str__(self):
         return self._format(True)
 
+    @ coerce_poly
     def __eq__(self, other):
         try:
             if not len(self) and not len(other):
@@ -1445,8 +1445,12 @@ class Polynomial(object):
                     Q.append(a / b)
                     return Q, Polynomial()
                 return Q, A.filter()
+
             A.sort(key=self._key(letter), reverse=True)
-            quotient = _div(A[0], B[0])
+            try:
+                quotient = _div(A[0], B[0])
+            except KeyError:
+                raise ValueError('The polynomials are not divisible')
             del A[0]
             Q.append(quotient)
 
