@@ -5,7 +5,12 @@ This file is part of the pypol project.
 (C) Copyright 2010 Michele Lacchia
 '''
 
+from __future__ import division
+
+import math
+import decimal
 import operator
+from pypol import poly1d
 from funcs import polyder
 
 def ruffini(poly):
@@ -57,6 +62,10 @@ def ruffini(poly):
     if not p:
         return []
     return [x for x in _divs(p) if not poly(x)]
+
+def linear(poly):
+    assert 0 not in (poly[0], poly[1]), 'b or c cannot be equal to 0'
+    return -1 * poly[0] / poly[1]
 
 def quadratic(poly):
     '''
@@ -116,30 +125,91 @@ def quadratic(poly):
     .. versionadded:: 0.3
     '''
 
-    def _get(power):
-        if power == 0:
-            return poly.right_hand_side or 0
-        plist = poly.to_plist()
-        c = [None] + plist[::-1]
-        if c[power][1] == power:
-            return c[power][0]
-        else:
-            for t in plist:
-                if t[1] == power:
-                    return t[0]
-            return 0
-
     assert poly.degree == 2, 'The polynomial\'s degree must be 2'
     if len(poly.coefficients) == 3:
         a, b, c = poly.coefficients
     else:
-        a, b, c = map(_get, [2, 1, 0])
+        a, b, c = map(getattr(poly, 'get'), [2, 1, 0])
     r = b ** 2 - 4*a*c
     if r < 0:
         r = complex(imag=(-r) ** 0.5)
     else:
         r = r ** 0.5
     return ((-b + r) / (2*a), (-b - r) / (2*a))
+
+def cubic(poly):
+    assert poly.degree == 3, 'The polynomial\'s degree must be 3'
+    if len(poly.coefficients) == 4:
+        a, b, c, d = poly.coefficients
+    else:
+        a, b, c, d = map(getattr(poly, 'get'), [3, 2, 1, 0])
+
+    if a == 0:
+        poly = poly1d([a, b, c, d])
+        return quadratic(poly[1:])
+    print a, b, c, d
+    f = ((3*c / a) - (b**2 / a**2)) / 3
+    g = ((2*b**3 / a**3) - (9*b*c / a**2) + (27*d / a)) / 27
+    h = (g**2 / 4) + (f**3 / 27)
+    print f, g, h
+    if h > 0:
+        b_3a = - (b / (3*a))
+        r = -(g / 2) + math.sqrt(h)
+        s = r ** (1/3)
+        t = -(g / 2) - math.sqrt(h)
+        print r, s, t
+        if t < 0:
+            u = complex(imag=(-t) ** (1/3))
+        else:
+            u = t ** (1/3)
+        x1 = (s + u) - b_3a
+        x2 = complex(-(s + u) + b_3a, (s + u) * math.sqrt(3) / 2)
+        x3 = complex(-(s + u) + b_3a, -(s + u) * math.sqrt(3) / 2)
+        return x1, x2, x3
+
+    if f == g == h == 0:
+        x1 = x2 = x3 = -((d / a) ** (1/3))
+        return x1, x2, x3
+
+    if h <= 0:
+        i = math.sqrt((g**2 / 4) - h)
+        j = i ** (1 / 3)
+        k = math.acos(-(g / (2*i)))
+        l = -j
+        m = math.cos(k / 3)
+        n = math.sqrt(3) * math.sin(k / 3)
+        p = -(b / (3*a))
+        x1 = 2*j * math.cos(k / 3) + p
+        x2 = l * (m + n) + p
+        x3 = l * (m - n) + p
+        return x1, x2, x3
+
+def quartic(poly):
+    assert poly.degree == 4, 'The polynomial\'s degree must be 4'
+    if len(poly.coefficients) == 4:
+        a, b, c, d, e = poly.coefficients
+    else:
+        a, b, c, d, e = map(getattr(poly, 'get'), [4, 3, 2, 1, 0])
+
+    poly = poly1d([a, b, c, d, e])
+    if not poly.right_hand_side:
+        roots = [0]
+        roots.extend(cubic(poly.div_all(monomial(x=1))))
+        return roots
+    if not p(1):
+        roots = [1]
+        roots.extend(cubic(poly / 'x - 1'))
+        return roots
+    if not p(-1):
+        roots = [-1]
+        roots.extend(cubic(poly / 'x + 1'))
+        return roots
+    if b == d: # biquadratic
+        return NotImplemented
+    if (a, b) == (0, 0):
+        return quadratic(poly[2:])
+    if a == 0:
+        return cubic(poly[1:])
 
 def newton(poly, start, epsilon=float('-inf')):
     '''

@@ -325,6 +325,9 @@ def parse_polynomial(string, max_length=None):
     monomials = []
     regex = re.compile(r'([-+]?\s*\d*[\./]?\d*)((?:\w?\^?\d*)*)')
 
+    if not string:
+        return []
+
     for c, l in regex.findall(string):
         if max_length and len(monomials) == max_length:
             return monomials
@@ -524,8 +527,12 @@ class Polynomial(object):
 
             >>> Polynomial(parse_polynomial('2x^3 + 4xy')).degree
             3
+            >>> Polynomial(parse_polynomial('')).degree
+            -inf
         '''
 
+        if not self:
+            return float('-inf')
         return max([sum(monomial[1].values()) for monomial in self._monomials] + [0])
 
     @ property
@@ -720,6 +727,51 @@ class Polynomial(object):
                                                else self.right_hand_side))
         negdivs = map(operator.neg, divs)
         return tuple([x for x in divs + negdivs if not self(x)])
+
+    def get(self, power, letter='x'):
+        '''
+        Returns the coefficients of the term ``letter^power``.
+
+        :param integer power: the power of the term
+        :param string letter: the variable (default to ``x``)
+        :rtype: integer, float, or :class:`fractions.Fraction`
+
+        **Examples**
+
+        ::
+
+            >>> p = x**3 - y**3*x**4 -.4*z**5*y**5
+            >>> p
+            - 2/5y^5z^5 - x^4y^3 + x^3
+            >>> p.get(1)
+            0
+            >>> p.get(3)
+            1
+            >>> p.get(3, 'y')
+            -1
+            >>> p.get(5, 'y')
+            Fraction(-2, 5)
+            >>> p.get(5, 'z')
+            Fraction(-2, 5)
+            >>> p.get(5, 'x')
+            0
+            >>> p.get(6, 'y')
+            0
+        '''
+
+        if power == 0:
+            return self.right_hand_side or 0
+        plist = self.to_plist(letter)
+        c = [None] + plist[::-1]
+        try:
+            if c[power][1] == power:
+                return c[power][0]
+        except IndexError:
+            pass
+        for t in plist:
+            if t[1] == power:
+                return t[0]
+        return 0
 
     def raw_powers(self, letter=None):
         '''
@@ -952,16 +1004,11 @@ class Polynomial(object):
             return True
         return self.powers(letter) == range(self.max_power(letter), -1, -1)
 
-    def to_plist(self, letter=None):
+    def to_plist(self, letter='x'):
         '''
-        Returns the polynomial formatted into a list.
+        Returns the polynomial formatted into a list of lists.
         '''
 
-        if not letter:
-            try:
-                letter = self.letters[0]
-            except IndexError:
-                letter = 'x'
         return [[m[0], m[1].get(letter, 0)] for m in self._monomials]
 
     def invert(self, v=1):

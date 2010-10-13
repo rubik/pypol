@@ -1,5 +1,7 @@
 .. currentmodule:: pypol
 
+.. _operations:
+
 Basic operators
 ===============
 

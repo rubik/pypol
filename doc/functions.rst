@@ -10,7 +10,7 @@
 Functions
 =========
 
-pypol module has some functions to work with polynomials :
+pypol module has some functions to work with polynomials
 
 .. hlist::
 

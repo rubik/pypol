@@ -16,7 +16,7 @@
     :alt: Schröder's method
 
 The :mod:`roots` module
-========================
+=======================
 
 .. versionadded:: 0.4
 

@@ -11,6 +11,11 @@
 .. |p7| image:: images/poly2.gif
 .. |p8| image:: images/definite_int.gif
     :alt: Definite integral
+.. |p11| image:: images/bin_coeff.gif
+    :alt: Binomial coefficient
+.. |p12| image:: images/x^k.gif
+.. |p13| image:: images/binomial.gif
+.. |p14| image:: images/(-1)^k.gif
 
 
 The :mod:`funcs` module 
@@ -39,6 +44,7 @@ The :mod:`funcs` offers these basic functions:
     * :func:`polyder`
     * :func:`polyint`
     * :func:`polyint_`
+    * :func:`bin_coeff`
 
 divisible
 +++++++++
@@ -64,6 +70,11 @@ polyint\_
 +++++++++
 
 .. autofunction:: polyint_
+
+bin_coeff
++++++++++
+
+.. autofunction:: bin_coeff
 
 Series
 ------

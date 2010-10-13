@@ -296,7 +296,7 @@ def polyint(poly, m=1, C=[]):
     else:
         p_i = _int(poly)
         for _ in xrange(m - 1):
-            p_i = _int(poly)
+            p_i = _int(p_i)
 
     return p_i
 
@@ -344,15 +344,70 @@ def polyint_(poly, a, b):
     F = polyint(poly)
     return F(a) - F(b)
 
-def binomial_coeff(n, k):
+def bin_coeff(n, k):
     '''
-    Returns the binomial coefficient, i.e. the coefficient of the |p11| term of the binomial power |p12|.
+    Returns the binomial coefficient |p11|, i.e. the coefficient of the |p12| term of the binomial power |p13|.
+
+    :param integer n: the power of the binomial. If ``n == 1`` the result will be |p14|
+    :param integer k: the power of the term
+    :rtype: integer or float
 
     **Examples**
 
     ::
 
+        >>> bin_coeff(1, 4)
+        Traceback (most recent call last):
+          File "<stdin>", line 1, in <module>
+          File "funcs.py", line 367, in bin_coeff
+            
+        ValueError: k cannot be greater than n
+        >>> bin_coeff(6, 4)
+        15.0
+        >>> bin_coeff(16, 9)
+        11440.0
+        >>> bin_coeff(-1, 9)
+        -1
+        >>> bin_coeff(-1, 8)
+        1
+        >>> bin_coeff(124, 98)
+        3.9616705576337044e+26
+
+    It is the same as::
+
+        >>> def bin_coeff_2(n, k):
+            if n < k:
+                raise ValueError('k cannot be greater than n')
+            return ((1 + x) ** n).get(k)
         
+        >>> bin_coeff(5, 4)
+        5.0
+        >>> bin_coeff_2(5, 4)
+        5
+        >>> bin_coeff_2(3, 4)
+        Traceback (most recent call last):
+          File "<pyshell#18>", line 1, in <module>
+            bin_coeff_2(3, 4)
+          File "<pyshell#15>", line 3, in bin_coeff_2
+            raise ValueError('k cannot be greater than n')
+        ValueError: k cannot be greater than n
+        >>> bin_coeff(3, 4)
+        Traceback (most recent call last):
+          File "<pyshell#19>", line 1, in <module>
+            bin_coeff(3, 4)
+          File "funcs.py", line 388, in bin_coeff
+            raise ValueError('k cannot be greater than n')
+        ValueError: k cannot be greater than n
+        >>> bin_coeff(56, 54)
+        1540.0
+        >>> bin_coeff_2(56, 54)
+        1540
+        >>> bin_coeff(123, 54)
+        3.0748160713247975e+35
+        >>> bin_coeff_2(123, 54)
+        307481607132479763736986522890815830L
+
+    but :func:`bin_coeff` is faster.
 
     **References**
 
@@ -363,10 +418,12 @@ def binomial_coeff(n, k):
 
     if n == -1:
         return (-1) ** k
-    try:
-        return math.factorial(n) / (math.factorial(k) * math.factorial(n - k))
-    except ValueError:
-        return float('nan')
+    if n == k:
+        return 1
+    if n < k:
+        raise ValueError('k cannot be greater than n')
+
+    return math.factorial(n) / (math.factorial(k) * math.factorial(n - k))
 
 def fib_poly(n):
     '''

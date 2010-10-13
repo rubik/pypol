@@ -6,12 +6,14 @@ This is the pypol tutorial. If you haven't installed it yet, see below.
 First steps with pypol
 ----------------------
 
+.. _install:
+
 Download and install
 ++++++++++++++++++++
 
 First of all, you need to get the files. To do this, go to the `github repository <http://github.com/rubik/pypol/downloads>`_ or to `PyPI <http://pypi.python.org/pypi/pypol_/0.3>`_ and download the right file.
 
-If you downloaded the source you need to unpack it::
+If you downloaded the source package you need to unpack it::
 
     $ tar -xzfv pypol_-0.3.tar.gz
 
@@ -94,19 +96,6 @@ Now run the setup.py script::
             Installed /usr/local/lib/python2.6/dist-packages/pypol_-0.3-py2.6.egg
             Processing dependencies for pypol-==0.3
             Finished processing dependencies for pypol-==0.3
-
-easy_install
-############
-
-pypol is on PyPI too. If you have setuptools installed you can get pypol doing this::
-
-    $ easy_install pypol_
-
-and **don't forget the underscore!** Because if you try::
-
-    $ easy_install pypol
-
-**you will install a different package!**
 
 Running the tests
 +++++++++++++++++
@@ -200,30 +189,201 @@ To build the documentation, change directory and go to pypol/doc::
 
 Where *<target>* is one of: 
 
-        +-----------+-----------------------------------------------------------+
-        |    html   |  to make standalone HTML files                            |
-        +-----------+-----------------------------------------------------------+
-        | singlehtml|  to make a single large HTML file                         |
-        +-----------+-----------------------------------------------------------+
-        |  dirhtml  |  to make HTML files named index.html in directories       |
-        +-----------+-----------------------------------------------------------+
-        |   pickle  |  to make pickle files                                     |
-        +-----------+-----------------------------------------------------------+
-        |   json    |  to make JSON files                                       |
-        +-----------+-----------------------------------------------------------+
-        |  htmlhelp |  to make HTML files and a HTML help project               |
-        +-----------+-----------------------------------------------------------+
-        |  qthelp   |  to make HTML files and a qthelp project                  |
-        +-----------+-----------------------------------------------------------+
-        |  devhelp  |  to make HTML files and a Devhelp project                 |
-        +-----------+-----------------------------------------------------------+
-        |    epub   |  to make an epub                                          |
-        +-----------+-----------------------------------------------------------+
-        |   latex   |  to make LaTeX files, you can set PAPER=a4 or PAPER=letter|
-        +-----------+-----------------------------------------------------------+
-        |  latexpdf |  to make LaTeX files and run them through pdflatex        |
-        +-----------+-----------------------------------------------------------+
-        |    text   |  to make text files                                       |
-        +-----------+-----------------------------------------------------------+
-        |    man    |  to make manual pages                                     |
-        +-----------+-----------------------------------------------------------+
+        +----------------+------------------------------------------------------------+
+        | **html**       |  to make standalone HTML files                             |
+        +----------------+------------------------------------------------------------+
+        | **singlehtml** |  to make a single large HTML file                          |
+        +----------------+------------------------------------------------------------+
+        | **dirhtml**    |  to make HTML files named index.html in directories        |
+        +----------------+------------------------------------------------------------+
+        | **pickle**     |  to make pickle files                                      |
+        +----------------+------------------------------------------------------------+
+        | **json**       |  to make JSON files                                        |
+        +----------------+------------------------------------------------------------+
+        | **htmlhelp**   |  to make HTML files and a HTML help project                |
+        +----------------+------------------------------------------------------------+
+        | **qthelp**     |  to make HTML files and a qthelp project                   |
+        +----------------+------------------------------------------------------------+
+        | **devhelp**    |  to make HTML files and a Devhelp project                  |
+        +----------------+------------------------------------------------------------+
+        |  **epub**      |  to make an epub                                           |
+        +----------------+------------------------------------------------------------+
+        | **latex**      |  to make LaTeX files, you can set PAPER=a4 or PAPER=letter |
+        +----------------+------------------------------------------------------------+
+        | **latexpdf**   |  to make LaTeX files and run them through pdflatex         |
+        +----------------+------------------------------------------------------------+
+        |  **text**      |  to make text files                                        |
+        +----------------+------------------------------------------------------------+
+        |  **man**       |  to make manual pages                                      |
+        +----------------+------------------------------------------------------------+
+
+Cookbook
+--------
+
+Here is pypol cookbook. All examples assume::
+
+    >>> from pypol import *
+
+
+Creating a polynomial
++++++++++++++++++++++
+
+Use :func:`pypol.poly1d`, :func:`pypol.poly1d_2`, :func:`pypol.polynomial`, and :func:`pypol.monomial`::
+
+    >>> p = poly1d([1, 2, -3, 4])
+    >>> p
+    + x^3 + 2x^2 - 3x + 4
+    >>> q = poly1d_2([[3, 9], [-5, 6]])
+    >>> q
+    + 3x^9 - 5x^6
+    >>> r = polynomial('.3x^4 - 2x^5 + 4x')
+    >>> r
+    - 2x^5 + 3/10x^4 + 4x
+    >>> m = monomial(-3)
+    >>> m
+    - 3
+    >>> m.monomials
+    ((-3, {}),)
+    >>> m2 = monomial(-3, x=1, y=3, z=2)
+    >>> m2
+    - 3xy^3z^2
+    >>> m2.monomials
+    ((-3, {'y': 3, 'x': 1, 'z': 2}),)
+    >>> len(m2)
+    1
+
+
+The :class:`pypol.Polynomial` class
+++++++++++++++++++++++++++++++++++++++
+
+::
+
+    >>> p.monomials
+    ((1, {'x': 3}), (2, {'x': 2}), (-3, {'x': 1}), (4, {}))
+    >>> p.coefficients
+    [1, 2, -3, 4]
+    >>> p.letters
+    ('x',)
+    >>> p.append(-2)
+    >>> p
+    + x^3 + 2x^2 - 3x + 2
+    >>> p.append('4xy')
+    >>> p
+    + x^3 + 2x^2 + 4xy - 3x + 2
+    >>> p.letters
+    ('x', 'y')
+    >>> del p[1]
+    >>> p
+    + x^3 + 4xy - 3x + 2
+    >>> p.gcd
+    + 1
+    >>> p.lcm
+    + 12x^3y
+    >>> p.degree
+    3
+
+.. seealso::
+    :class:`pypol.Polynomial` class reference.
+
+
+Operations
+++++++++++
+
+::
+
+    >>> p / q
+    Traceback (most recent call last):
+      File "<pyshell#20>", line 1, in <module>
+        p / q
+      File "/core.py", line 1436, in __divmod__
+        raise ValueError('The polynomials are not divisible')
+    ValueError: The polynomials are not divisible
+    >>> q / p
+    Traceback (most recent call last):
+      File "<pyshell#21>", line 1, in <module>
+        q / p
+      File "core.py", line 1453, in __divmod__
+        raise ValueError('The polynomials are not divisible')
+    ValueError: The polynomials are not divisible
+    >>> del p[1]
+    >>> q / p
+    + 3x^6 + 9x^4 - 11x^3 + 27x^2 - 51x + 103
+    >>> divmod(q, p)
+    (+ 3x^6 + 9x^4 - 11x^3 + 27x^2 - 51x + 103, - 207x^2 + 411x - 206)
+    >>> quot, rem = divmod(q, p)
+    >>> quot * p + rem
+    + 3x^9 - 5x^6
+    >>> q
+    + 3x^9 - 5x^6
+    >>> quot * p + rem == q
+    True
+    >>> j = poly1d([-3, 2, 1])
+    >>> j
+    - 3x^2 + 2x + 1
+    >>> j * -3
+    + 9x^2 - 6x - 3
+    >>> j * '-x^3'
+    + 3x^5 - 2x^4 - x^3
+    >>> j * ((1, {'y': 3}), (-2, {}))
+    - 3x^2y^3 + 2xy^3 + y^3 + 6x^2 - 4x - 2
+    >>> j
+    - 3x^2 + 2x + 1
+    >>> k = poly1d([1, 2])
+    >>> k
+    + x + 2
+    >>> j + k
+    - 3x^2 + 3x + 3
+    >>> j - k
+    - 3x^2 + x - 1
+    >>> j + -k == j - k
+    True
+
+.. seealso::
+    :ref:`operations`
+
+Differentiation and itegration
+++++++++++++++++++++++++++++++
+
+There are three functions: :func:`pypol.funcs.polyder` (to find the derivative),
+:func:`pypol.funcs.polyint` (to find the indefinite integral) and :func:`pypol.funcs.polyint_` (to find the definite integral)::
+
+    >>> p = poly1d([1, 3, -3, -1])
+    >>> p
+    + x^3 + 3x^2 - 3x - 1
+    >>> funcs.polyder(p)
+    + 3x^2 + 6x - 3
+    >>> funcs.polyder(p, 2)
+    + 6x + 6
+    >>> funcs.polyder(p, 2) == funcs.polyder(funcs.polyder(p))
+    True
+    >>> funcs.polyder(p, 3)
+    + 6
+    >>> funcs.polyder(p, 4)
+    
+    >>> funcs.polyder(p, 5)
+    
+    >>> funcs.polyint(p)
+    + 1/4x^4 + x^3 - 3/2x^2 - x
+    >>> funcs.polyint(p, 2)
+    + 1/20x^5 + 1/4x^4 - 1/2x^3 - 1/2x^2
+    >>> funcs.polyint(p, 2) == funcs.polyint(funcs.polyint(p))
+    True
+    >>> funcs.polyint(p, 2, [3, 1]) ## Integration costants
+    + 1/20x^5 + 1/4x^4 - 1/2x^3 - 1/2x^2 + 3x + 1
+    >>> funcs.polyint(p, 3, [3, 1, -4, 3, 2]) ## Integration costants, polyint will use only the first three (m = 3)
+    + 1/120x^6 + 1/20x^5 - 1/8x^4 - 1/6x^3 + 3/2x^2 + x - 4
+    >>> funcs.polyint_(p, 10, -2) ## Definite integral
+    3348.0
+    >>> funcs.polyint_(p, -10, -2) ## Definite integral
+    1368.0
+    >>> funcs.polyint_(p, -10, -10) ## If the limits are equal the result will be 0
+    0.0
+
+
+Series
+++++++
+
+
+Root-finding
+++++++++++++
+

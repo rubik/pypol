@@ -12,15 +12,16 @@ class TestFuncs(object):
         pass
 
     def testDivisible(self):
-        pass
+        p = pypol.poly1d([2, 6, -4, 8])*x
+        assert_true(funcs.divisible(p, p.gcd))
 
     def testRandomPoly(self):
         for _ in xrange(1000):
-            assert_equal(pypol.Polynomial, type(pypol.funcs.random_poly()))
+            assert_equal(type(funcs.random_poly()), pypol.Polynomial)
 
-        poly1, poly2, poly3 = pypol.funcs.random_poly(letters='x', right_hand_side=False, not_null=True), \
-                              pypol.funcs.random_poly(unique=True, right_hand_side=False, not_null=True), \
-                              pypol.funcs.random_poly(not_null=True)
+        poly1, poly2, poly3 = funcs.random_poly(letters='x', right_hand_side=False, not_null=True), \
+                              funcs.random_poly(unique=True, right_hand_side=False, not_null=True), \
+                              funcs.random_poly(not_null=True)
 
         assert poly1
         assert poly2
@@ -31,7 +32,10 @@ class TestFuncs(object):
         pass
 
     def testPolyder(self):
-        pass
+        p = pypol.poly1d([1]*4)
+        assert_equal(pypol.poly1d([3, 2, 1]), funcs.polyder(p))
+        assert_equal(pypol.poly1d([6, 2]), funcs.polyder(p, 2))
+        assert_equal(pypol.poly1d([6]), funcs.polyder(p, 3))
 
     def testPolyint(self):
         pass

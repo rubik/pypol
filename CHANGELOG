@@ -7,9 +7,11 @@ Added:
     + :func:`pypol.funcs.gegenbauer_r`
     + :func:`pypol.funcs.laguerre`
     + :func:`pypol.funcs.polyint_`
+    + :func:`pypol.funcs.bin_coeff`
     + :func:`pypol.roots.halley`
     + :func:`pypol.roots.householder`
     + :func:`pypol.roots.brent`
+    + :meth:`pypol.Polynomial.get`
     + :meth:`pypol.Polynomial.filter`
 
 Removed:
