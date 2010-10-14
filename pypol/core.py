@@ -728,7 +728,7 @@ class Polynomial(object):
         negdivs = map(operator.neg, divs)
         return tuple([x for x in divs + negdivs if not self(x)])
 
-    def get(self, power, letter='x'):
+    def get(self, power, letter=None):
         '''
         Returns the coefficients of the term ``letter^power``.
 
@@ -759,6 +759,8 @@ class Polynomial(object):
             0
         '''
 
+        if not letter:
+            letter = self.letters[0]
         if power == 0:
             return self.right_hand_side or 0
         plist = self.to_plist(letter)

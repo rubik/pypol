@@ -10,7 +10,7 @@ from __future__ import division
 import math
 import decimal
 import operator
-from pypol import poly1d
+from pypol import poly1d, monomial, Polynomial
 from funcs import polyder
 
 def ruffini(poly):
@@ -125,6 +125,7 @@ def quadratic(poly):
     .. versionadded:: 0.3
     '''
 
+    poly = poly.filter()
     assert poly.degree == 2, 'The polynomial\'s degree must be 2'
     if len(poly.coefficients) == 3:
         a, b, c = poly.coefficients
@@ -138,6 +139,7 @@ def quadratic(poly):
     return ((-b + r) / (2*a), (-b - r) / (2*a))
 
 def cubic(poly):
+    poly = poly.filter()
     assert poly.degree == 3, 'The polynomial\'s degree must be 3'
     if len(poly.coefficients) == 4:
         a, b, c, d = poly.coefficients
@@ -146,70 +148,96 @@ def cubic(poly):
 
     if a == 0:
         poly = poly1d([a, b, c, d])
-        return quadratic(poly[1:])
-    print a, b, c, d
+        return quadratic(poly)
     f = ((3*c / a) - (b**2 / a**2)) / 3
     g = ((2*b**3 / a**3) - (9*b*c / a**2) + (27*d / a)) / 27
     h = (g**2 / 4) + (f**3 / 27)
-    print f, g, h
-    if h > 0:
+    if h > 0: # only 1 root is real
         b_3a = - (b / (3*a))
         r = -(g / 2) + math.sqrt(h)
         s = r ** (1/3)
         t = -(g / 2) - math.sqrt(h)
-        print r, s, t
         if t < 0:
-            u = complex(imag=(-t) ** (1/3))
+            u = - ((-t) ** (1/3))
         else:
             u = t ** (1/3)
-        x1 = (s + u) - b_3a
-        x2 = complex(-(s + u) + b_3a, (s + u) * math.sqrt(3) / 2)
-        x3 = complex(-(s + u) + b_3a, -(s + u) * math.sqrt(3) / 2)
+
+        x1 = (s + u) + b_3a
+        x2 = complex(-(s + u) / 2 + b_3a, (s - u) * math.sqrt(3) / 2)
+        x3 = complex(-(s + u) / 2 + b_3a, -(s - u) * math.sqrt(3) / 2)
+
+        if poly(x1) and not poly(round(x1)):
+            x1 = round(x1)
         return x1, x2, x3
 
-    if f == g == h == 0:
+    if f == g == h == 0: # all 3 roots are real and equal
         x1 = x2 = x3 = -((d / a) ** (1/3))
         return x1, x2, x3
 
-    if h <= 0:
+    if h <= 0: # all 3 roots are real
         i = math.sqrt((g**2 / 4) - h)
-        j = i ** (1 / 3)
+        j_ = i ** (1 / 3)
         k = math.acos(-(g / (2*i)))
-        l = -j
+        l = -j_
         m = math.cos(k / 3)
         n = math.sqrt(3) * math.sin(k / 3)
         p = -(b / (3*a))
-        x1 = 2*j * math.cos(k / 3) + p
+        x1 = 2*j_ * math.cos(k / 3) + p
         x2 = l * (m + n) + p
         x3 = l * (m - n) + p
+
+        x1 = x1*1e14; x1 = round(x1); x1 = (x1/1e14)
+        x2 = x2*1e14; x2 = round(x2); x2 = (x2/1e14)
+        x3 = x3*1e14; x3 = round(x3); x3 = (x3/1e14)
+
+        if poly(x1) and not poly(round(x1)):
+            x1 = round(x1)
+        if poly(x2) and not poly(round(x2)):
+            x2 = round(x2)
+        if poly(x3) and not poly(round(x3)):
+            x3 = round(x3)
         return x1, x2, x3
 
 def quartic(poly):
     assert poly.degree == 4, 'The polynomial\'s degree must be 4'
-    if len(poly.coefficients) == 4:
+    if len(poly.coefficients) == 5:
         a, b, c, d, e = poly.coefficients
     else:
         a, b, c, d, e = map(getattr(poly, 'get'), [4, 3, 2, 1, 0])
 
     poly = poly1d([a, b, c, d, e])
-    if not poly.right_hand_side:
-        roots = [0]
-        roots.extend(cubic(poly.div_all(monomial(x=1))))
-        return roots
-    if not p(1):
+    if not poly(1):
         roots = [1]
         roots.extend(cubic(poly / 'x - 1'))
         return roots
-    if not p(-1):
+    if not poly(-1):
         roots = [-1]
         roots.extend(cubic(poly / 'x + 1'))
         return roots
     if b == d: # biquadratic
-        return NotImplemented
+        pass
     if (a, b) == (0, 0):
-        return quadratic(poly[2:])
+        return quadratic(Polynomial(poly[2:]))
     if a == 0:
-        return cubic(poly[1:])
+        return cubic(Polynomial(poly[1:]))
+
+    poly = poly.div_all(monomial(a))
+    a, b, c, d, e = poly.coefficients
+
+    f = float(c - (3*b**2 / 8))
+    g = float(d + (b**3/ 8) - (b*c / 2))
+    h = e - (3*b**4 / 256) + (b**2 * c / 16) - (b*d / 4)
+    y = monomial(y=1)
+    eq = y**3 + (f / 2) * y**2 + ((f**2 - 4*h) / 16) * y - g**2 / 64
+    y1, y2, y3 = cubic(eq)
+    p, q = map(math.sqrt, [r for r in (y1, y2, y3) if r][:2])
+    r = -g / (8*p*q)
+    s = b / (4*a)
+    x1 = p + q + r - s
+    x2 = p - q - r - s
+    x3 = - p + q - r - s
+    x4 = - p - q + r - s
+    return x1, x2, x3, x4
 
 def newton(poly, start, epsilon=float('-inf')):
     '''
