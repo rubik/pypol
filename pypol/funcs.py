@@ -200,7 +200,7 @@ def polyder(poly, m=1):
 def polyint(poly, m=1, C=[]):
     '''
     Returns the indefinite integral of the polynomial *poly*:
-        |p5|
+        .. math:: \int p(x)dx
 
     :param Polynomial poly: the polynomial
     :param integer m: the order of the antiderivative (default 1)
@@ -210,7 +210,7 @@ def polyint(poly, m=1, C=[]):
 
     **Examples**
 
-    Let's calculate the indefinite integrals of the polynomials: |p6| and |p7|::
+    Let's calculate the indefinite integrals of the polynomials: :math:`-x` and :math:`x^3 - 7x + 5`::
 
         >>> p1, p2 = poly1d([-1, 0]), poly1d([1, 0, -7, 5])
         >>> p1, p2
@@ -344,13 +344,14 @@ def polyint_(poly, a, b):
     F = polyint(poly)
     return F(a) - F(b)
 
-def bin_coeff(n, k):
+def bin_coeff(n, k, as_frac=False):
     '''
     Returns the binomial coefficient |p11|, i.e. the coefficient of the |p12| term of the binomial power |p13|.
 
     :param integer n: the power of the binomial. If ``n == 1`` the result will be |p14|
     :param integer k: the power of the term
-    :rtype: integer or float
+    :param bool as_frac: if True the result will be a :class:`fractions.Fraction` object, float otherwise
+    :rtype: float (or :class:`fractions.Fraction` if as_frac is True)
 
     **Examples**
 
@@ -372,6 +373,12 @@ def bin_coeff(n, k):
         1
         >>> bin_coeff(124, 98)
         3.9616705576337044e+26
+        >>> bin_coeff(19, 19, True)
+        1.0
+        >>> bin_coeff(99, 19, True)
+        Fraction(107196674081000000000, 1)
+        >>> bin_coeff(99, 69, True)
+        Fraction(20560637875100000000000000, 1)
 
     It is the same as::
 
@@ -417,12 +424,14 @@ def bin_coeff(n, k):
     '''
 
     if n == -1:
-        return (-1) ** k
+        return float((-1) ** k)
     if n == k:
-        return 1
+        return 1.
     if n < k:
         raise ValueError('k cannot be greater than n')
 
+    if as_frac:
+        return fractions.Fraction(str(math.factorial(n) / (math.factorial(k) * math.factorial(n - k))))
     return math.factorial(n) / (math.factorial(k) * math.factorial(n - k))
 
 def fib_poly(n):
@@ -840,17 +849,56 @@ def laguerre(n, a='a'):
         ll = ((2*i - 1 + a - x) * l1 - (i - 1 + a) * l0) / monomial(i)
     return ll
 
+def bernoulli(m):
+    '''
+    '''
+
+    def _sum(n):
+        return sum([(-1) ** k * bin_coeff(n, k) * (x + k) ** m for k in xrange(0, n + 1)])
+    if m < 0:
+        raise ValueError
+    if m == 0:
+        return ONE
+    return x ** m + sum([fractions.Fraction(1, n + 1) * _sum(n) for n in xrange(1, m + 1)])
+
+def bern_num(m, n = 0):
+    '''
+    '''
+
+    def _sum(k):
+        return sum([(-1) ** v * bin_coeff(k, v, True) * fractions.Fraction((n + v) ** m, k + 1) for v in xrange(k + 1)])
+    if m < 0:
+        raise ValueError
+    if m == 0:
+        return ONE
+    if m == 1:
+        return monomial(fractions.Fraction(1, 2))
+    if m & 1:
+        return Polynomial()
+    #return bernoulli(n).right_hand_side
+    return sum([_sum(k) for k in xrange(m + 1)])
+
+def euler(m):
+    '''
+    '''
+
+    def _sum(n):
+        return sum([(-1) ** k * bin_coeff(n, k) * (x + k) ** m for k in xrange(0, n + 1)])
+    if m < 0:
+        raise ValueError
+    if m == 0:
+        return ONE
+    return x ** m + sum([fractions.Fraction(1, 2 ** n) * _sum(n) for n in xrange(1, m + 1)])
+
+
 ################################################################################
 ##                            Still in development                            ##
 ################################################################################
 
 def bernstein(i, n): ## Still in development
-    def _bin_coeff(n, k):
-        return math.factorial(n)/(math.factorial(k)*math.factorial(n - k))
-
     if not i and not n:
         return ONE
-    return _bin_coeff(n, i) * (x**i) * (1 - x) ** (n - i)
+    return bin_coeff(n, i) * (x**i) * (1 - x) ** (n - i)
 
 def interpolate(x_values, y_values): ## Still in development
     '''

@@ -8,6 +8,7 @@ This file is part of the pypol project.
 from __future__ import division
 
 import math
+import cmath
 import decimal
 import operator
 from pypol import poly1d, monomial, Polynomial
@@ -214,15 +215,23 @@ def quartic(poly):
         roots = [-1]
         roots.extend(cubic(poly / 'x + 1'))
         return roots
-    if b == d: # biquadratic
-        pass
+    #if b == d == 0: # biquadratic
+    #    l = poly.letters[0]
+    #    for m in poly.monomials:
+    #        m[1][l] = m[1][l] / 2
+    #    print poly
+    #    poly_ = poly(x=monomial('z'))
+    #    return quadratic(poly_)
     if (a, b) == (0, 0):
         return quadratic(Polynomial(poly[2:]))
     if a == 0:
         return cubic(Polynomial(poly[1:]))
 
-    poly = poly.div_all(monomial(a))
-    a, b, c, d, e = poly.coefficients
+    poly = poly.div_all(a, int=True)
+    if len(poly.coefficients) == 5:
+        a, b, c, d, e = poly.coefficients
+    else:
+        a, b, c, d, e = map(getattr(poly, 'get'), [4, 3, 2, 1, 0])
 
     f = float(c - (3*b**2 / 8))
     g = float(d + (b**3/ 8) - (b*c / 2))
@@ -230,7 +239,12 @@ def quartic(poly):
     y = monomial(y=1)
     eq = y**3 + (f / 2) * y**2 + ((f**2 - 4*h) / 16) * y - g**2 / 64
     y1, y2, y3 = cubic(eq)
-    p, q = map(math.sqrt, [r for r in (y1, y2, y3) if r][:2])
+    print eq, y1, y2, y3
+    roots = [cmath.sqrt(r) for r in (y1, y2, y3) if isinstance(r, complex)]
+    if len(roots) >= 2:
+        p, q = roots[:2]
+    else:
+        p, q = map(math.sqrt, [r for r in (y1, y2, y3) if r][:2])
     r = -g / (8*p*q)
     s = b / (4*a)
     x1 = p + q + r - s

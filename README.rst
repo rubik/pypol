@@ -33,8 +33,11 @@ Then you can import it normally::
 See also the documentation:
 `here <http://www.pypol.altervista.org/>`_
 
-For examples see the Wiki:
+For some examples see the Wiki:
 `wiki <http://github.com/rubik/pypol/wiki>`_
+
+pypol is on PyPI too:
+`Python Package Index <http://pypi.python.org/pypi/pypol_/0.3>`
 
 Documentation
 -------------

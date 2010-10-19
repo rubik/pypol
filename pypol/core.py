@@ -29,9 +29,13 @@ import copy
 import re
 
 
+__author__ = 'Michele Lacchia'
+__version__ = (0, 3)
+__version_str__ = '0.3'
+
 __all__ = ['polynomial', 'algebraic_fraction', 'monomial','poly1d', 'poly1d_2',
            'coerce_poly', 'coerce_frac', 'gcd', 'lcm', 'are_similar', 'parse_polynomial',
-           'Polynomial', 'AlgebraicFraction']
+           'Polynomial', 'AlgebraicFraction', '__author__', '__version__', '__version_str__']
 
 def polynomial(string=None, simplify=True):
     '''
@@ -565,7 +569,6 @@ class Polynomial(object):
                 tmp.append('%s*%s' % (str(c), '*'.join(ll)))
 
         evallable = '+'.join(tmp).replace('+-', '-') \
-                                 .replace('**1', '') \
                                  .replace('-1*', '-')
         return evallable
 
@@ -1140,7 +1143,7 @@ class Polynomial(object):
                                  key=self._key(), reverse=True)
         self.simplify()
 
-    def div_all(self, poly):
+    def div_all(self, poly, int=False):
         '''
         Divide all polynomial's monomials by *poly*::
 
@@ -1150,9 +1153,18 @@ class Polynomial(object):
             >>> a.div_all(a.gcd)
             - x^3 + 3
 
+        :param poly: the polynomial or the integer
+        :param bool int: when True, the *poly* parameter will be interpreted as an integer, and the division will be between each coefficient and *poly*
+        :type poly: :class:`Polynomial` or integer
+        :rtype: :class:`Polynomial`
+
         .. versionadded:: 0.2
+        .. versionadded:: 0.4
+            The *int* parameter
         '''
 
+        if int: # the poly parameter is an integer
+            return poly1d([c / poly for c in self.coefficients])
         return sum([Polynomial((monomial,)) / poly for monomial in self._monomials], Polynomial())
 
     def filter(self):
