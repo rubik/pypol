@@ -344,14 +344,13 @@ def polyint_(poly, a, b):
     F = polyint(poly)
     return F(a) - F(b)
 
-def bin_coeff(n, k, as_frac=False):
+def bin_coeff(n, k):
     '''
     Returns the binomial coefficient |p11|, i.e. the coefficient of the |p12| term of the binomial power |p13|.
 
     :param integer n: the power of the binomial. If ``n == 1`` the result will be |p14|
     :param integer k: the power of the term
-    :param bool as_frac: if True the result will be a :class:`fractions.Fraction` object, float otherwise
-    :rtype: float (or :class:`fractions.Fraction` if as_frac is True)
+    :rtype: float
 
     **Examples**
 
@@ -373,12 +372,6 @@ def bin_coeff(n, k, as_frac=False):
         1
         >>> bin_coeff(124, 98)
         3.9616705576337044e+26
-        >>> bin_coeff(19, 19, True)
-        1.0
-        >>> bin_coeff(99, 19, True)
-        Fraction(107196674081000000000, 1)
-        >>> bin_coeff(99, 69, True)
-        Fraction(20560637875100000000000000, 1)
 
     It is the same as::
 
@@ -430,9 +423,7 @@ def bin_coeff(n, k, as_frac=False):
     if n < k:
         raise ValueError('k cannot be greater than n')
 
-    if as_frac:
-        return fractions.Fraction(str(math.factorial(n) / (math.factorial(k) * math.factorial(n - k))))
-    return math.factorial(n) / (math.factorial(k) * math.factorial(n - k))
+    return float(math.factorial(n) / (math.factorial(k) * math.factorial(n - k)))
 
 def fib_poly(n):
     '''
@@ -866,13 +857,13 @@ def bern_num(m, n = 0):
     '''
 
     def _sum(k):
-        return sum([(-1) ** v * bin_coeff(k, v, True) * fractions.Fraction((n + v) ** m, k + 1) for v in xrange(k + 1)])
+        return sum([(-1) ** v * fractions.Fraction.from_float(bin_coeff(k, v)) * fractions.Fraction((n + v) ** m, k + 1) for v in xrange(k + 1)])
     if m < 0:
         raise ValueError
     if m == 0:
         return ONE
     if m == 1:
-        return monomial(fractions.Fraction(1, 2))
+        return -monomial(fractions.Fraction(1, 2))
     if m & 1:
         return Polynomial()
     #return bernoulli(n).right_hand_side
@@ -889,6 +880,21 @@ def euler(m):
     if m == 0:
         return ONE
     return x ** m + sum([fractions.Fraction(1, 2 ** n) * _sum(n) for n in xrange(1, m + 1)])
+
+def euler_num(m):
+    '''
+    '''
+
+    def _sum(k):
+        return sum([bin_coeff(k, j) * (((-1) ** j * (k - 2*j) ** (m + 1)) / (2 ** k * k)) for j in xrange(k + 1)])
+
+    if m < 0:
+        raise ValueError
+    if m == 0:
+        return ONE
+    if m & 1:
+        return Polynomial()
+    return sum([_sum(k) for k in xrange(1, m + 2)])
 
 
 ################################################################################
@@ -915,11 +921,11 @@ def interpolate(x_values, y_values): ## Still in development
         
     '''
 
-    def _product(i):
-        p = [(x - x_values[k])/(x_values[i] - x_values[k]) for k in xrange(n) if k != i] + [y_values[i]]
+    def _basis(j):
+        p = [(x - x_values[m])/(x_values[j] - x_values[m]) for m in xrange(k + 1) if m != j]
         return reduce(operator.mul, p)
 
     assert len(x_values) != 0 and (len(x_values) == len(y_values)), 'x and y cannot be empty and must have the same length'
 
-    n = len(x_values)
-    return sum(_product(j) for j in xrange(n))
+    k = len(x_values)
+    return sum(_basis(j) for j in xrange(k))
