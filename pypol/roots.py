@@ -290,39 +290,22 @@ def newton(poly, start, epsilon=float('-inf')):
         >>> k(-1.5)
         0.0
 
-    But this function cannot find complex roots::
+    This function can find complex roots too (if *start* is a complex number)::
 
         >>> k = poly1d([1, -3, 6])
         >>> k
         + x^2 - 3x + 6
-        >>> quadratic(k) ## quadratic works for polynomial with degree 2 only
+        >>> roots.quadratic(k)
         ((1.5+1.9364916731037085j), (1.5-1.9364916731037085j))
-        >>> newton(k)
-        
-        Traceback (most recent call last):
-          File "<pyshell#157>", line 1, in <module>
-            newton(k)
-          File "funcs.py", line 261, in newton
-            poly_d = polyder(poly)
-          File "core.py", line 1308, in __call__
-            letters = dict(zip(self.letters[:len(args)], args))
-          File "core.py", line 552, in letters
-            for m in self._monomials if m[1]], set())))
-        KeyboardInterrupt
-        >>> newton(k, -1)
-        
-        Traceback (most recent call last):
-          File "<pyshell#158>", line 1, in <module>
-            newton(k, -1)
-          File "funcs.py", line 261, in newton
-            poly_d = polyder(poly)
-          File "core.py", line 1311, in __call__
-            return eval(self.eval_form, letters)
-          File "core.py", line 522, in eval_form
-            for c, vars in self._monomials:
-        KeyboardInterrupt
+        >>> roots.newton(k, complex(100, 1))
+        (1.5+1.9364916731037085j)
+        >>> roots.newton(k, complex(100, -1))
+        (1.5-1.9364916731037085j)
 
-    We must interrupt!
+    **References**
+
+    `Wikipedia <http://en.wikipedia.org/wiki/Halley's_method>`_ |
+    `MathWorld <http://mathworld.wolfram.com/HalleysMethod.html>`_
 
     .. versionadded:: 0.3
     '''
@@ -383,11 +366,8 @@ def halley(poly, start, epsilon=float('-inf')):
 
     **References**
 
-    +---------------------------------------------------------------------+
-    | `Wikipedia <http://en.wikipedia.org/wiki/Halley's_method>`_         |
-    +---------------------------------------------------------------------+
-    | `MathWorld <http://mathworld.wolfram.com/HalleysMethod.html>`_      |
-    +---------------------------------------------------------------------+
+    `Wikipedia <http://en.wikipedia.org/wiki/Halley's_method>`_ |
+    `MathWorld <http://mathworld.wolfram.com/HalleysMethod.html>`_
 
     .. versionadded:: 0.4
     '''
@@ -401,7 +381,7 @@ def halley(poly, start, epsilon=float('-inf')):
 
 def householder(poly, start, epsilon=float('-inf')):
     '''
-    Finds one root of the polynomial *poly* using the Householder's method, with the iteration formula:
+    Finds one root of the polynomial *poly* using the Householder's method, with this iteration formula:
         |p10|
 
     :param integer start: the start value to evaluate ``poly(x)``
@@ -444,11 +424,8 @@ def householder(poly, start, epsilon=float('-inf')):
 
     **References**
 
-    +---------------------------------------------------------------------+
-    | `Wikipedia <http://en.wikipedia.org/wiki/Householder's_method>`_    |
-    +---------------------------------------------------------------------+
-    | `MathWorld <http://mathworld.wolfram.com/HouseholdersMethod.html>`_ |
-    +---------------------------------------------------------------------+
+    `Wikipedia <http://en.wikipedia.org/wiki/Householder's_method>`_ |
+    `MathWorld <http://mathworld.wolfram.com/HouseholdersMethod.html>`_
 
     .. versionadded:: 0.4
     '''
@@ -489,7 +466,22 @@ def brent(poly, a, b, epsilon=float('-inf')):
 
     **Examples**
 
-        
+        >>> p = poly1d([1, -4, 3, -4])
+        >>> p
+        + x^3 - 4x^2 + 3x - 4
+        >>> brent(p, 100, -100)
+        3.4675038570565078
+        >>> r = brent(p, 100, -100)
+        >>> p(r)
+        -1.1723955140041653e-13
+
+    If we start closer::
+
+        >>> r = brent(p, 10, -10)
+        >>> p(r)
+        -1.7763568394002505e-15
+
+    the precision is greater.
 
     **References**
 
@@ -550,6 +542,9 @@ def brent(poly, a, b, epsilon=float('-inf')):
 
     return b
 
+def maehly(poly, start, epsilon=float('-inf')):
+    p = poly / (NotImplemented)
+
 def bisection(poly, k=0.5, epsilon=float('-inf')):
     '''
     .. warning::
@@ -572,9 +567,7 @@ def bisection(poly, k=0.5, epsilon=float('-inf')):
 
     **References**
 
-    +--------------------------------------------------------------+
-    | `Wikipedia <http://en.wikipedia.org/wiki/Bisection_method>`_ |
-    +--------------------------------------------------------------+
+    `Wikipedia <http://en.wikipedia.org/wiki/Bisection_method>`_
 
     .. versionadded:: 0.2
     .. versionchanged:: 0.3

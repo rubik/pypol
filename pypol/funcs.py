@@ -6,12 +6,13 @@ This file is part of the pypol project.
 '''
 
 from __future__ import division
+import copy
 import random
 import operator
 import fractions
 import math
 
-from core import Polynomial, poly1d, poly1d_2, polynomial, monomial
+from core import Polynomial, AlgebraicFraction, poly1d, poly1d_2, polynomial, monomial
 
 NULL = Polynomial()
 ONE = monomial()
@@ -267,12 +268,13 @@ def polyint(poly, m=1, C=[]):
             n = var[1] + 1
             if not n:
                 return [0, 0]
-            j = fractions.Fraction(var[0], n)
-            if int(j) == j:
-                j = int(j)
+            j = fractions.Fraction(str(var[0])) / fractions.Fraction(str(n))
+            jint = int(j)
+            if jint == j:
+                return [jint, n]
             return [j, n]
 
-        p = poly1d_2([_single_int(t) for t in p.to_plist()])
+        p = poly1d_2([_single_int(t) for t in p.to_float().to_plist()])
         if c:
             p += c
         return p
@@ -842,6 +844,36 @@ def laguerre(n, a='a'):
 
 def bernoulli(m):
     '''
+    Returns the *m-th* Bernoulli polynomial.
+
+    :rtype: :class:`pypol.Polynomial`
+
+    **Examples**
+
+    ::
+
+        >>> bernoulli(0)
+        + 1
+        >>> bernoulli(1)
+        + x - 1/2
+        >>> bernoulli(2)
+        + x^2 - x + 1/6
+        >>> bernoulli(3)
+        + x^3 - 3/2x^2 + 1/2x
+        >>> bernoulli(4)
+        + x^4 - 2x^3 + x^2 - 1/30
+        >>> bernoulli(5)
+        + x^5 - 5/2x^4 + 5/3x^3 - 1/6x
+        >>> bernoulli(6)
+        + x^6 - 3x^5 + 5/2x^4 - 1/2x^2 + 1/42
+        >>> bernoulli(16)
+        + x^16 - 8x^15 + 20x^14 - 182/3x^12 + 572/3x^10 - 429x^8 + 1820/3x^6 - 1382/3x^4 + 140x^2 - 3617/510
+        >>> bernoulli(36)
+        + x^36 - 18x^35 + 105x^34 - 3927/2x^32 + 46376x^30 - 1008678x^28 + 19256580x^26 - 316816590x^24 + 4429013400x^22 - 51828575337x^20 + 498870877450x^18 - 3866772293937x^16 + 23507139922200x^14 - 108370572082590x^12 + 362347726769028x^10 - 826053753510678x^8 + 1171754413536680x^6 - 1780853160521127/2x^4 + 270657225128535x^2 - 26315271553053477373/1919190
+
+    **References**
+
+    `Wikipedia <>`_ | `MathWorld <>`_
     '''
 
     def _sum(n):
@@ -881,7 +913,7 @@ def euler(m):
         return ONE
     return x ** m + sum([fractions.Fraction(1, 2 ** n) * _sum(n) for n in xrange(1, m + 1)])
 
-def euler_num(m):
+def euler_num(m): ## Still in development
     '''
     '''
 
@@ -927,5 +959,14 @@ def interpolate(x_values, y_values): ## Still in development
 
     assert len(x_values) != 0 and (len(x_values) == len(y_values)), 'x and y cannot be empty and must have the same length'
 
-    k = len(x_values)
-    return sum(_basis(j) for j in xrange(k))
+    k = len(x_values) - 1
+    r = [_basis(j) for j in xrange(k)]
+    c = copy.deepcopy(r)
+    for i, v in enumerate(c):
+        if isinstance(v, AlgebraicFraction):
+            q = divmod(*v.terms)
+            if len(q) > 1:
+                r[i] = q[0] + q[1]
+            else:
+                r[i] = q
+    return sum(r)

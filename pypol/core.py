@@ -408,7 +408,7 @@ class Polynomial(object):
     __slots__ = ('_monomials', '_simplify',)
 
     def __init__(self, monomials=(), simplify=True):
-        self._monomials = monomials
+        self._monomials = tuple(monomials)
         self.sort(key=self._key(), reverse=True)
         self._simplify = simplify
         if self._simplify:
@@ -1139,8 +1139,7 @@ class Polynomial(object):
             :meth:`update`.
         '''
 
-        self._monomials = sorted(pol_or_monomials._monomials + self._monomials,
-                                 key=self._key(), reverse=True)
+        self._monomials = tuple(list(pol_or_monomials._monomials) + list(self._monomials))
         self.simplify()
 
     def div_all(self, poly, int=False):
@@ -1196,6 +1195,15 @@ class Polynomial(object):
 
         return Polynomial(self._filter())
 
+    def to_float(self):
+        tmp = list(copy.deepcopy(self._monomials))
+        tmp_ = copy.deepcopy(tmp)
+        for i, m in enumerate(tmp_):
+            tmp[i] = list(tmp[i])
+            tmp[i][0] = float(m[0])
+
+        return Polynomial(tmp)
+
     def simplify(self):
         '''
         Simplifies the polynomial. This is done automatically on the __init__ and on the :meth:`update` methods if self._simplify is True.
@@ -1231,7 +1239,7 @@ class Polynomial(object):
             if not monomial[0] and (not monomial[1] or all(not x for x in monomial[1].values())):
                 simplified[index] = None
 
-        self._monomials = tuple(filter(lambda i: i is not None, simplified))
+        self._monomials = tuple(sorted(filter(lambda i: i is not None, simplified), key=self._key(), reverse=True))
 
     def _key(self, letter=None):
         '''
@@ -1367,7 +1375,7 @@ class Polynomial(object):
     def __setitem__(self, p, v):
         tmp_monomials = list(self._monomials)
         tmp_monomials[p] = v
-        self._monomials = tmp_monomials
+        self._monomials = tuple(tmp_monomials)
 
     def __delitem__(self, p):
         tmp_monomials = list(self._monomials)
@@ -1415,6 +1423,26 @@ class Polynomial(object):
 
             dict(zip(self.letters, [1]*len(self.letters)))
 
+        so::
+
+            p = poly1d([3, -2, 4, .53, -2, 5, .3])
+            >>> q = poly1d([4, -2, 4, .4], 'y')
+            >>> p
+            + 3x^6 - 2x^5 + 4x^4 + 0.53x^3 - 2x^2 + 5x + 3/10
+            >>> q
+            + 4y^3 - 2y^2 + 4y + 2/5
+            >>> k = p*q
+            >>> k
+            + 12x^6y^3 - 6x^6y^2 + 12x^6y + 6/5x^6 - 8x^5y^3 + 4x^5y^2 - 8x^5y - 4/5x^5 + 16x^4y^3 - 8x^4y^2 + 16x^4y + 8/5x^4 + 2.12x^3y^3 - 1.06x^3y^2 + 2.12x^3y + 0.212x^3 - 8x^2y^3 + 4x^2y^2 - 8x^2y - 4/5x^2 + 20xy^3 - 10xy^2 + 20xy + 2x + 6/5y^3 - 3/5y^2 + 6/5y + 3/25
+            >>> k()
+            56.512
+            >>> k() == k(1, 1)
+            True
+            >>> k() == k(x=1, y=1)
+            True
+            >>> k() == k(y=1, x=1)
+            True
+
         .. versionchanged:: 0.2
             Added the support for positional and keyword arguments.
         .. versionchanged:: 0.4
@@ -1432,6 +1460,8 @@ class Polynomial(object):
     @ coerce_poly
     def __add__(self, other):
         try:
+            if not other:
+                return self
             return Polynomial(self._monomials + other._monomials)
         except (AttributeError, TypeError):
             return NotImplemented
@@ -1442,6 +1472,8 @@ class Polynomial(object):
     @ coerce_poly
     def __sub__(self, other):
         try:
+            if not other:
+                return self
             return Polynomial(self._monomials + (-other)._monomials)
         except (AttributeError, TypeError):
             return NotImplemented
@@ -1488,6 +1520,10 @@ class Polynomial(object):
 
         if not other:
             raise ZeroDivisionError('polynomial division or modulo by zero')
+        if other == monomial():
+            return (self, Polynomial())
+        if other == monomial(-1):
+            return (-self, Polynomial())
 
         A = Polynomial(copy.deepcopy(self._monomials))
         B = Polynomial(copy.deepcopy(other._monomials))
