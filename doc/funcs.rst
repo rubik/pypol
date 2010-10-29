@@ -40,6 +40,7 @@ The :mod:`funcs` offers these basic functions:
     :columns: 2
 
     * :func:`divisible`
+    * :func:`from_roots`
     * :func:`random_poly`
     * :func:`polyder`
     * :func:`polyint`
@@ -50,6 +51,11 @@ divisible
 +++++++++
 
 .. autofunction:: divisible
+
+from_roots
+++++++++++
+
+.. autofunction:: from_roots
 
 random_poly
 +++++++++++
@@ -84,47 +90,35 @@ In this module there are these functions:
 .. hlist::
     :columns: 3
 
-    * :func:`fib_poly`
-    * :func:`fib_poly_r`
+    * :func:`fibonacci`
     * :func:`hermite_prob`
-    * :func:`hermite_prob_r`
     * :func:`hermite_phys`
-    * :func:`hermite_phys_r`
     * :func:`chebyshev_t`
     * :func:`chebyshev_u`
     * :func:`abel`
-    * :func:`gegenbauer_r`
+    * :func:`gegenbauer`
     * :func:`laguerre`
+    * :func:`laguerre_g`
+    * :func:`bernoulli`
+    * :func:`bern_num`
+    * :func:`euler`
+    * :func:`euler_num`
+    * :func:`genocchi`
 
-fib_poly
-++++++++
+fibonacci
++++++++++
 
-.. autofunction:: fib_poly
-
-fib_poly_r
-++++++++++
-
-.. autofunction:: fib_poly_r
+.. autofunction:: fibonacci
 
 hermite_prob
 ++++++++++++
 
 .. autofunction:: hermite_prob
 
-hermite_prob_r
-++++++++++++++
-
-.. autofunction:: hermite_prob_r
-
 hermite_phys
 ++++++++++++
 
 .. autofunction:: hermite_phys
-
-hermite_phys_r
-++++++++++++++
-
-.. autofunction:: hermite_phys_r
 
 chebyshev_t
 +++++++++++
@@ -141,12 +135,43 @@ abel
 
 .. autofunction:: abel
 
-gegenbauer_r
-++++++++++++
+gegenbauer
+++++++++++
 
-.. autofunction:: gegenbauer_r
+.. autofunction:: gegenbauer
 
 laguerre
 ++++++++
 
 .. autofunction:: laguerre
+
+
+laguerre_g
+++++++++++
+
+.. autofunction:: laguerre_g
+
+bernoulli
++++++++++
+
+.. autofunction:: bernoulli
+
+bern_num
+++++++++
+
+.. autofunction:: bern_num
+
+euler
++++++
+
+.. autofunction:: euler
+
+euler_num
++++++++++
+
+.. autofunction:: euler_num
+
+genocchi
+++++++++
+
+.. autofunction:: genocchi

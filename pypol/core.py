@@ -88,11 +88,11 @@ def algebraic_fraction(s1, s2='1', simplify=True):
 
     return AlgebraicFraction(polynomial(s1), polynomial(s2), simplify)
 
-def monomial(c=1, **vars):
+def monomial(coeff=1, **vars):
     '''
     Simple function that returns a :class:`Polynomial` object.
 
-    :param c: the coefficient of the polynomial
+    :param coeff: the coefficient of the polynomial
     :key \*\*vars: the monomial's letters
 
     ::
@@ -107,12 +107,12 @@ def monomial(c=1, **vars):
         >>> m.monomials
         ((5, {'a': 3, 'b': 4}),)
 
-    This function is useful when you need a monomial. If there isn't this function you should do::
+    This function is useful when you need a monomial. Without it you should do::
 
        >>> Polynomial(((5, {'a': 3, 'b': 4}),))
        + 5a^3b^4
 
-    Either *c* or *\*\*vars* is optional::
+    Either *coeff* or *\*\*vars* is optional::
 
         >>> monomial()
         + 1
@@ -122,13 +122,16 @@ def monomial(c=1, **vars):
 
     Equivalent to::
 
-        def monomial(c=1, **vars):
-            return Polynomial(((c, vars),))
+        def monomial(coeff=1, **vars):
+            return Polynomial(((coeff, vars),))
 
     .. versionadded:: 0.2
+    .. versionadded:: 0.4
+        The *\*var* parameter
     '''
 
-    return Polynomial(((c, vars),))
+    assert all(len(v) == 1 for v in vars), 'Cannot set a letter with length > 1'
+    return Polynomial(((coeff, vars),))
 
 def poly1d(coeffs, variable='x', right_hand_side=True):
     '''
@@ -276,6 +279,8 @@ def coerce_poly(wrapped):
     '''
     def wrapper(self, other):
         if isinstance(other, int):
+            other = monomial(other)
+        elif isinstance(other, long):
             other = monomial(other)
         elif isinstance(other, str):
             other =  polynomial(other)
@@ -1455,6 +1460,10 @@ class Polynomial(object):
             letters = kwargs
         else:
             letters = dict(zip(self.letters, [1]*len(self.letters)))
+        if len(letters) < len(self.letters):
+            for l in self.letters:
+                if l not in letters:
+                    letters[l] = monomial(**{l: 1})
         return eval(self.eval_form, letters)
 
     @ coerce_poly

@@ -17,7 +17,7 @@ from core import Polynomial, AlgebraicFraction, poly1d, poly1d_2, polynomial, mo
 NULL = Polynomial()
 ONE = monomial()
 TWO = monomial(2)
-x = poly1d([1, 0])
+x = monomial(x=1)
 
 def divisible(a, b):
     '''
@@ -48,6 +48,37 @@ def divisible(a, b):
         return False
 
     return a % b == polynomial()
+
+def from_roots(roots):
+    '''
+    Make a polynomial from its roots. These can be integer, float or :class:`fractions.Fraction` objects but the **complex** type is not supported.
+
+    **Examples**
+
+    ::
+
+        >>> p = from_roots([4, -2, 153, -52])
+        >>> p
+        + x^4 - 103x^3 - 7762x^2 + 16720x + 63648
+        >>> p(4)
+        0
+        >>> p(-2)
+        0
+        >>> p(153)
+        0
+        >>> p(-52)
+        0
+        >>> roots.newton(p, 1000)
+        153.0
+        >>> roots.newton(p, 100)
+        -2.0
+        >>> roots.newton(p, 10)
+        4.0
+        >>> roots.newton(p, -10000)
+        -52.0
+    '''
+
+    return reduce(operator.mul, ((x - (fractions.Fraction.from_float(r) if isinstance(r, float) else r)) for r in roots))
 
 def random_poly(coeff_range=xrange(-10, 11), len_=None, len_range=xrange(-10, 11),
                 letters='xyz', max_letters=3, unique=False, exp_range=xrange(1, 6),
@@ -176,7 +207,7 @@ def polyder(poly, m=1):
             return [var[0]*var[1], var[1] - 1]
 
         if not poly:
-            return NULL
+            raise ValueError('Laguerre polynomials only defined for n >= 0')
         try:
             variable = poly.letters[0]
         except IndexError:
@@ -193,7 +224,7 @@ def polyder(poly, m=1):
     p_d = _der(poly)
     for _ in xrange(m - 1):
         if not p_d:
-            return NULL
+            raise ValueError('Laguerre polynomials only defined for n >= 0')
         p_d = _der(p_d)
 
     return p_d
@@ -427,91 +458,62 @@ def bin_coeff(n, k):
 
     return float(math.factorial(n) / (math.factorial(k) * math.factorial(n - k)))
 
-def fib_poly(n):
+def fibonacci(n):
     '''
     Returns the *nth* Fibonacci polynomial. This is the iterative version, and it is extremely faster than the recursive one.
+
+    :raises: :exc:`ValueError` if *n* is negative
+    :rtype: :class:`pypol.Polynomial`
 
     **Examples**
 
     ::
 
-        >>> fib_poly(0)
+        >>> fibonacci(0)
         
-        >>> fib_poly(1)
+        >>> fibonacci(1)
         + 1
-        >>> fib_poly(2)
+        >>> fibonacci(2)
         + x
-        >>> fib_poly(3)
+        >>> fibonacci(3)
         + x^2 + 1
-        >>> fib_poly(4)
+        >>> fibonacci(4)
         + x^3 + 2x
-        >>> fib_poly(5)
+        >>> fibonacci(5)
         + x^4 + 3x^2 + 1
-        >>> fib_poly(6)
+        >>> fibonacci(6)
         + x^5 + 4x^3 + 3x
-        >>> fib_poly(23)
+        >>> fibonacci(23)
         + x^22 + 21x^20 + 190x^18 + 969x^16 + 3060x^14 + 6188x^12 + 8008x^10 + 6435x^8 + 3003x^6 + 715x^4 + 66x^2 + 1
-        >>> fib_poly(100)
+        >>> fibonacci(100)
         + x^99 + 98x^97 + 4656x^95 + 142880x^93 .. cut .. + 197548686920970x^17 + 22057981462440x^15 + 1889912732400x^13 + 119653565850x^11 + 5317936260x^9 + 154143080x^7 + 2598960x^5 + 20825x^3 + 50x
-        >>> fib_poly(200)
+        >>> fibonacci(200)
         + x^199 + 198x^197 + .. cut .. + 15913388077274800x^13 + 249145778809200x^11 + 2747472247520x^9 + 19813501785x^7 + 83291670x^5 + 166650x^3 + 100x
-        >>> len(fib_poly(300))
+        >>> len(fibonacci(300))
         150
-        >>> len(str(fib_poly(300)))
+        >>> len(str(fibonacci(300)))
         8309
 
     .. versionadded:: 0.3
     '''
 
     if n <= 0:
-        return NULL
+        raise ValueError('Fibonacci polynomials only defined for n > 0')
     elif n == 1:
         return ONE
     elif n == 2:
-        return poly1d([1], right_hand_side=False)
-    p = [ONE, poly1d([1], right_hand_side=False)]
+        return monomial(x=1)
+    p = [ONE, monomial(x=1)]
     for x in xrange(n - 2):
         p.append(polynomial('x') * p[-1] + p[-2])
     return p[-1]
 
-def fib_poly_r(n):
-    '''
-    Returns the *nth* Fibonacci polynomial in *x* (recursive version)::
-
-        >>> fib_poly(1)
-        + 1
-        >>> fib_poly(2)
-        + x
-        >>> fib_poly(3)
-        + x^2 + 1
-        >>> fib_poly(4)
-        + x^3 + 2x
-        >>> fib_poly(5)
-        + x^4 + 3x^2 + 1
-        >>> fib_poly(6)
-        + x^5 + 4x^3 + 3x
-        >>> fib_poly(12)
-        + x^11 + 10x^9 + 36x^7 + 56x^5 + 35x^3 + 6x
-        >>> fib_poly(20)
-        + x^19 + 18x^17 + 136x^15 + 560x^13 + 1365x^11 + 2002x^9 + 1716x^7 + 792x^5 + 165x^3 + 10x
-        >>> fib_poly(25)
-        + x^24 + 23x^22 + 231x^20 + 1330x^18 + 4845x^16 + 11628x^14 + 18564x^12 + 19448x^10 + 12870x^8 + 5005x^6 + 1001x^4 + 78x^2 + 1
-
-    .. versionadded:: 0.3
-    '''
-
-    if n <= 0:
-        return NULL
-    elif n == 1:
-        return ONE
-    elif n == 2:
-        return poly1d([1], right_hand_side=False)
-    elif n > 2:
-        return polynomial('x')*fib_poly(n - 1) + fib_poly(n - 2)
-
 def hermite_prob(n):
     '''
     Returns the *nth* probabilistic Hermite polynomial, that is a polynomial of degree *n*.
+
+    :raises: :exc:`ValueError` if *n* is negative
+    :rtype: :class:`pypol.Polynomial`
 
     **Examples**
 
@@ -532,7 +534,7 @@ def hermite_prob(n):
     '''
 
     if n < 0:
-        return NULL
+        raise ValueError('Hermite polynomials (probabilistic) only defined for n >= 0')
     if n == 0:
         return ONE
     if n == 1:
@@ -542,41 +544,12 @@ def hermite_prob(n):
         p.append(p[-1] * x - polyder(p[-1]))
     return p[-1]
 
-def hermite_prob_r(n):
-    '''
-    Returns the *nth* Hermite probabilistic polynomial (recursive version).
-
-    **Examples**
-
-    ::
-
-        >>> hermite_prob_r(0)
-         + 1
-        >>> hermite_prob_r(1)
-         + x
-        >>> hermite_prob_r(2)
-         + x^2 - 1
-        >>> hermite_prob_r(3)
-         + x^3 - 3x
-        >>> hermite_prob_r(4)
-         + x^4 - 6x^2 + 3
-        >>> hermite_prob_r(42)
-         + x^42 - 861x^40 + 335790x^38 .. cut .. - 747445016088215350396115625x^8 + 1162692247248334989505068750x^6 - 917914932038159202240843750x^4 + 275374479611447760672253125x^2 - 13113070457687988603440625
-
-    .. versionadded:: 0.3
-    '''
-
-    if n < 0:
-        return NULL
-    if n == 0:
-        return ONE
-    if n == 1:
-        return x
-    return hermite_prob(n - 1) * x - polyder(hermite_prob(n - 1))
-
 def hermite_phys(n):
     '''
     Returns the *nth* Hermite polynomial (physicist).
+
+    :raises: :exc:`ValueError` if *n* is negative
+    :rtype: :class:`pypol.Polynomial`
 
     **Examples**
 
@@ -601,7 +574,7 @@ def hermite_phys(n):
     '''
 
     if n < 0:
-        return NULL
+        raise ValueError('Hermite polynomials (physicist) only defined for n >= 0')
     if n == 0:
         return ONE
     p = [ONE]
@@ -609,39 +582,12 @@ def hermite_phys(n):
         p.append((p[-1] * x * 2) - polyder(p[-1]))
     return p[-1]
 
-def hermite_phys_r(n):
-    '''
-    Returns the *nth* Hermite polynomial (physicist and recursive version).
-
-    **Examples**
-
-    ::
-
-        >>> hermite_phys_r(0)
-        + 1
-        >>> hermite_phys_r(1)
-         + 2x
-        >>> hermite_phys_r(2)
-         + 4x^2 - 2
-        >>> hermite_phys_r(3)
-         + 8x^3 - 12x
-        >>> hermite_phys_r(6)
-         + 64x^6 - 480x^4 + 720x^2 - 120
-        >>> hermite_phys_r(9)
-         + 512x^9 - 9216x^7 + 48384x^5 - 80640x^3 + 30240x
-
-    .. versionadded:: 0.3
-    '''
-
-    if n < 0:
-        return NULL
-    if n == 0:
-        return ONE
-    return (hermite_phys(n - 1) * x * 2) - polyder(hermite_phys(n - 1))
-
 def chebyshev_t(n):
     '''
     Returns the *nth* Chebyshev polynomial of the first kind in ``x``.
+
+    :raises: :exc:`ValueError` if *n* is negative
+    :rtype: :class:`pypol.Polynomial`
 
     **Examples**
 
@@ -664,7 +610,7 @@ def chebyshev_t(n):
     '''
 
     if n < 0:
-        return NULL
+        raise ValueError('Chebyshev polynomials of the first kind only defined for n >= 0')
     if n == 0:
         return ONE
     if n == 1:
@@ -674,6 +620,9 @@ def chebyshev_t(n):
 def chebyshev_u(n):
     '''
     Returns the *nth* Chebyshev polynomial of the second kind in ``x``.
+
+    :raises: :exc:`ValueError` if *n* is negative
+    :rtype: :class:`pypol.Polynomial`
 
     **Examples**
 
@@ -698,7 +647,7 @@ def chebyshev_u(n):
     '''
 
     if n < 0:
-        return NULL
+        raise ValueError('Chebyshev polynomials of the second kind only defined for n >= 0')
     if n == 0:
         return ONE
     if n == 1:
@@ -708,6 +657,9 @@ def chebyshev_u(n):
 def abel(n, variable='a'):
     '''
     Returns the *nth* Abel polynomial in ``x`` and *variable*.
+
+    :raises: :exc:`ValueError` if *n* is negative
+    :rtype: :class:`pypol.Polynomial`
 
     **Examples**
 
@@ -728,7 +680,7 @@ def abel(n, variable='a'):
     '''
 
     if n < 0:
-        return NULL
+        raise ValueError('Abel polynomials only defined for n >= 0')
     if n == 0:
         return ONE
     if n == 1:
@@ -736,36 +688,42 @@ def abel(n, variable='a'):
     p = poly1d([n])
     return x * (x - p*variable) ** (n - 1)
 
-def spread(n):
+def spread(n): ## Should work but it doesn't
     '''
     Returns the *nth* Spread polynomial in ``x``.
+    
+    :raises: :exc:`ValueError` if *n* is negative
+    :rtype: :class:`pypol.Polynomial`
     '''
 
     if n < 0:
-        return NULL
+        raise ValueError('Spread polynomials only defined for n >= 0')
     if n == 0:
         return ONE
     if n == 1:
         return x
     return 2*x - spread(n - 2) + (2 - 4*x) * spread(n - 1)
 
-def gegenbauer_r(n, a='a'):
+def gegenbauer(n, a='a'):
     '''
     Returns the *nth* Gegenbauer polynomial in ``x``.
+
+    :raises: :exc:`ValueError` if *n* is negative
+    :rtype: :class:`pypol.Polynomial`
 
     **Examples**
 
     ::
 
-        >>> gegenbauer_r(0)
+        >>> gegenbauer(0)
         + 1
-        >>> gegenbauer_r(1)
+        >>> gegenbauer(1)
         + 2ax
-        >>> gegenbauer_r(2)
+        >>> gegenbauer(2)
         + 2a^2x^2 + 2ax^2 - a
         >>> 
         >>> 
-        >>> gegenbauer_r(4)
+        >>> gegenbauer(4)
         + 2/3a^4x^4 + 4a^3x^4 - 2a^3x^2 + 22/3a^2x^4 + 1/2a^2 - 6a^2x^2 + 4ax^4 - 4ax^2 + 1/2a
 
     **References**
@@ -781,17 +739,70 @@ def gegenbauer_r(n, a='a'):
 
     a = monomial(**{a: 1})
     if n < 0:
-        return NULL
+        raise ValueError('Gegenbauer polynomials only defined for n >= 0')
     if n == 0:
         return ONE
     if n == 1:
         return 2*a*x
-    return fractions.Fraction(1, n) * ((2*x * (n + a - ONE) * gegenbauer_r(n - 1) \
-                                    - (n + 2*a - 2) * gegenbauer_r(n - 2)))
+    return fractions.Fraction(1, n) * ((2*x * (n + a - ONE) * gegenbauer(n - 1) \
+                                    - (n + 2*a - 2) * gegenbauer(n - 2)))
 
-def laguerre(n, a='a'):
+def laguerre(n):
+    '''
+    Returns the *n-th* Laguerre polynomial in ``x``.
+
+    :raises: :exc:`ValueError` if *n* is negative
+    :rtype: :class:`pypol.Polynomial`
+
+    **Examples**
+
+    ::
+
+        >>> laguerre(0)
+        + 1
+        >>> laguerre(1)
+        - x + 1
+        >>> laguerre(2)
+        + 1/2x^2 - 2x + 1
+        >>> laguerre(3)
+        - 1/6x^3 + 3/2x^2 - 3x + 1
+        >>> laguerre(4)
+        + 1/24x^4 - 2/3x^3 + 3x^2 - 4x + 1
+        >>> laguerre(14)
+        + 1/87178291200x^14 - 1/444787200x^13 + 13/68428800x^12 - 13/1425600x^11 + 143/518400x^10 - 143/25920x^9 + 143/1920x^8 - 143/210x^7 + 1001/240x^6 - 1001/60x^5 + 1001/24x^4 - 182/3x^3 + 91/2x^2 - 14x + 1
+
+    Should be approximatively like a generalized Laguerre polynomial with ``a = 0`` (:func:`laguerre_g`)::
+
+        >>> laguerre(5), laguerre_g(5)(a=0)
+        (- 1/120x^5 + 5/24x^4 - 5/3x^3 + 5x^2 - 5x + 1, - 833333333333/100000000000000x^5 + 208333333333/1000000000000x^4 - 166666666667/100000000000x^3 + 5x^2 - 5x + 1)
+
+    **References**
+
+    `Wikipedia <http://en.wikipedia.org/wiki/Laguerre_polynomials>`_ | `MathWorld <http://mathworld.wolfram.com/LaguerrePolynomial.html>`_
+    '''
+
+    if n < 0:
+        raise ValueError('Laguerre polynomials only defined for n >= 0')
+    if n == 0:
+        return ONE
+    if n == 1:
+        return ONE - x
+
+    l1, ll = NULL, ONE
+    for i in xrange(1, n + 1):
+        l0, l1 = l1, ll
+        ll = ((2*i - 1 - x) * l1 - (i - 1) * l0) / monomial(i)
+
+    if n & 1: ## little hack for odd n
+        return -ll
+    return ll
+
+def laguerre_g(n, a='a'):
     '''
     Returns the *nth* generalized Laguerre polynomial in ``x``.
+
+    :raises: :exc:`ValueError` if *n* is negative
+    :rtype: :class:`pypol.Polynomial`
 
     **Examples**
 
@@ -829,7 +840,7 @@ def laguerre(n, a='a'):
     '''
 
     if n < 0:
-        return NULL
+        raise ValueError('Generalized Laguerre polynomials only defined for n >= 0')
     if n == 0:
         return ONE
     if n == 1:
@@ -846,6 +857,7 @@ def bernoulli(m):
     '''
     Returns the *m-th* Bernoulli polynomial.
 
+    :raises: :exc:`ValueError` if *m* is negative
     :rtype: :class:`pypol.Polynomial`
 
     **Examples**
@@ -873,65 +885,206 @@ def bernoulli(m):
 
     **References**
 
-    `Wikipedia <>`_ | `MathWorld <>`_
+    `Wikipedia <http://en.wikipedia.org/wiki/Bernoulli_polynomials>`_ | `MathWorld <http://mathworld.wolfram.com/BernoulliPolynomial.html>`_
     '''
 
     def _sum(n):
         return sum([(-1) ** k * bin_coeff(n, k) * (x + k) ** m for k in xrange(0, n + 1)])
     if m < 0:
-        raise ValueError
+        raise ValueError('Bernoulli polynomials only defined for m >= 0')
     if m == 0:
         return ONE
     return x ** m + sum([fractions.Fraction(1, n + 1) * _sum(n) for n in xrange(1, m + 1)])
 
-def bern_num(m, n = 0):
+def bern_num(m):
     '''
+    Returns the *m-th* Bernoulli number.
+
+    :raises: :exc:`ValueError` if *m* is negative
+    :rtype: :class:`fractions.Fraction`
+
+    .. note::
+        If *m* is odd, the result is always 0.
+
+    **Examples**
+
+    ::
+
+        >>> bern_num(0)
+        + 1
+        >>> bern_num(1)
+        - 1/2
+        >>> bern_num(2)
+        Fraction(1, 6)
+        >>> bern_num(3)
+        0
+        >>> bern_num(4)
+        Fraction(-1, 30)
+        >>> bern_num(6)
+        Fraction(1, 42)
+        >>> bern_num(8)
+        Fraction(-1, 30)
+        >>> bern_num(10)
+        Fraction(5, 66)
+
+    **References**
+
+    `Wikipedia <http://en.wikipedia.org/wiki/Bernoulli_numbers>`_ | `MathWorld <http://mathworld.wolfram.com/BernoulliNumber.html>`_
     '''
 
     def _sum(k):
-        return sum([(-1) ** v * fractions.Fraction.from_float(bin_coeff(k, v)) * fractions.Fraction((n + v) ** m, k + 1) for v in xrange(k + 1)])
+        return sum([(-1) ** v * fractions.Fraction.from_float(bin_coeff(k, v)) * fractions.Fraction(v ** m, k + 1) for v in xrange(k + 1)])
     if m < 0:
-        raise ValueError
+        raise ValueError('Bernoulli numbers only defined for m >= 0')
     if m == 0:
-        return ONE
+        return 0
     if m == 1:
-        return -monomial(fractions.Fraction(1, 2))
+        return fractions.Fraction(-1, 2)
     if m & 1:
-        return Polynomial()
+        return 0
     #return bernoulli(n).right_hand_side
     return sum([_sum(k) for k in xrange(m + 1)])
 
 def euler(m):
     '''
+    Returns the *m-th* Bernoulli polynomial.
+
+    :raises: :exc:`ValueError` if *m* is negative
+    :rtype: :class:`pypol.Polynomial`
+
+    **Examples**
+
+    ::
+
+        >>> euler(0)
+        + 1
+        >>> euler(1)
+        + x - 1/2
+        >>> euler(2)
+        + x^2 - x
+        >>> euler(3)
+        + x^3 - 3/2x^2 + 1/4
+        >>> euler(4)
+        + x^4 - 2x^3 + x
+        >>> euler(5)
+        + x^5 - 5/2x^4 + 5/2x^2 - 1/2
+        >>> euler(15)
+        + x^15 - 15/2x^14 + 455/4x^12 - 3003/2x^10 + 109395/8x^8 - 155155/2x^6 + 943215/4x^4 - 573405/2x^2 + 929569/16
+
+    **References**
+
+    `MathWorld <http://mathworld.wolfram.com/EulerPolynomial.html>`_
     '''
 
     def _sum(n):
         return sum([(-1) ** k * bin_coeff(n, k) * (x + k) ** m for k in xrange(0, n + 1)])
     if m < 0:
-        raise ValueError
+        raise ValueError('Euler polynomials only defined for m >= 0')
     if m == 0:
         return ONE
     return x ** m + sum([fractions.Fraction(1, 2 ** n) * _sum(n) for n in xrange(1, m + 1)])
 
+def eu2(m):
+    def _sum(n):
+        return sum([(- 1) ** k * bin_coeff(n, k) * (x + k) ** m for k in xrange(n + 1)])
+    if m == 0:
+        return ONE
+    return sum([_sum(n) * fractions.Fraction(1, 2 ** n) for n in xrange(m + 1)])
+
 def euler_num(m): ## Still in development
     '''
+    Returns the *m-th* Euler number.
+
+    :raises: :exc:`ValueError` if *m* is negative
+    :rtype: Integer
+
+    .. note::
+        If *m* is odd, the result is always 0.
+
+    **Examples**
+
+    ::
+
+        
+
+    **References**
+
+    `Wikipedia <http://en.wikipedia.org/wiki/Bernoulli_numbers>`_ | `MathWorld <http://mathworld.wolfram.com/BernoulliNumber.html>`_
     '''
 
-    def _sum(k):
-        return sum([bin_coeff(k, j) * (((-1) ** j * (k - 2*j) ** (m + 1)) / (2 ** k * k)) for j in xrange(k + 1)])
-
     if m < 0:
-        raise ValueError
+        raise ValueError('Euler numbers only defined for m >= 0')
     if m == 0:
         return ONE
     if m & 1:
-        return Polynomial()
-    return sum([_sum(k) for k in xrange(1, m + 2)])
+        return 0
+    return int(2 ** m * euler(m)(.5))
+
+def e2(m):
+    def _sum(k):
+        return sum([bin_coeff(k, i) * (((-1) ** i * (k - 2*i) ** (m + 1)) / (2 ** k * c ** k * k)) for i in xrange(k + 1)])
+    if m == 0:
+        return ONE
+    if m & 1:
+        return 0
+    c = 1j
+    return math.ceil((c * sum([_sum(k) for k in xrange(1, m + 2)])).real)
+
+def genocchi(n):
+    '''
+    Returns the *n-th* Genocchi number.
+
+    :rtype: integer or :class:`fractions.Fraction`
+
+    .. note::
+        If *n* is odd, the result is always 0.
+
+    **Examples**
+
+    ::
+
+        >>> genocchi(0)
+        0
+        >>> genocchi(2)
+        -1
+        >>> genocchi(8)
+        17
+        >>> genocchi(17)
+        0
+        >>> genocchi(34)
+        -14761446733784164001387L
+    '''
+
+    if not n:
+        return 0
+    if n == 1:
+        return 1
+
+    r = 2 * (1 - 2 ** n) * bern_num(n)
+    if not r:
+        return 0
+    try:
+        rint = int(r)
+    except TypeError:
+        return r
+
+    if rint == r:
+        return rint
+    return r
 
 
 ################################################################################
 ##                            Still in development                            ##
 ################################################################################
+
+def ___laguerre(n):
+    if n < 0:
+        raise ValueError
+    if n == 0:
+        return ONE
+    if n == 1:
+        return 1 - x
+    return fractions.Fraction(1, n + 1) * ((2*n + 1 - x) * laguerre(n - 1) - n * laguerre(n - 2))
 
 def bernstein(i, n): ## Still in development
     if not i and not n:

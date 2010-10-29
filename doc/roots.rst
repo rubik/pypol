@@ -3,9 +3,9 @@
 .. moduleauthor:: Michele Lacchia (michelelacchia@gmail.com)
 .. sectionauthor:: Michele Lacchia (michelelacchia@gmail.com)
 
-.. |p1| image:: images/quad_eq.gif
+.. |p1| image:: images/quad_poly.gif
+.. |p2| image:: images/quad_eq.gif
     :alt: Quadratic equation
-.. |p2| image:: images/quad_poly.gif
 .. |p8_5| image:: images/newton.gif
     :alt: Newton's method
 .. |p9| image:: images/halley.gif
@@ -14,13 +14,14 @@
     :alt: Householder's method
 .. |p11| image:: images/schroder.gif
     :alt: Schröder's method
+.. |p12| image:: images/cubic_eq.gif
 
 The :mod:`roots` module
 =======================
 
 .. versionadded:: 0.4
 
-Here are some root-finding algorithm, such as :func:`ruffini`'s method, :func:`quadratic` formula, :func:`newton`'s method, :func:`halley`'s method, :func:`householder`'s method, :func:`bisection` method, :func:`brent`'s method.
+Here are some root-finding algorithm, such as :func:`ruffini`'s method, :func:`quadratic` formula, :func:`cubic` formula, :func:`newton`'s method, :func:`halley`'s method, :func:`householder`'s method, :func:`schroeder`'s method, :func:`brent`'s method, and :func:`bisection`.
 
 ruffini
 +++++++
@@ -31,6 +32,11 @@ quadratic
 +++++++++
 
 .. autofunction:: quadratic
+
+cubic
++++++
+
+.. autofunction:: cubic
 
 newton
 ++++++
@@ -46,6 +52,11 @@ householder
 +++++++++++
 
 .. autofunction:: householder
+
+schroeder
++++++++++
+
+.. autofunction:: schroeder
 
 brent
 +++++

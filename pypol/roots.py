@@ -70,13 +70,13 @@ def linear(poly):
 
 def quadratic(poly):
     '''
-    Finds the two roots of the polynomial *poly* solving the quadratic equation:
-        |p1|
+    Finds the two roots of the polynomial *poly* solving the quadratic equation: |p1|
 
-    where the polynomial is |p2|.
+    with the formula:
+        |p2|.
 
     :raises: :exc:`AssertionError` if the polynomial's degree is not 2.
-    :rtype: 2 length tuple
+    :rtype: 2 numbers (integer, float or complex) in a tuple
 
     **Examples**
 
@@ -140,6 +140,42 @@ def quadratic(poly):
     return ((-b + r) / (2*a), (-b - r) / (2*a))
 
 def cubic(poly):
+    '''
+    Finds the three roots of the polynomial *poly* solving the equation: |p12|.
+
+    :raises: :exc:`AssertionError` if the polynomial's degree is not 3.
+    :rtype: 3 numbers (integer, float or complex) in a tuple
+
+    **Examples**
+
+    ::
+
+        >>> k = poly1d([3, -2, 45, -1])
+        >>> k
+        + 3x^3 - 2x^2 + 45x - 1
+        >>> cubic(k)
+        (0.022243478406449024, (0.3222115941301088+3.8576995055778323j), (0.3222115941301088-3.8576995055778323j))
+        >>> k = poly1d([-9, 12, -2, -34])
+        >>> k
+        - 9x^3 + 12x^2 - 2x - 34
+        >>> cubic(k)
+        (-1.182116114781928, (1.2577247240576306+1.2703952413531459j), (1.2577247240576306-1.2703952413531459j))
+        >>> k = poly1d([1, 1, 1, 1])
+        >>> cubic(k)
+        (-1.0, (5.551115123125783e-17+0.9999999999999999j), (5.551115123125783e-17-0.9999999999999999j))
+        >>> k(-1.)
+        0.0
+        >>> k = poly1d([-1, 1, 0, 1])
+        >>> cubic(k)
+        (1.4655712318767669, (-0.23278561593838348+0.7925519925154489j), (-0.23278561593838348-0.7925519925154489j))
+        >>> k(cubic(k)[0])
+        3.9968028886505635e-15
+
+    **References**
+
+    `Wikipedia <http://en.wikipedia.org/wiki/Cubic_function>`_ | `MathWorld <http://mathworld.wolfram.com/CubicFormula.html>`_ | `1728 <http://www.1728.com/cubic.htm>`_
+    '''
+
     poly = poly.filter()
     assert poly.degree == 3, 'The polynomial\'s degree must be 3'
     if len(poly.coefficients) == 4:
@@ -156,7 +192,10 @@ def cubic(poly):
     if h > 0: # only 1 root is real
         b_3a = - (b / (3*a))
         r = -(g / 2) + math.sqrt(h)
-        s = r ** (1/3)
+        if r < 0:
+            s = -((-r) ** (1/3))
+        else:
+            s = r ** (1/3)
         t = -(g / 2) - math.sqrt(h)
         if t < 0:
             u = - ((-t) ** (1/3))
@@ -199,7 +238,7 @@ def cubic(poly):
             x3 = round(x3)
         return x1, x2, x3
 
-def quartic(poly):
+def __quartic(poly):
     assert poly.degree == 4, 'The polynomial\'s degree must be 4'
     if len(poly.coefficients) == 5:
         a, b, c, d, e = poly.coefficients
@@ -220,7 +259,7 @@ def quartic(poly):
     #    for m in poly.monomials:
     #        m[1][l] = m[1][l] / 2
     #    print poly
-    #    poly_ = poly(x=monomial('z'))
+    #    poly_ = poly(x=monomial(z=1))
     #    return quadratic(poly_)
     if (a, b) == (0, 0):
         return quadratic(Polynomial(poly[2:]))
@@ -270,7 +309,7 @@ def newton(poly, start, epsilon=float('-inf')):
         >>> k
         + 2x^2 + 5x + 3
 
-    the roots (real) of this polynomial are ``-1`` and ``-1.5``.
+    the roots of this polynomial are ``-1`` and ``-1.5``.
     We start with 10::
 
         >>> newton(k, 10)
@@ -446,6 +485,20 @@ def schroeder(poly, start, epsilon=float('-inf')):
     :param epsilon: the precision, default to ``float('-inf')``
     :type epsilon: integer or float
     :rtype: integer or float
+
+    **Examples**
+
+    ::
+
+        >>> k = poly1d([3, -4, -1, 4])
+        >>> k
+        + 3x^3 - 4x^2 - x + 4
+        >>> schroeder(k, 100)
+        -0.859475828371609
+        >>> schroeder(k, 100j)
+        (1.0964045808524712-0.5909569632973221j)
+        >>> schroeder(k, -100j)
+        (1.0964045808524712+0.5909569632973221j)
     '''
 
     p_d, p_d_ = polyder(poly), polyder(poly, 2)

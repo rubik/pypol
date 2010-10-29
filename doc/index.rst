@@ -71,7 +71,7 @@ These are just some features of pypol::
     + 2x^3 - 4x^2 + 3x - 1
     >>> q * p1 + r == p2
     True
-    >>> roots ## pypol.funcs
+    >>> roots ## pypol.roots
     <module 'pypol.roots' from '/pypol/roots.py'>
     >>> del p1[0]
     >>> p1

@@ -2,6 +2,9 @@
 
 .. _operations:
 
+Operators
+#########
+
 Basic operators
 ===============
 

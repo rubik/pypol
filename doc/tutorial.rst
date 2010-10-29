@@ -341,8 +341,8 @@ Operations
 .. seealso::
     :ref:`operations`
 
-Differentiation and itegration
-++++++++++++++++++++++++++++++
+Differentiation and integration
++++++++++++++++++++++++++++++++
 
 There are three functions: :func:`pypol.funcs.polyder` (to find the derivative),
 :func:`pypol.funcs.polyint` (to find the indefinite integral) and :func:`pypol.funcs.polyint_` (to find the definite integral)::
@@ -383,7 +383,72 @@ There are three functions: :func:`pypol.funcs.polyder` (to find the derivative),
 Series
 ++++++
 
+In the :mod:`pypol.funcs` module there are some generator functions, like::
+
+    >>> from pypol.funcs import *
+    >>> fibonacci(2)
+    + x
+    >>> fibonacci(21)
+    + x^20 + 19x^18 + 153x^16 + 680x^14 + 1820x^12 + 3003x^10 + 3003x^8 + 1716x^6 + 495x^4 + 55x^2 + 1
+    >>> hermite_prob(12)
+    + x^12 - 66x^10 + 1485x^8 - 13860x^6 + 51975x^4 - 62370x^2 + 10395
+    >>> hermite_phys(12)
+    + 4096x^12 - 135168x^10 + 1520640x^8 - 7096320x^6 + 13305600x^4 - 7983360x^2 + 665280
+    >>> chebyshev_t(19)
+    + 262144x^19 - 1245184x^17 + 2490368x^15 - 2723840x^13 + 1770496x^11 - 695552x^9 + 160512x^7 - 20064x^5 + 1140x^3 - 19x
+    >>> chebyshev_u(17) ## Chebyshev polynomials of the second kind
+    + 131072x^17 - 524288x^15 + 860160x^13 - 745472x^11 + 366080x^9 - 101376x^7 + 14784x^5 - 960x^3 + 18x
+    >>> abel(12)
+    + x^12 - 132ax^11 + 7920a^2x^10 - 285120a^3x^9 + 6842880a^4x^8 - 114960384a^5x^7 + 1379524608a^6x^6 - 11824496640a^7x^5 + 70946979840a^8x^4 - 283787919360a^9x^3 + 681091006464a^10x^2 - 743008370688a^11x
+    >>> abel(9, 'k')
+    + x^9 - 72kx^8 + 2268k^2x^7 - 40824k^3x^6 + 459270k^4x^5 - 3306744k^5x^4 + 14880348k^6x^3 - 38263752k^7x^2 + 43046721k^8x
+    >>> laguerre_g(2)
+    + 1/2a^2 + 3/2a - ax + 1 + 1/2x^2 - 2x
+    >>> laguerre_g(2, 't')
+    + 1/2t^2 + 3/2t - tx + 1 + 1/2x^2 - 2x
+    >>> bernoulli(2)
+    + x^2 - x + 1/6
+    >>> bern_num(2)
+    Fraction(1, 6)
+    >>> euler(3)
+    + x^3 - 3/2x^2 + 1/4
 
 Root-finding
 ++++++++++++
 
+The :mod:`pypol.roots` implements some root-findings algorithm::
+
+    >>> from pypol.roots import *
+    >>> k = poly1d([3, -4, -1, 4])
+    >>> k
+    + 3x^3 - 4x^2 - x + 4
+    >>> newton(k, 100)
+    -0.859475828371609
+    >>> newton(k, -10)
+    -0.859475828371609
+    >>> k(newton(k, -10))
+    0.0
+    >>> newton(k, complex(100, 1))
+    (1.0964045808524712-0.5909569632973221j)
+    >>> k(newton(k, complex(100, 1)))
+    -1.1102230246251565e-16j
+    >>> newton(k, complex(100, -1))
+    (1.0964045808524712+0.5909569632973221j)
+    >>> k(newton(k, complex(100, -1)))
+    1.1102230246251565e-16j
+    >>> halley(k, 100)
+    -0.859475828371609
+    >>> householder(k, 100)
+    -0.859475828371609
+    >>> halley(k, 1j)
+    (1.0964045808524712-0.5909569632973221j)
+    >>> householder(k, complex(.4, .9))
+    (1.0964045808524712+0.5909569632973221j)
+    >>> schroeder(k, 100)
+    -0.859475828371609
+    >>> schroeder(k, 100j)
+    (1.0964045808524712-0.5909569632973221j)
+    >>> schroeder(k, -100j)
+    (1.0964045808524712+0.5909569632973221j)
+    >>> cubic(k) ## All in one
+    (-0.8594758283716091, (1.0964045808524712+0.590956963297322j), (1.0964045808524712-0.590956963297322j))
