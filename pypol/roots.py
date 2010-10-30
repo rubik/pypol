@@ -509,6 +509,36 @@ def schroeder(poly, start, epsilon=float('-inf')):
             return x_n
         start = x_n
 
+def laguerre(poly, start, epsilon=float('-inf')):
+    '''
+    Finds one root of the polynomial *poly* using the Laguerre's method, with the iteration formula:
+        |p13|
+
+    :param integer start: the start value to evaluate ``poly(x)``
+    :param epsilon: the precision, default to ``float('-inf')``
+    :type epsilon: integer or float
+    :rtype: integer or float
+    '''
+
+    p_d, p_d_, n = polyder(poly), polyder(poly, 2), poly.degree
+    start = complex(start)
+    while True:
+        px = poly(start)
+        if not px:
+            return start
+        g = p_d(start) / px
+        h = g ** 2 - p_d_(start) / px
+        dp = cmath.sqrt((n - 1) * n * h - (g ** 2))
+        d = g + dp
+        d2 = g - dp
+        if abs(d2) > abs(d):
+            d = d2
+        a = n / d
+        x_n = start - a
+        if start == x_n or abs(start - x_n) < epsilon:
+            return start
+        start = x_n
+
 def brent(poly, a, b, epsilon=float('-inf')):
     '''
     Finds a root of the polynomial *poly*, with the Brent's method.
@@ -595,9 +625,6 @@ def brent(poly, a, b, epsilon=float('-inf')):
 
     return b
 
-def maehly(poly, start, epsilon=float('-inf')):
-    p = poly / (NotImplemented)
-
 def bisection(poly, k=0.5, epsilon=float('-inf')):
     '''
     .. warning::
@@ -665,17 +692,40 @@ def bisection(poly, k=0.5, epsilon=float('-inf')):
 ##                            Still in development                            ##
 ################################################################################
 
-def durand_kerner(poly, start=complex(.4, .9), epsilon=10**-16):#float('-inf')):
+def d1(poly, start=complex(.4, .9), epsilon=10**-16):#float('-inf')):
     roots = []
-    for e in xrange(poly.degree):
+    for e in xrange(poly.order):
         roots.append(start ** e)
     while True:
         new = []
         for i, r in enumerate(roots):
-            new_r = r - (poly(r))/(reduce(operator.mul, [(r - r_1) for j, r_1 in enumerate(roots) if i != j]))
+            new_r = r - (poly(r)) / (reduce(operator.mul, [(r - r_1) for j, r_1 in enumerate(roots) if i != j]))
             new.append(new_r)
+            #if r == roots[i] or abs(r - roots[i]) < epsilon:
+            #    return new
         if all(n == roots[i] or abs(n - roots[i]) < epsilon for i, n in enumerate(new)):
             return new
+        roots = new
+
+def d2(poly, start=complex(.4, .9), epsilon=float('-inf')):
+    roots = []
+    for e in xrange(poly.degree):
+        roots.append(start ** e)
+    k = 0
+    print roots
+    while True:
+        new = []
+        for i, r in enumerate(roots):
+            new_r = r - (poly(r)) / (reduce(operator.mul, [(r - r_1) for j, r_1 in enumerate(roots) if i != j]))
+            new.append(new_r)
+            #if r == roots[i] or abs(r - roots[i]) < epsilon:
+            #    return new
+        if all(n == roots[i] or abs(n - roots[i]) < epsilon for i, n in enumerate(new)):
+            return new
+        print new
+        if k == 10:
+            return
+        k += 1
         roots = new
 
 def lambert(poly, start, epsilon=float('-inf')):

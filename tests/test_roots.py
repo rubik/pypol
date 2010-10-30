@@ -13,6 +13,9 @@ class TestRoots(object):
     def testQuadratic(self):
         pass
 
+    def testCubic(self):
+        pass
+
     def testNewton(self):
         pass
 
@@ -22,7 +25,13 @@ class TestRoots(object):
     def testHouseholder(self):
         pass
 
+    def testSchroeder(self):
+        pass
+
     def testBrent(self):
+        pass
+
+    def testDurandKerner(self):
         pass
 
 

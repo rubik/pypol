@@ -224,7 +224,7 @@ def polyder(poly, m=1):
     p_d = _der(poly)
     for _ in xrange(m - 1):
         if not p_d:
-            raise ValueError('Laguerre polynomials only defined for n >= 0')
+            return Polynomial()
         p_d = _der(p_d)
 
     return p_d
@@ -977,7 +977,7 @@ def euler(m):
     '''
 
     def _sum(n):
-        return sum([(-1) ** k * bin_coeff(n, k) * (x + k) ** m for k in xrange(0, n + 1)])
+        return sum([(- 1) ** k * bin_coeff(n, k) * (x + k) ** m for k in xrange(n + 1)])
     if m < 0:
         raise ValueError('Euler polynomials only defined for m >= 0')
     if m == 0:
@@ -1053,6 +1053,12 @@ def genocchi(n):
         0
         >>> genocchi(34)
         -14761446733784164001387L
+
+    Should be quite fast::
+
+        >>> from timeit import timeit
+        >>> timeit('(genocchi(i) for i in xrange(1000))', 'from pypol.funcs import genocchi', number=1000000)
+        1.8470048904418945
     '''
 
     if not n:
@@ -1077,19 +1083,12 @@ def genocchi(n):
 ##                            Still in development                            ##
 ################################################################################
 
-def ___laguerre(n):
-    if n < 0:
-        raise ValueError
-    if n == 0:
+def bernstein(v, n): ## Still in development
+    if not v and not n:
         return ONE
-    if n == 1:
-        return 1 - x
-    return fractions.Fraction(1, n + 1) * ((2*n + 1 - x) * laguerre(n - 1) - n * laguerre(n - 2))
-
-def bernstein(i, n): ## Still in development
-    if not i and not n:
-        return ONE
-    return bin_coeff(n, i) * (x**i) * (1 - x) ** (n - i)
+    if v == n:
+        return x ** v
+    return bin_coeff(n, v) * (x**v) * (1 - x) ** (n - v)
 
 def interpolate(x_values, y_values): ## Still in development
     '''

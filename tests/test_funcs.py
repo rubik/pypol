@@ -40,22 +40,13 @@ class TestFuncs(object):
     def testPolyint(self):
         pass
 
-    def testFib_poly(self):
-        assert not funcs.fib_poly(0)
-        assert_equal(funcs.fib_poly(1), 1)
-        assert_equal(funcs.fib_poly(2), x)
-        assert_equal(funcs.fib_poly(3), x**2 + 1)
-        assert_equal(funcs.fib_poly(4), x**3 + 2*x)
-        assert_equal(funcs.fib_poly(5), x**4 + 3 * x**2 + 1)
-
-    def testFib_poly_r(self):
-        assert not funcs.fib_poly_r(0)
-        assert_equal(funcs.fib_poly_r(1), 1)
-        assert_equal(funcs.fib_poly_r(2), x)
-        assert_equal(funcs.fib_poly_r(3), x**2 + 1)
-        assert_equal(funcs.fib_poly_r(4), x**3 + 2*x)
-        assert_equal(funcs.fib_poly_r(5), x**4 + 3 * x**2 + 1)
-        assert_equal(funcs.fib_poly(11), funcs.fib_poly_r(11))
+    def testFibonacci(self):
+        assert not funcs.fibonacci(0)
+        assert_equal(funcs.fibonacci(1), 1)
+        assert_equal(funcs.fibonacci(2), x)
+        assert_equal(funcs.fibonacci(3), x**2 + 1)
+        assert_equal(funcs.fibonacci(4), x**3 + 2*x)
+        assert_equal(funcs.fibonacci(5), x**4 + 3 * x**2 + 1)
 
     def testHermite_prob(self):
         assert_equal(funcs.hermite_prob(1), x)
@@ -63,27 +54,12 @@ class TestFuncs(object):
         assert_equal(funcs.hermite_prob(3), x**3 - 3*x)
         assert_equal(funcs.hermite_prob(4), x**4 - 6*x**2 + 3)
 
-    def testHermite_prob_r(self):
-        assert_equal(funcs.hermite_prob_r(1), x)
-        assert_equal(funcs.hermite_prob_r(2), x**2 - 1)
-        assert_equal(funcs.hermite_prob_r(3), x**3 - 3*x)
-        assert_equal(funcs.hermite_prob_r(4), x**4 - 6*x**2 + 3)
-        assert_equal(funcs.hermite_prob(13), funcs.hermite_prob_r(13))
-
     def testHermite_phys(self):
         assert_equal(funcs.hermite_phys(0), 1)
         assert_equal(funcs.hermite_phys(1), 2*x)
         assert_equal(funcs.hermite_phys(2), 4*x**2 - 2)
         assert_equal(funcs.hermite_phys(3), 8*x**3 - 12*x)
         assert_equal(funcs.hermite_phys(4), 16*x**4 - 48*x**2 + 12)
-
-    def testHermite_phys_r(self):
-        assert_equal(funcs.hermite_phys_r(0), 1)
-        assert_equal(funcs.hermite_phys_r(1), 2*x)
-        assert_equal(funcs.hermite_phys_r(2), 4*x**2 - 2)
-        assert_equal(funcs.hermite_phys_r(3), 8*x**3 - 12*x)
-        assert_equal(funcs.hermite_phys_r(4), 16*x**4 - 48*x**2 + 12)
-        assert_equal(funcs.hermite_phys(12), funcs.hermite_phys_r(12))
 
     def testChebyshev_t(self):
         assert_equal(funcs.chebyshev_t(0), 1)
@@ -112,6 +88,24 @@ class TestFuncs(object):
         pass
 
     def testLaguerre(self):
+        pass
+
+    def testLaguerreG(self):
+        pass
+
+    def testBernoulli(self):
+        pass
+
+    def testBernoulliNumbers(self):
+        pass
+
+    def testEuler(self):
+        pass
+
+    def testEulerNumbers(self):
+        pass
+
+    def testGenocchi(self):
         pass
 
 

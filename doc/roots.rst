@@ -15,6 +15,7 @@
 .. |p11| image:: images/schroder.gif
     :alt: Schröder's method
 .. |p12| image:: images/cubic_eq.gif
+.. |p13| image:: images/laguerre.gif
 
 The :mod:`roots` module
 =======================

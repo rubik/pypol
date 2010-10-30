@@ -287,7 +287,7 @@ def coerce_poly(wrapped):
         elif isinstance(other, tuple):
             other =  Polynomial(other)
         elif isinstance(other, float):
-            other = monomial(fractions.Fraction(str(other)))
+            other = monomial(fractions.Fraction.from_float(other))
         elif isinstance(other, fractions.Fraction):
             other = monomial(other)
         return wrapped(self, other)
@@ -1285,7 +1285,7 @@ class Polynomial(object):
         return True
 
     def _filter(self):
-        return [m for m in self._monomials if m[0]]
+        return [copy.deepcopy(m) for m in self._monomials if m[0]]
 
     def _format(self, print_format=False):
         '''
@@ -1594,9 +1594,15 @@ class Polynomial(object):
 
     def __pow__(self, exp):
         if exp == 0:
-            return Polynomial()
+            return monomial()
         elif exp < 0:
             return AlgebraicFraction(monomial(1), self ** abs(exp))
+        elif len(self) == 1:
+            c = self.filter()
+            for m in c._monomials:
+                for l in m[1]:
+                    m[1][l] *= exp
+            return c
         else:
             try:
                 return reduce(operator.mul, [self]*exp)

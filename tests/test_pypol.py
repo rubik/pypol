@@ -18,18 +18,15 @@ class TestPolynomial(object):
         assert_equal(pypol.polynomial('x^3 + x + a^3 - 4x^2 - b - 2'), self.a + self.b)
         assert_equal(pypol.polynomial('x^3 - 2x^2 + x - 6'), self.a + -1)
         assert_equal(pypol.polynomial('x^3 - 2x^2 + x - 5 + y^2'), self.a + 'y^2')
-        assert_raises(TypeError, operator.add, self.a, [])
 
     def testSub(self):
         assert_equal(pypol.polynomial('x^3 - a^3  + x + b - 8'), self.a - self.b)
         assert_equal(pypol.polynomial('x^3 - 2x^2 + x - 7'), self.a - 2)
         assert_equal(pypol.polynomial('x^3 - 2x^2 + x - 5 - y^2'), self.a - 'y^2')
-        assert_raises(TypeError, operator.sub, self.a, [])
 
     def testMul(self):
         assert_equal(pypol.polynomial('x^3a - 2x^2a + xa - 5a'), self.a * self.d)
         assert_equal(pypol.polynomial('x^3a^3 - 2x^5 - x^3b - 2x^2a^3 + 4x^4 + 2x^2b + xa^3 + x^3 - xb + 3x - 5a^3 + 4x^2 + 5b - 15'), self.a * self.b)
-        assert_raises(TypeError, operator.mul, self.d, [])
 
     def testDivmod(self):
         assert_equal((pypol.polynomial('- x^2 + x'), pypol.polynomial('- 5')), divmod(self.a, self.c))
