@@ -297,8 +297,10 @@ def newton(poly, start, epsilon=float('-inf')):
     Finds one root of the polynomial *poly*, with this iteration formula:
         |p8_5|
 
-    :param integer start: the start value for evaluate ``poly(x)``.
-    :param integer epsilon: the precision of the calculus (default to ``float('-inf')``).
+    :param start: the start value for evaluate ``poly(x)``.
+    :param epsilon: the precision of the calculus (default to ``float('-inf')``).
+    :type start: integer, float or complex
+    :type epsilon: integer or float
     :rtype: integer of float
 
     **Examples**
@@ -367,8 +369,9 @@ def halley(poly, start, epsilon=float('-inf')):
     Finds one root of the polynomial *poly* using the Halley's method, with this iteration formula:
         |p9|
 
-    :param integer start: the start value to evaluate ``poly(x)``
+    :param start: the start value to evaluate ``poly(x)``
     :param epsilon: the precision, default to ``float('-inf')``
+    :type start: integer, float or complex
     :type epsilon: integer or float
     :rtype: integer or float
 
@@ -423,8 +426,9 @@ def householder(poly, start, epsilon=float('-inf')):
     Finds one root of the polynomial *poly* using the Householder's method, with this iteration formula:
         |p10|
 
-    :param integer start: the start value to evaluate ``poly(x)``
+    :param start: the start value to evaluate ``poly(x)``
     :param epsilon: the precision, default to ``float('-inf')``
+    :type start: integer, float or complex
     :type epsilon: integer or float
     :rtype: integer or float
 
@@ -481,8 +485,9 @@ def schroeder(poly, start, epsilon=float('-inf')):
     Finds one root of the polynomial *poly* using the Schröder's method, with the iteration formula:
         |p11|
 
-    :param integer start: the start value to evaluate ``poly(x)``
+    :param start: the start value to evaluate ``poly(x)``
     :param epsilon: the precision, default to ``float('-inf')``
+    :type start: integer, float or complex
     :type epsilon: integer or float
     :rtype: integer or float
 
@@ -514,10 +519,11 @@ def laguerre(poly, start, epsilon=float('-inf')):
     Finds one root of the polynomial *poly* using the Laguerre's method, with the iteration formula:
         |p13|
 
-    :param integer start: the start value to evaluate ``poly(x)``
+    :param start: the start value to evaluate ``poly(x)``
     :param epsilon: the precision, default to ``float('-inf')``
+    :type start: integer, float or complex
     :type epsilon: integer or float
-    :rtype: integer or float
+    :rtype: complex
     '''
 
     p_d, p_d_, n = polyder(poly), polyder(poly, 2), poly.degree
@@ -528,11 +534,13 @@ def laguerre(poly, start, epsilon=float('-inf')):
             return start
         g = p_d(start) / px
         h = g ** 2 - p_d_(start) / px
-        dp = cmath.sqrt((n - 1) * n * h - (g ** 2))
-        d = g + dp
+        dp = cmath.sqrt((n - 1) * (n * h - g**2))
+        d1 = g + dp
         d2 = g - dp
-        if abs(d2) > abs(d):
+        if abs(d2) > abs(d1):
             d = d2
+        else:
+            d = d1
         a = n / d
         x_n = start - a
         if start == x_n or abs(start - x_n) < epsilon:
@@ -711,8 +719,6 @@ def d2(poly, start=complex(.4, .9), epsilon=float('-inf')):
     roots = []
     for e in xrange(poly.degree):
         roots.append(start ** e)
-    k = 0
-    print roots
     while True:
         new = []
         for i, r in enumerate(roots):
@@ -722,10 +728,6 @@ def d2(poly, start=complex(.4, .9), epsilon=float('-inf')):
             #    return new
         if all(n == roots[i] or abs(n - roots[i]) < epsilon for i, n in enumerate(new)):
             return new
-        print new
-        if k == 10:
-            return
-        k += 1
         roots = new
 
 def lambert(poly, start, epsilon=float('-inf')):
