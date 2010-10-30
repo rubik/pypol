@@ -700,22 +700,7 @@ def bisection(poly, k=0.5, epsilon=float('-inf')):
 ##                            Still in development                            ##
 ################################################################################
 
-def d1(poly, start=complex(.4, .9), epsilon=10**-16):#float('-inf')):
-    roots = []
-    for e in xrange(poly.order):
-        roots.append(start ** e)
-    while True:
-        new = []
-        for i, r in enumerate(roots):
-            new_r = r - (poly(r)) / (reduce(operator.mul, [(r - r_1) for j, r_1 in enumerate(roots) if i != j]))
-            new.append(new_r)
-            #if r == roots[i] or abs(r - roots[i]) < epsilon:
-            #    return new
-        if all(n == roots[i] or abs(n - roots[i]) < epsilon for i, n in enumerate(new)):
-            return new
-        roots = new
-
-def d2(poly, start=complex(.4, .9), epsilon=float('-inf')):
+def durand_kerner(poly, start=complex(.4, .9), epsilon=float('-inf')):
     roots = []
     for e in xrange(poly.degree):
         roots.append(start ** e)
@@ -724,9 +709,7 @@ def d2(poly, start=complex(.4, .9), epsilon=float('-inf')):
         for i, r in enumerate(roots):
             new_r = r - (poly(r)) / (reduce(operator.mul, [(r - r_1) for j, r_1 in enumerate(roots) if i != j]))
             new.append(new_r)
-            #if r == roots[i] or abs(r - roots[i]) < epsilon:
-            #    return new
-        if all(n == roots[i] or abs(n - roots[i]) < epsilon for i, n in enumerate(new)):
+        if all(str(n) == str(roots[i]) or abs(n - roots[i]) < epsilon for i, n in enumerate(new)):
             return new
         roots = new
 
