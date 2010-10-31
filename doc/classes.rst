@@ -181,7 +181,7 @@ In all these examples we assume::
     a, b = polynomial('3x - 5'), polynomial('2a')
 
 
-.. autoclass:: AlgebraicFraction(numerator, denominator) 
+.. autoclass:: AlgebraicFraction(numerator, denominator)
 
     .. automethod:: numerator()
 

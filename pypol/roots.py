@@ -211,7 +211,16 @@ def cubic(poly):
         return x1, x2, x3
 
     if f == g == h == 0: # all 3 roots are real and equal
-        x1 = x2 = x3 = -((d / a) ** (1/3))
+        d_a = d / a
+        if d_a < 0:
+            x1 = x2 = x3 = (-d_a) ** (1/3)
+        else:
+            x1 = x2 = x3 = -((d / a) ** (1/3))
+
+        x1 = x1*1e14; x1 = round(x1); x1 = (x1/1e14)
+        x2 = x2*1e14; x2 = round(x2); x2 = (x2/1e14)
+        x3 = x3*1e14; x3 = round(x3); x3 = (x3/1e14)
+
         return x1, x2, x3
 
     if h <= 0: # all 3 roots are real
@@ -543,9 +552,26 @@ def laguerre(poly, start, epsilon=float('-inf')):
             d = d1
         a = n / d
         x_n = start - a
-        if start == x_n or abs(start - x_n) < epsilon:
+        if str(start) == str(x_n) or abs(start - x_n) < epsilon:
             return start
         start = x_n
+
+def durand_kerner(poly, start=complex(.4, .9), epsilon=1.12e-16):
+    '''
+    The Durand-Kerner method. It finds all the roots of the polynomials *poly*
+    '''
+
+    roots = []
+    for e in xrange(poly.degree):
+        roots.append(start ** e)
+    while True:
+        new = []
+        for i, r in enumerate(roots):
+            new_r = r - (poly(r)) / (reduce(operator.mul, [(r - r_1) for j, r_1 in enumerate(roots) if i != j]))
+            new.append(new_r)
+        if all(str(n) == str(roots[i]) or abs(n - roots[i]) < epsilon for i, n in enumerate(new)):
+            return tuple(new)
+        roots = new
 
 def brent(poly, a, b, epsilon=float('-inf')):
     '''
@@ -662,7 +688,7 @@ def bisection(poly, k=0.5, epsilon=float('-inf')):
     '''
 
     if k == 0:
-        raise Warning('This function may not work!')
+        raise Warning('May not work with k = 0')
 
     if k < 0:
         raise ValueError('k value cannot be negative')
@@ -700,18 +726,6 @@ def bisection(poly, k=0.5, epsilon=float('-inf')):
 ##                            Still in development                            ##
 ################################################################################
 
-def durand_kerner(poly, start=complex(.4, .9), epsilon=float('-inf')):
-    roots = []
-    for e in xrange(poly.degree):
-        roots.append(start ** e)
-    while True:
-        new = []
-        for i, r in enumerate(roots):
-            new_r = r - (poly(r)) / (reduce(operator.mul, [(r - r_1) for j, r_1 in enumerate(roots) if i != j]))
-            new.append(new_r)
-        if all(str(n) == str(roots[i]) or abs(n - roots[i]) < epsilon for i, n in enumerate(new)):
-            return new
-        roots = new
 
 def lambert(poly, start, epsilon=float('-inf')):
     def _hg(n):

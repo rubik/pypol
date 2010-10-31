@@ -96,8 +96,9 @@ Contents
    :numbered:
    
    tutorial.rst
-   classes.rst
+   mainmod.rst
    functions.rst
+   classes.rst
    operations.rst
    funcs.rst
    roots.rst

@@ -59,6 +59,16 @@ schroeder
 
 .. autofunction:: schroeder
 
+laguerre
+++++++++
+
+.. autofunction:: laguerre
+
+durand_kerner
++++++++++++++
+
+.. autofunction:: durand_kerner
+
 brent
 +++++
 

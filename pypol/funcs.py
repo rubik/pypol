@@ -460,7 +460,7 @@ def bin_coeff(n, k):
 
 def fibonacci(n):
     '''
-    Returns the *nth* Fibonacci polynomial. This is the iterative version, and it is extremely faster than the recursive one.
+    Returns the *nth* Fibonacci polynomial.
 
     :raises: :exc:`ValueError` if *n* is negative
     :rtype: :class:`pypol.Polynomial`
