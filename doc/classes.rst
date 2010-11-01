@@ -1,7 +1,7 @@
 .. currentmodule:: pypol
 
-pypol classes reference
-=======================
+Classes
+=======
 
 pypol's classes are two: :class:`Polynomial` and :class:`AlgebraicFraction`.
 

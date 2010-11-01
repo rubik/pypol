@@ -207,7 +207,7 @@ def polyder(poly, m=1):
             return [var[0]*var[1], var[1] - 1]
 
         if not poly:
-            raise ValueError('Laguerre polynomials only defined for n >= 0')
+            return Polynomial()
         try:
             variable = poly.letters[0]
         except IndexError:
@@ -219,7 +219,7 @@ def polyder(poly, m=1):
         raise ValueError('order of derivative must be positive (see polyint)')
     if m == 0:
         return poly
-    if m == 1:
+    elif m == 1:
         return _der(poly)
     p_d = _der(poly)
     for _ in xrange(m - 1):
@@ -458,9 +458,46 @@ def bin_coeff(n, k):
 
     return float(math.factorial(n) / (math.factorial(k) * math.factorial(n - k)))
 
+def harmonic(n):
+    return sum(fractions.Fraction(1, k) for k in xrange(1, n + 1))
+
+def harmonic_g(n, m):
+    return sum(fractions.Fraction(1, k ** m) for k in xrange(1, n + 1))
+
+def stirling(n, k):
+    if n == k:
+        return 1.
+    if n > 0 and k == 0:
+        return 0.
+    if k > n:
+        return 0.
+    if k == 1:
+        return math.factorial(n - 1)
+    if k == 2:
+        return math.factorial(n - 1) * harmonic(n - 1)
+    if k == 3:
+        return fractions.Fraction(1, 2) * math.factorial(n - 1) * (harmonic(n - 1) ** 2 - harmonic_g(n - 1, 2))
+    if k == (n - 1):
+        return bin_coeff(n, 2)
+    if k == (n - 2):
+        return fractions.Fraction(1, 4) * (3*n - 1) * bin_coeff(n, 3)
+    if k == (n - 3):
+        return bin_coeff(n, 2) * bin_coeff(n, 4)
+    return stirling(n - 1, k - 1) - (n - 1) * stirling(n - 1, k)
+
+def stirling_2(n, k):
+    return fractions.Fraction(1, math.factorial(k)) * sum((-1) ** (k - j) * bin_coeff(k, j) * j ** n for j in xrange(k + 1))
+
+def bell_num(n):
+    if n == 0:
+        return 1.
+    if n == 1:
+        return 1.
+    return sum(stirling_2(n, k) for k in xrange(n + 1))
+
 def fibonacci(n):
     '''
-    Returns the *nth* Fibonacci polynomial.
+    Returns the *n-th* Fibonacci polynomial.
 
     :raises: :exc:`ValueError` if *n* is negative
     :rtype: :class:`pypol.Polynomial`
@@ -486,9 +523,9 @@ def fibonacci(n):
         >>> fibonacci(23)
         + x^22 + 21x^20 + 190x^18 + 969x^16 + 3060x^14 + 6188x^12 + 8008x^10 + 6435x^8 + 3003x^6 + 715x^4 + 66x^2 + 1
         >>> fibonacci(100)
-        + x^99 + 98x^97 + 4656x^95 + 142880x^93 .. cut .. + 197548686920970x^17 + 22057981462440x^15 + 1889912732400x^13 + 119653565850x^11 + 5317936260x^9 + 154143080x^7 + 2598960x^5 + 20825x^3 + 50x
+        + x^99 + 98x^97 + 4656x^95 + 142880x^93 ... + 197548686920970x^17 + 22057981462440x^15 + 1889912732400x^13 + 119653565850x^11 + 5317936260x^9 + 154143080x^7 + 2598960x^5 + 20825x^3 + 50x
         >>> fibonacci(200)
-        + x^199 + 198x^197 + .. cut .. + 15913388077274800x^13 + 249145778809200x^11 + 2747472247520x^9 + 19813501785x^7 + 83291670x^5 + 166650x^3 + 100x
+        + x^199 + 198x^197 + ... + 15913388077274800x^13 + 249145778809200x^11 + 2747472247520x^9 + 19813501785x^7 + 83291670x^5 + 166650x^3 + 100x
         >>> len(fibonacci(300))
         150
         >>> len(str(fibonacci(300)))
@@ -510,7 +547,7 @@ def fibonacci(n):
 
 def hermite_prob(n):
     '''
-    Returns the *nth* probabilistic Hermite polynomial, that is a polynomial of degree *n*.
+    Returns the *n-th* probabilistic Hermite polynomial, that is a polynomial of degree *n*.
 
     :raises: :exc:`ValueError` if *n* is negative
     :rtype: :class:`pypol.Polynomial`
@@ -546,7 +583,7 @@ def hermite_prob(n):
 
 def hermite_phys(n):
     '''
-    Returns the *nth* Hermite polynomial (physicist).
+    Returns the *n-th* Hermite polynomial (physicist).
 
     :raises: :exc:`ValueError` if *n* is negative
     :rtype: :class:`pypol.Polynomial`
@@ -584,7 +621,7 @@ def hermite_phys(n):
 
 def chebyshev_t(n):
     '''
-    Returns the *nth* Chebyshev polynomial of the first kind in ``x``.
+    Returns the *n-th* Chebyshev polynomial of the first kind in ``x``.
 
     :raises: :exc:`ValueError` if *n* is negative
     :rtype: :class:`pypol.Polynomial`
@@ -619,7 +656,7 @@ def chebyshev_t(n):
 
 def chebyshev_u(n):
     '''
-    Returns the *nth* Chebyshev polynomial of the second kind in ``x``.
+    Returns the *n-th* Chebyshev polynomial of the second kind in ``x``.
 
     :raises: :exc:`ValueError` if *n* is negative
     :rtype: :class:`pypol.Polynomial`
@@ -656,7 +693,7 @@ def chebyshev_u(n):
 
 def abel(n, variable='a'):
     '''
-    Returns the *nth* Abel polynomial in ``x`` and *variable*.
+    Returns the *n-th* Abel polynomial in ``x`` and *variable*.
 
     :raises: :exc:`ValueError` if *n* is negative
     :rtype: :class:`pypol.Polynomial`
@@ -690,7 +727,7 @@ def abel(n, variable='a'):
 
 def spread(n): ## Should work but it doesn't
     '''
-    Returns the *nth* Spread polynomial in ``x``.
+    Returns the *n-th* Spread polynomial in ``x``.
     
     :raises: :exc:`ValueError` if *n* is negative
     :rtype: :class:`pypol.Polynomial`
@@ -699,14 +736,294 @@ def spread(n): ## Should work but it doesn't
     if n < 0:
         raise ValueError('Spread polynomials only defined for n >= 0')
     if n == 0:
-        return ONE
+        return NULL
     if n == 1:
         return x
-    return 2*x - spread(n - 2) + (2 - 4*x) * spread(n - 1)
+    p = [NULL, x]
+    for _ in xrange(n - 2):
+        p.append(2*x - p[-2] + (2 - 4*x) * p[-1])
+    return p[-1]
+
+def touchard(n):
+    '''
+    Returns the *n-th* Touchard polynomial in ``x``.
+
+    :rtype: :class:`pypol.Polynomial`
+
+    **Examples**
+
+    ::
+
+        >>> touchard(0)
+        + 1
+        >>> touchard(1)
+        + x
+        >>> touchard(2)
+        + x^2 + x
+        >>> touchard(12)
+        + x^12 + 66x^11 + 7498669301432319/4398046511104x^10 + 22275x^9 + 159027x^8 + 627396x^7 + 1323652x^6 + 1379400x^5 + 611501x^4 + 86526x^3 + 2047x^2 + x
+
+    The Touchard polynomials also satisfy:
+        |p15|
+
+    where |p16| is the *n-th* Bell number (:func:`bell_num`)::
+
+        >>> long(touchard(19)(1)) == long(bell_num(19))
+        True
+
+    The more *n* become greater, the more it loses precision::
+
+        >>> long(touchard(23)(1)) == long(bell_num(23))
+        False
+        >>> abs(long(touchard(23)(1)) - long(bell_num(23)))
+        8L
+        >>> long(touchard(45)(1)) == long(bell_num(45))
+        False
+        >>> abs(long(touchard(45)(1)) - long(bell_num(45)))
+        19342813113834066795298816L
+        >>> long(touchard(123)(1)) == long(bell_num(123))
+        False
+        >>> abs(long(touchard(123)(1)) - long(bell_num(123)))
+        429106803807439187983719223678319701219747465049443431177466446916319867062128867811451292833717675081551803755143128885524389827706879L
+    '''
+
+    if n < 0:
+        return NULL
+    if n == 0:
+        return ONE    
+    return sum(stirling_2(n, k) * x ** k for k in xrange(n + 1))
+
+def lucas(n):
+    '''
+    Returns the *n-th* Lucas polynomial.
+
+    :raises: :exc:`ValueError` if *n* is negative
+    :rtype: :class:`pypol.Polynomial`
+
+    **Examples**
+
+    ::
+
+        >>> lucas(0)
+        + 2
+        >>> lucas(1)
+        + x
+        >>> lucas(2)
+        + x^2 + 2
+        >>> lucas(3)
+        + x^3 + 3x
+        >>> lucas(4)
+        + x^4 + 4x^2 + 2
+        >>> lucas(14)
+        + x^14 + 14x^12 + 77x^10 + 210x^8 + 294x^6 + 196x^4 + 49x^2 + 2
+
+    .. note::
+        The Lucas polynomials are obtained setting ``p = x`` and ``q = 1`` in the Lucas polynomial sequence (see :func:`lucas_seq`).
+        You can generate them with this small piece of code::
+
+            >>> from pypol import x, ONE, TWO
+            >>> from pypol.funcs import lucas_seq
+            >>> 
+            >>> def lucas_poly(n):
+                return lucas_seq(n, x, ONE, TWO, x)
+            
+            >>> lucas_poly(0)
+            + 2
+            >>> lucas_poly(1)
+            + x
+            >>> lucas_poly(2)
+            + x^2 + 2
+            >>> lucas_poly(5)
+            + x^5 + 5x^3 + 5x
+            >>> lucas_poly(15)
+            + x^15 + 15x^13 + 90x^11 + 275x^9 + 450x^7 + 378x^5 + 140x^3 + 15x
+
+
+    **References**
+
+    `MathWorld <http://mathworld.wolfram.com/LucasPolynomial.html>`_
+    '''
+
+    if n < 0:
+        raise ValueError('Lucas polynomials only defined for n >= 0')
+    if n == 0:
+        return TWO
+    if n == 1:
+        return x
+    p = [TWO, x]
+    for _ in xrange(n - 1):
+        p.append(x * p[-1] + p[-2])
+    return p[-1]
+
+def pell(n):
+    '''
+    Returns the *n-th* Pell polynomial.
+
+    :raises: :exc:`ValueError` if *n* is negative
+    :rtype: :class:`pypol.Polynomial`
+
+    **Examples**
+
+    ::
+
+        >>> pell(0) # A null polynomial
+        
+        >>> pell(1)
+        + 1
+        >>> pell(2)
+        + 2x
+        >>> pell(3)
+        + 4x^2 + 1
+        >>> pell(4)
+        + 8x^3 + 4x
+        >>> pell(14)
+        + 8192x^13 + 24576x^11 + 28160x^9 + 15360x^7 + 4032x^5 + 448x^3 + 14x
+
+    .. note::
+
+        The Pell polynomials are obtained setting ``p = 2x`` and ``q = 1`` in the Lucas sequence (see :func:`lucas_seq`).
+        You can easily generate them::
+
+            >>> from pypol import x, ONE
+            >>> from pypol.funcs import lucas_seq
+            >>> 
+            >>> def pell_poly(n):
+                return lucas_seq(n, 2*x, ONE)
+            
+            >>> pell_poly(0)
+            
+            >>> pell_poly(1)
+            + 1
+            >>> pell_poly(3)
+            + 4x^2 + 1
+            >>> pell_poly(9)
+            + 256x^8 + 448x^6 + 240x^4 + 40x^2 + 1
+
+    **References**
+
+    `MathWorld <http://mathworld.wolfram.com/PellPolynomial.html>`_
+    '''
+
+    if n < 0:
+        raise ValueError('Pell polynomials only defined for n >= 0')
+    if n == 0:
+        return NULL
+    if n == 1:
+        return ONE
+    p = [NULL, ONE]
+    for _ in xrange(n- 1):
+        p.append(2*x * p[-1] + p[-2])
+    return p[-1]
+
+def pell_lucas(n):
+    '''
+    '''
+
+    if n < 0:
+        raise ValueError('Pell-Lucas polynomials only defined for n >= 0')
+    if n == 0:
+        return TWO
+    if n == 1:
+        return 2*x
+    p = [TWO, 2*x]
+    for _ in xrange(n- 1):
+        p.append(2*x * p[-1] + 1 * p[-2])
+    return p[-1]
+
+def jacobsthal(n):
+    if n < 0:
+        raise ValueError('Jacobsthal polynomials only defined for n >= 0')
+    if n == 0:
+        return NULL
+    if n == 1:
+        return ONE
+    p = [NULL, ONE]
+    for _ in xrange(n- 1):
+        p.append(1 * p[-1] + 2*x * p[-2])
+    return p[-1]
+
+def jacob_lucas(n):
+    if n < 0:
+        raise ValueError('Jacobsthal-Lucas polynomials only defined for n >= 0')
+    if n == 0:
+        return TWO
+    if n == 1:
+        return ONE
+    p = [TWO, ONE]
+    for _ in xrange(n- 1):
+        p.append(1 * p[-1] + 2*x * p[-2])
+    return p[-1]
+
+def fermat(n):
+    if n < 0:
+        raise ValueError('Fermat polynomials only defined for n >= 0')
+    if n == 0:
+        return NULL
+    if n == 1:
+        return ONE
+    p = [NULL, ONE]
+    for _ in xrange(n- 1):
+        p.append(3*x * p[-1] -2 * p[-2])
+    return p[-1]
+
+def fermat_lucas(n):
+    if n < 0:
+        raise ValueError('Fermat-Lucas polynomials only defined for n >= 0')
+    if n == 0:
+        return TWO
+    if n == 1:
+        return 3*x
+    p = [TWO, 3*x]
+    for _ in xrange(n- 1):
+        p.append(3*x * p[-1] -2 * p[-2])
+    return p[-1]
+
+def lucas_seq(n, p, q, zero=NULL, one=ONE):
+    '''
+    "The Lucas polynomial sequence is a pair of generalized polynomials which generalize the Lucas sequence to polynomials ..." [MathWorld]_
+
+    :param integer n: the *n-th* element of the sequence
+    :param p: The *p* parameter
+    :param q: The *q* parameter
+    :param zero: The first element of the sequence (at index 0)
+    :type zero: :class:`pypol.Polynomial`
+    :param one: The second element of the sequence (at index 1)
+    :type one: :class:`pypol.Polynomial`
+    :raises: :exc:`ValueError` if *n* is negative
+    :rtype: :class:`pypol.Polynomial`
+
+    Setting different values for *p* and *q* we obtain some polynomial sequences, for every *p* and *q* pair there are two polynomials sequences, |p17| and |p18|:
+
+    +--------+--------+-----------------------------------------------------------------------+---------------------------------------------------------------------+
+    | **p**  | **q**  |    **W(x)**                                                           |   **w(x)**                                                          |
+    +--------+--------+-----------------------------------------------------------------------+---------------------------------------------------------------------+
+    | x      | 1      |  Fibonacci polynomials (:func:`fibonacci`)                            | Lucas polynomials (:func:`lucas`)                                   |
+    +--------+--------+-----------------------------------------------------------------------+---------------------------------------------------------------------+
+    | 2x     | 1      |  Pell polynomials (:func:`pell`)                                      | Pell-Lucas polynomials (:func:`pell_lucas`)                         |
+    +--------+--------+-----------------------------------------------------------------------+---------------------------------------------------------------------+
+    | 1      | 2x     |  Jacobsthal polynomials (:func:`jacobsthal`)                          | Jacobsthal-Lucas polynomials (:func:`jacob_lucas`)                  |
+    +--------+--------+-----------------------------------------------------------------------+---------------------------------------------------------------------+
+    | 3x     | -2     |  Fermat polynomials (:func:`fermat`)                                  | Fermat-Lucas polynomials (:func:`fermat_lucas`)                     |
+    +--------+--------+-----------------------------------------------------------------------+---------------------------------------------------------------------+
+    | 2x     | -1     |  Chebyshev polynomials of the second kind |p19| (:func:`chebyshev_u`) | Chebyshev polynomials of the first kind |p20| (:func:`chebyshev_t`) |
+    +--------+--------+-----------------------------------------------------------------------+---------------------------------------------------------------------+
+
+
+    .. [MathWorld]: `Weisstein, Eric W. <http://mathworld.wolfram.com/about/author.html>`_ "Lucas Polynomial Sequence." From `MathWorld <http://mathworld.wolfram.com/>`_--A Wolfram Web Resource.
+    '''
+
+    if n < 0:
+        raise ValueError('Lucas sequence only defined for n >= 0')
+    o = [zero, one]
+    if n in (0, 1):
+        return o[n]
+    for _ in xrange(n - 1):
+        o.append(p * o[-1] + q * o[-2])
+    return o[-1]
 
 def gegenbauer(n, a='a'):
     '''
-    Returns the *nth* Gegenbauer polynomial in ``x``.
+    Returns the *n-th* Gegenbauer polynomial in ``x``.
 
     :raises: :exc:`ValueError` if *n* is negative
     :rtype: :class:`pypol.Polynomial`
@@ -799,7 +1116,7 @@ def laguerre(n):
 
 def laguerre_g(n, a='a'):
     '''
-    Returns the *nth* generalized Laguerre polynomial in ``x``.
+    Returns the *n-th* generalized Laguerre polynomial in ``x``.
 
     :raises: :exc:`ValueError` if *n* is negative
     :rtype: :class:`pypol.Polynomial`

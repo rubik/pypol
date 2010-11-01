@@ -16,6 +16,12 @@
 .. |p12| image:: images/x^k.gif
 .. |p13| image:: images/binomial.gif
 .. |p14| image:: images/(-1)^k.gif
+.. |p15| image:: images/touchard_eq.gif
+.. |p16| image:: images/b_n.gif
+.. |p17| image:: images/W.gif
+.. |p18| image:: images/w.gif
+.. |p19| image:: images/Un-1.gif
+.. |p20| image:: images/2Tn.gif
 
 
 The :mod:`funcs` module 
@@ -90,6 +96,7 @@ In this module there are these functions:
 .. hlist::
     :columns: 3
 
+    * :func:`lucas_seq`
     * :func:`fibonacci`
     * :func:`hermite_prob`
     * :func:`hermite_phys`
@@ -105,10 +112,60 @@ In this module there are these functions:
     * :func:`euler_num`
     * :func:`genocchi`
 
+Lucas polynomials sequences
++++++++++++++++++++++++++++
+
+.. autofunction:: lucas_seq
+
 fibonacci
-+++++++++
+^^^^^^^^^
 
 .. autofunction:: fibonacci
+
+lucas
+^^^^^
+
+.. autofunction:: lucas
+
+pell
+^^^^
+
+.. autofunction:: pell
+
+pell_lucas
+^^^^^^^^^^
+
+.. autofunction:: pell_lucas
+
+jacobsthal
+^^^^^^^^^^
+
+.. autofunction:: jacobsthal
+
+jacob_lucas
+^^^^^^^^^^^
+
+.. autofunction:: jacob_lucas
+
+fermat
+^^^^^^
+
+.. autofunction:: fermat
+
+fermat_lucas
+^^^^^^^^^^^^
+
+.. autofunction:: fermat_lucas
+
+chebyshev_t
+^^^^^^^^^^^
+
+.. autofunction:: chebyshev_t
+
+chebyshev_u
+^^^^^^^^^^^
+
+.. autofunction:: chebyshev_u
 
 hermite_prob
 ++++++++++++
@@ -119,16 +176,6 @@ hermite_phys
 ++++++++++++
 
 .. autofunction:: hermite_phys
-
-chebyshev_t
-+++++++++++
-
-.. autofunction:: chebyshev_t
-
-chebyshev_u
-+++++++++++
-
-.. autofunction:: chebyshev_u
 
 abel
 ++++

@@ -4,19 +4,31 @@ Release 0.4 (in development)
 Added:
     + moved gcd() and lcm() from :mod:`pypol.funcs` to :mod:`pypol` (core)
     + new module: :mod:`pypol.roots`
-    + :func:`pypol.funcs.gegenbauer`
-    + :func:`pypol.funcs.laguerre_g`
-    + :func:`pypol.funcs.polyint_`
-    + :func:`pypol.funcs.bin_coeff`
+    + moved :func:`pypol.funcs.newton` to :func:`pypol.roots.newton`
+    + moved :func:`pypol.funcs.newton` to :func:`pypol.roots.ruffini`
+    + moved :func:`pypol.funcs.newton` to :func:`pypol.roots.bisection`
     + :func:`pypol.roots.halley`
     + :func:`pypol.roots.householder`
     + :func:`pypol.roots.brent`
+    + :func:`pypol.funcs.polyint_`
+    + :func:`pypol.funcs.bin_coeff`
+    + :func:`pypol.funcs.harmonic`
+    + :func:`pypol.funcs.harmonic_g`
+    + :func:`pypol.funcs.stirling`
+    + :func:`pypol.funcs.stirling2`
+    + :func:`pypol.funcs.bell_num`
+    + :func:`pypol.funcs.gegenbauer`
+    + :func:`pypol.funcs.laguerre`
+    + :func:`pypol.funcs.laguerre_g`
+    + :func:`pypol.funcs.touchard`
+    + :func:`pypol.funcs.lucas`
+    + :func:`pypol.funcs.lucas_seq`
     + :meth:`pypol.Polynomial.get`
     + :meth:`pypol.Polynomial.filter`
     + Changed the name of :func:`pypol.funcs.fib_poly` now is :func:`pypol.funcs.fibonacci`
 
 Removed:
-    - Polynomial.zeros
+    - :meth:`Polynomial.zeros`
     - :func:`pypol.funcs.fib_poly_r`
     - :func:`pypol.funcs.hermite_prob_r`
     - :func:`pypol.funcs.hermite_phys_r`

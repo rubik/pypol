@@ -360,7 +360,7 @@ def newton(poly, start, epsilon=float('-inf')):
     .. versionadded:: 0.3
     '''
 
-    poly_d = polyder(poly)
+    poly_d = polyder(poly);print poly_d
 
     while True:
         p_s = poly(start)
@@ -509,10 +509,16 @@ def schroeder(poly, start, epsilon=float('-inf')):
         + 3x^3 - 4x^2 - x + 4
         >>> schroeder(k, 100)
         -0.859475828371609
+        >>> k(schroeder(k, 100))
+        0.0
         >>> schroeder(k, 100j)
         (1.0964045808524712-0.5909569632973221j)
+        >>> k(schroeder(k, 100))
+        -1.1102230246251565e-16j
         >>> schroeder(k, -100j)
         (1.0964045808524712+0.5909569632973221j)
+        >>> k(schroeder(k, 100))
+        1.1102230246251565e-16j
     '''
 
     p_d, p_d_ = polyder(poly), polyder(poly, 2)
@@ -528,11 +534,37 @@ def laguerre(poly, start, epsilon=float('-inf')):
     Finds one root of the polynomial *poly* using the Laguerre's method, with the iteration formula:
         |p13|
 
+    where:
+
+    |p30|
+
+    |p31|
+
     :param start: the start value to evaluate ``poly(x)``
     :param epsilon: the precision, default to ``float('-inf')``
     :type start: integer, float or complex
     :type epsilon: integer or float
     :rtype: complex
+
+    **Examples**
+
+    ::
+
+        >>> k = poly1d([32, -123, 43, 2])
+        >>> k
+        + 32x^3 - 123x^2 + 43x + 2
+        >>> laguerre(k, 100)
+        (3.448875873899064+0j)
+        >>> k(laguerre(k, 100))
+        (2.5579538487363607e-13+0j)
+        >>> laguerre(k, 1)
+        (0.43639990661090833+0j)
+        >>> k(laguerre(k, 1))
+        0j
+        >>> laguerre(k, -100)
+        (-0.041525780509971674+0j)
+        >>> k(laguerre(k, -100))
+        0j
     '''
 
     p_d, p_d_, n = polyder(poly), polyder(poly, 2), poly.degree

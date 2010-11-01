@@ -1454,8 +1454,8 @@ class Polynomial(object):
             Added the support for no arguments
         '''
 
-        if not self:
-            return 0
+        #if not self:
+        #    return 0
         if args:
             letters = dict(zip(self.letters[:len(args)], args))
         elif kwargs:

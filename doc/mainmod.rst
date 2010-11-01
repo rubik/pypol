@@ -42,13 +42,30 @@ Utility functions
 Series
 ++++++
 
+Lucas polynomial sequences
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 .. autosummary::
 
+    pypol.funcs.lucas_seq
     pypol.funcs.fibonacci
-    pypol.funcs.hermite_prob
-    pypol.funcs.hermite_phys
+    pypol.funcs.lucas
+    pypol.funcs.pell
+    pypol.funcs.pell_lucas
+    pypol.funcs.jacobsthal
+    pypol.funcs.jacob_lucas
+    pypol.funcs.fermat
+    pypol.funcs.fermat_lucas
     pypol.funcs.chebyshev_t
     pypol.funcs.chebyshev_u
+
+Other series
+^^^^^^^^^^^^
+
+.. autosummary::
+
+    pypol.funcs.hermite_prob
+    pypol.funcs.hermite_phys
     pypol.funcs.abel
     pypol.funcs.gegenbauer
     pypol.funcs.laguerre
