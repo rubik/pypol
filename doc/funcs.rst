@@ -29,6 +29,8 @@ The :mod:`funcs` module
 
 .. versionadded:: 0.3
 
+.. contents:: Table of contents
+
 This module add some utility function to pypol.
 
 .. note::
@@ -40,7 +42,7 @@ This module add some utility function to pypol.
 Basic functions
 ---------------
 
-The :mod:`funcs` offers these basic functions:
+The :mod:`pypol.funcs` module offers these basic functions:
 
 .. hlist::
     :columns: 2
@@ -53,38 +55,18 @@ The :mod:`funcs` offers these basic functions:
     * :func:`polyint_`
     * :func:`bin_coeff`
 
-divisible
-+++++++++
 
 .. autofunction:: divisible
 
-from_roots
-++++++++++
-
 .. autofunction:: from_roots
-
-random_poly
-+++++++++++
 
 .. autofunction:: random_poly
 
-polyder
-+++++++
-
 .. autofunction:: polyder
-
-polyint
-+++++++
 
 .. autofunction:: polyint
 
-polyint\_
-+++++++++
-
 .. autofunction:: polyint_
-
-bin_coeff
-+++++++++
 
 .. autofunction:: bin_coeff
 
@@ -117,108 +99,52 @@ Lucas polynomials sequences
 
 .. autofunction:: lucas_seq
 
-fibonacci
-^^^^^^^^^
-
 .. autofunction:: fibonacci
-
-lucas
-^^^^^
 
 .. autofunction:: lucas
 
-pell
-^^^^
-
 .. autofunction:: pell
-
-pell_lucas
-^^^^^^^^^^
 
 .. autofunction:: pell_lucas
 
-jacobsthal
-^^^^^^^^^^
-
 .. autofunction:: jacobsthal
-
-jacob_lucas
-^^^^^^^^^^^
 
 .. autofunction:: jacob_lucas
 
-fermat
-^^^^^^
-
 .. autofunction:: fermat
-
-fermat_lucas
-^^^^^^^^^^^^
 
 .. autofunction:: fermat_lucas
 
-chebyshev_t
-^^^^^^^^^^^
-
 .. autofunction:: chebyshev_t
-
-chebyshev_u
-^^^^^^^^^^^
 
 .. autofunction:: chebyshev_u
 
-hermite_prob
+Bernoulli and Euler sequences
++++++++++++++++++++++++++++++
+
+.. autofunction:: bernoulli
+
+.. autofunction:: bern_num
+
+.. autofunction:: euler
+
+.. autofunction:: euler_num
+
+.. autofunction:: genocchi
+
+Other series
 ++++++++++++
 
 .. autofunction:: hermite_prob
 
-hermite_phys
-++++++++++++
-
 .. autofunction:: hermite_phys
-
-abel
-++++
-
-.. autofunction:: abel
-
-gegenbauer
-++++++++++
-
-.. autofunction:: gegenbauer
-
-laguerre
-++++++++
 
 .. autofunction:: laguerre
 
-
-laguerre_g
-++++++++++
-
 .. autofunction:: laguerre_g
 
-bernoulli
-+++++++++
+.. autofunction:: abel
 
-.. autofunction:: bernoulli
+.. autofunction:: gegenbauer
 
-bern_num
-++++++++
-
-.. autofunction:: bern_num
-
-euler
-+++++
-
-.. autofunction:: euler
-
-euler_num
-+++++++++
-
-.. autofunction:: euler_num
-
-genocchi
-++++++++
-
-.. autofunction:: genocchi
+.. autofunction:: touchard
