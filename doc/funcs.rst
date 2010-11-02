@@ -3,26 +3,7 @@
 .. moduleauthor:: Michele Lacchia <michelelacchia@gmail.com>
 .. sectionauthor:: Michele Lacchia <michelelacchia@gmail.com>
 
-.. |p3| image:: images/x2.gif
-.. |p4| image:: images/poly1.gif
-.. |p5| image:: images/indefinite_int.gif
-    :alt: Indefinite integral
-.. |p6| image:: images/-x.gif
-.. |p7| image:: images/poly2.gif
-.. |p8| image:: images/definite_int.gif
-    :alt: Definite integral
-.. |p11| image:: images/bin_coeff.gif
-    :alt: Binomial coefficient
-.. |p12| image:: images/x^k.gif
-.. |p13| image:: images/binomial.gif
-.. |p14| image:: images/(-1)^k.gif
-.. |p15| image:: images/touchard_eq.gif
-.. |p16| image:: images/b_n.gif
-.. |p17| image:: images/W.gif
-.. |p18| image:: images/w.gif
-.. |p19| image:: images/Un-1.gif
-.. |p20| image:: images/2Tn.gif
-
+.. include:: global.rst
 
 The :mod:`funcs` module 
 ========================
@@ -97,7 +78,7 @@ In this module there are these functions:
 Lucas polynomials sequences
 +++++++++++++++++++++++++++
 
-.. autofunction:: lucas_seq
+.. autofunction:: lucas_seq(n, p, q, zero=Polynomial(), one=monomial(1))
 
 .. autofunction:: fibonacci
 

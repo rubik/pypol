@@ -1,6 +1,8 @@
 The :mod:`pypol` package
 =========================
 
+.. include:: global.rst
+
 Functions
 ---------
 
@@ -28,6 +30,10 @@ The :mod:`funcs` module
 
 Utility functions
 +++++++++++++++++
+
+.. autosummary::
+
+    pypol.funcs
 
 .. autosummary::
 
@@ -78,6 +84,10 @@ Other series
 
 The :mod:`roots` module
 ------------------------
+
+.. autosummary::
+
+    pypol.roots
 
 .. autosummary::
 

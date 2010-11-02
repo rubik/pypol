@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 '''
-This file is part of the pypol project.
+This module implements some root-finding algorithms, like the Newton's methods, or the Durand-Kerner method
 (C) Copyright 2010 Michele Lacchia
 '''
 
@@ -16,7 +16,7 @@ from funcs import polyder
 
 def ruffini(poly):
     '''
-    Returns the zeros of the polynomial basing on the right-hand side. If the polynomial has not the right-hand side, returns an empty list.
+    Returns the real integer roots (if there are any) of the polynomial basing on the right-hand side. If the polynomial has not the right-hand side, returns an empty list.
 
     **Examples**
 
@@ -141,7 +141,7 @@ def quadratic(poly):
 
 def cubic(poly):
     '''
-    Finds the three roots of the polynomial *poly* solving the equation: |p12|.
+    Finds the three roots of the polynomial *poly* solving the equation: |p22|.
 
     :raises: :exc:`AssertionError` if the polynomial's degree is not 3.
     :rtype: 3 numbers (integer, float or complex) in a tuple
@@ -492,7 +492,7 @@ def householder(poly, start, epsilon=float('-inf')):
 def schroeder(poly, start, epsilon=float('-inf')):
     '''
     Finds one root of the polynomial *poly* using the Schröder's method, with the iteration formula:
-        |p11|
+        |p21|
 
     :param start: the start value to evaluate ``poly(x)``
     :param epsilon: the precision, default to ``float('-inf')``
@@ -532,7 +532,7 @@ def schroeder(poly, start, epsilon=float('-inf')):
 def laguerre(poly, start, epsilon=float('-inf')):
     '''
     Finds one root of the polynomial *poly* using the Laguerre's method, with the iteration formula:
-        |p13|
+        |p23|
 
     where:
 

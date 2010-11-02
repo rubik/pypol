@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 '''
-This file is part of the pypol project.
+This module offer some utility functions like polyder, polyint or some generator functions
 (C) Copyright 2010 Michele Lacchia
 '''
 
@@ -577,7 +577,7 @@ def fibonacci(n):
         8309
 
     .. note::
-        The Fibonacci polynomials sequence is a Lucas sequence (:func:`lucas_seq`) with ``p = x`` and ``q = 1``::
+        The Fibonacci polynomials are the *W*-polynomials in the Lucas sequence (:func:`lucas_seq`) obtained setting ``p = x`` and ``q = 1``::
 
             >>> from pypol import x, ONE
             >>> from pypol.funcs import lucas_seq
@@ -637,7 +637,7 @@ def lucas(n):
         + x^14 + 14x^12 + 77x^10 + 210x^8 + 294x^6 + 196x^4 + 49x^2 + 2
 
     .. note::
-        The Lucas polynomials are obtained setting ``p = x`` and ``q = 1`` in the Lucas polynomial sequence (see :func:`lucas_seq`).
+        The Lucas polynomials are the *w*-polynomials obtained setting ``p = x`` and ``q = 1`` in the Lucas polynomial sequence (see :func:`lucas_seq`).
         You can generate them with this small piece of code::
 
             >>> from pypol import x, ONE, TWO
@@ -700,7 +700,7 @@ def pell(n):
 
     .. note::
 
-        The Pell polynomials are obtained setting ``p = 2x`` and ``q = 1`` in the Lucas sequence (see :func:`lucas_seq`).
+        The Pell polynomials are the *W*-polynomials obtained setting ``p = 2x`` and ``q = 1`` in the Lucas sequence (see :func:`lucas_seq`).
         We can easily generate them::
 
             >>> from pypol import x, ONE
@@ -764,7 +764,7 @@ def pell_lucas(n):
 
     .. note::
 
-        The Pell polynomials are obtained setting ``p = 2x`` and ``q = 1`` in the Lucas sequence (see :func:`lucas_seq`).
+        The Pell polynomials are the *w*-polynomials obtained setting ``p = 2x`` and ``q = 1`` in the Lucas sequence (see :func:`lucas_seq`).
         We can easily generate them::
 
             >>> from pypol import x, ONE, TWO
@@ -829,7 +829,7 @@ def jacobsthal(n):
         + 1024x^7 + 5376x^6 + 8064x^5 + 5280x^4 + 1760x^3 + 312x^2 + 28x + 1
 
     .. note::
-        The Jacobsthal polynomials are a Lucas sequence (see :func:`lucas_seq`), obtained setting ``p = 1`` and ``q = 2x``::
+        The Jacobsthal polynomials are the *W*-polynomials in the Lucas sequence (see :func:`lucas_seq`), obtained setting ``p = 1`` and ``q = 2x``::
 
             >>> from pypol import x, ONE
             >>> from pypol.funcs import lucas_seq
@@ -873,6 +873,64 @@ def jacobsthal(n):
     return p[-1]
 
 def jacob_lucas(n):
+    '''
+    Returns the *n-th* Jacobsthal-Lucas polynomial.
+
+    :raises: :exc:`ValueError` if n is negative
+    :rtype: :class:`pypol.Polynomial`
+
+    **Examples**
+
+    ::
+
+        >>> jacob_lucas(0)
+        + 2
+        >>> jacob_lucas(1)
+        + 1
+        >>> jacob_lucas(2)
+        + 4x + 1
+        >>> jacob_lucas(3)
+        + 6x + 1
+        >>> jacob_lucas(4)
+        + 8x^2 + 8x + 1
+        >>> jacob_lucas(5)
+        + 20x^2 + 10x + 1
+        >>> jacob_lucas(6)
+        + 16x^3 + 36x^2 + 12x + 1
+        >>> jacob_lucas(9)
+        + 144x^4 + 240x^3 + 108x^2 + 18x + 1
+        >>> jacob_lucas(10)
+        + 64x^5 + 400x^4 + 400x^3 + 140x^2 + 20x + 1
+
+    .. note::
+        The Jacobsthal-Lucas polynomials are the *w*-polynomials in the Lucas sequence (see :func:`lucas_seq`), obtained setting ``p = 1`` and ``q = 2x``::
+
+            >>> from pypol import x, ONE, TWO
+            >>> from pypol.funcs import lucas_seq
+            >>> 
+            >>> def jacob_lucas_poly(n):
+                return lucas_seq(n, ONE, 2*x, TWO, ONE)
+            
+            >>> jacob_lucas_poly(0)
+            + 2
+            >>> jacob_lucas_poly(1)
+            + 1
+            >>> jacob_lucas_poly(2)
+            + 4x + 1
+            >>> jacob_lucas_poly(3)
+            + 6x + 1
+            >>> jacob_lucas_poly(4)
+            + 8x^2 + 8x + 1
+            >>> jacob_lucas_poly(5)
+            + 20x^2 + 10x + 1
+            >>> jacob_lucas_poly(15)
+            + 1920x^7 + 8960x^6 + 12096x^5 + 7200x^4 + 2200x^3 + 360x^2 + 30x + 1
+
+    **References**
+
+    `MathWorld <http://mathworld.wolfram.com/Jacobsthal-LucasPolynomial.html>`_
+    '''
+
     if n < 0:
         raise ValueError('Jacobsthal-Lucas polynomials only defined for n >= 0')
     if n == 0:
@@ -885,6 +943,64 @@ def jacob_lucas(n):
     return p[-1]
 
 def fermat(n):
+    '''
+    Returns the *n-th* Fermat polynomial.
+
+    :raises: :exc:`ValueError` if n is negative
+    :rtype: :class:`pypol.Polynomial`
+
+    **Examples**
+
+    ::
+
+        >>> fermat(0)
+        
+        >>> fermat(1)
+        + 1
+        >>> fermat(2)
+        + 3x
+        >>> fermat(3)
+        + 9x^2 - 2
+        >>> fermat(5)
+        + 81x^4 - 54x^2 + 4
+        >>> fermat(6)
+        + 243x^5 - 216x^3 + 36x
+        >>> fermat(7)
+        + 729x^6 - 810x^4 + 216x^2 - 8
+        >>> fermat(9)
+        + 6561x^8 - 10206x^6 + 4860x^4 - 720x^2 + 16
+        >>> fermat(11)
+        + 59049x^10 - 118098x^8 + 81648x^6 - 22680x^4 + 2160x^2 - 32
+
+    .. note::
+        The Fermat polynomials are the *W*-polynomials in the Lucas sequence (see :func:`lucas_seq`), obtained setting ``p = 3x`` and ``q = -2``::
+
+            >>> from pypol import x, TWO
+            >>> from pypol.funcs import lucas_seq
+            >>> 
+            >>> def fermat_poly(n):
+                return lucas_seq(n, 3*x, -TWO)
+            
+            >>> fermat_poly(0)
+            
+            >>> fermat_poly(1)
+            + 1
+            >>> fermat_poly(2)
+            + 3x
+            >>> fermat_poly(3)
+            + 9x^2 - 2
+            >>> fermat_poly(4)
+            + 27x^3 - 12x
+            >>> fermat_poly(5)
+            + 81x^4 - 54x^2 + 4
+            >>> fermat_poly(7)
+            + 729x^6 - 810x^4 + 216x^2 - 8
+
+    **References**
+
+    `MathWorld <http://mathworld.wolfram.com/FermatPolynomial.html>`_
+    '''
+
     if n < 0:
         raise ValueError('Fermat polynomials only defined for n >= 0')
     if n == 0:
@@ -897,6 +1013,58 @@ def fermat(n):
     return p[-1]
 
 def fermat_lucas(n):
+    '''
+    Returns the *n-th* Fermat-Lucas polynomial.
+
+    :raises: :exc:`ValueError` if n is negative
+    :rtype: :class:`pypol.Polynomial`
+
+    **Examples**
+
+    ::
+
+        >>> fermat_lucas(0)
+        + 2
+        >>> fermat_lucas(1)
+        + 3x
+        >>> fermat_lucas(2)
+        + 9x^2 - 4
+        >>> fermat_lucas(3)
+        + 27x^3 - 18x
+        >>> fermat_lucas(4)
+        + 81x^4 - 72x^2 + 8
+        >>> fermat_lucas(5)
+        + 243x^5 - 270x^3 + 60x
+        >>> fermat_lucas(9)
+        + 19683x^9 - 39366x^7 + 26244x^5 - 6480x^3 + 432x
+
+    .. note::
+        The Fermat-Lucas polynomials are the *w*-polynomials in the Lucas sequence (see :func:`lucas_seq`), obtained setting ``p = 3x`` and ``q = -2``::
+
+            >>> fermat_lucas_poly(0)
+            + 2
+            >>> fermat_lucas_poly(1)
+            + 3x
+            >>> fermat_lucas_poly(2)
+            + 9x^2 - 4
+            >>> fermat_lucas_poly(3)
+            + 27x^3 - 18x
+            >>> fermat_lucas_poly(4)
+            + 81x^4 - 72x^2 + 8
+            >>> fermat_lucas_poly(5)
+            + 243x^5 - 270x^3 + 60x
+            >>> fermat_lucas_poly(6)
+            + 729x^6 - 972x^4 + 324x^2 - 16
+            >>> fermat_lucas_poly(7)
+            + 2187x^7 - 3402x^5 + 1512x^3 - 168x
+            >>> fermat_lucas_poly(8)
+            + 6561x^8 - 11664x^6 + 6480x^4 - 1152x^2 + 32
+
+    **References**
+
+    `MathWorld <http://mathworld.wolfram.com/Fermat-LucasPolynomial.html>`_
+    '''
+
     if n < 0:
         raise ValueError('Fermat-Lucas polynomials only defined for n >= 0')
     if n == 0:

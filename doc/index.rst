@@ -14,6 +14,8 @@ Welcome to pypol v0.3 documentation!
 
 pypol is a Python library that allows you to manipulate polynomials. This is the main page of the documentation.
 
+.. contents:: Table of contents
+
 Installation
 ------------
 
