@@ -1,7 +1,11 @@
+.. module:: pypol
+
 The :mod:`pypol` package
 =========================
 
 .. include:: global.rst
+
+.. contents:: Table of contents
 
 Functions
 ---------
@@ -25,15 +29,11 @@ Classes
     pypol.Polynomial
     pypol.AlgebraicFraction
 
-The :mod:`funcs` module
-------------------------
+The :mod:`~pypol.funcs` module
+--------------------------------
 
 Utility functions
 +++++++++++++++++
-
-.. autosummary::
-
-    pypol.funcs
 
 .. autosummary::
 
@@ -43,62 +43,87 @@ Utility functions
     pypol.funcs.polyder
     pypol.funcs.polyint
     pypol.funcs.polyint_
+
+Numbers
++++++++
+
+.. autosummary::
+
     pypol.funcs.bin_coeff
 
-Series
-++++++
+The :mod:`~pypol.roots` module
+--------------------------------
 
-Lucas polynomial sequences
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. autosummary::
-
-    pypol.funcs.lucas_seq
-    pypol.funcs.fibonacci
-    pypol.funcs.lucas
-    pypol.funcs.pell
-    pypol.funcs.pell_lucas
-    pypol.funcs.jacobsthal
-    pypol.funcs.jacob_lucas
-    pypol.funcs.fermat
-    pypol.funcs.fermat_lucas
-    pypol.funcs.chebyshev_t
-    pypol.funcs.chebyshev_u
-
-Other series
-^^^^^^^^^^^^
-
-.. autosummary::
-
-    pypol.funcs.hermite_prob
-    pypol.funcs.hermite_phys
-    pypol.funcs.abel
-    pypol.funcs.gegenbauer
-    pypol.funcs.laguerre
-    pypol.funcs.laguerre_g
-    pypol.funcs.bernoulli
-    pypol.funcs.bern_num
-    pypol.funcs.euler
-    pypol.funcs.euler_num
-    pypol.funcs.genocchi
-
-The :mod:`roots` module
-------------------------
-
-.. autosummary::
-
-    pypol.roots
+Simple algorithms
++++++++++++++++++
 
 .. autosummary::
 
     pypol.roots.ruffini
     pypol.roots.quadratic
     pypol.roots.cubic
+
+Newton's method and derived
++++++++++++++++++++++++++++
+
+.. autosummary::
+
     pypol.roots.newton
     pypol.roots.halley
     pypol.roots.householder
     pypol.roots.schroeder
     pypol.roots.laguerre
+
+Other methods
++++++++++++++
+
+.. autosummary::
+
     pypol.roots.durand_kerner
     pypol.roots.brent
     pypol.roots.bisection
+
+The :mod:`~pypol.series` module
+---------------------------------
+
+This module implements some of the most common polynomial sequences.
+
+Lucas polynomial sequences
+++++++++++++++++++++++++++
+
+.. autosummary::
+
+    pypol.series.lucas_seq
+    pypol.series.fibonacci
+    pypol.series.lucas
+    pypol.series.pell
+    pypol.series.pell_lucas
+    pypol.series.jacobsthal
+    pypol.series.jacob_lucas
+    pypol.series.fermat
+    pypol.series.fermat_lucas
+    pypol.series.chebyshev_t
+    pypol.series.chebyshev_u
+
+Bernoulli and Euler sequences
++++++++++++++++++++++++++++++
+
+.. autosummary::
+
+    pypol.series.bernoulli
+    pypol.series.bern_num
+    pypol.series.euler
+    pypol.series.euler_num
+    pypol.series.genocchi
+
+Other series
+++++++++++++
+
+.. autosummary::
+
+    pypol.series.hermite_prob
+    pypol.series.hermite_phys
+    pypol.series.abel
+    pypol.series.gegenbauer
+    pypol.series.laguerre
+    pypol.series.laguerre_g

@@ -3,8 +3,6 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-.. module:: pypol
-
 Welcome to pypol v0.3 documentation!
 ====================================
 
@@ -15,6 +13,15 @@ Welcome to pypol v0.3 documentation!
 pypol is a Python library that allows you to manipulate polynomials. This is the main page of the documentation.
 
 .. contents:: Table of contents
+
+Indeces and tables
+------------------
+
+Main index: :ref:`genindex`
+
+Modules index: :ref:`modindex`
+
+Search: :ref:`search`
 
 Installation
 ------------
@@ -104,5 +111,6 @@ Contents
    operations.rst
    funcs.rst
    roots.rst
+   series.rst
    contacts.rst
    changelog.rst

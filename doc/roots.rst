@@ -1,5 +1,6 @@
 .. module:: pypol.roots
-    :synopsis: A collection of some root- finding algorithm
+    :synopsis: A collection of some root-finding algorithms
+    
 .. moduleauthor:: Michele Lacchia (michelelacchia@gmail.com)
 .. sectionauthor:: Michele Lacchia (michelelacchia@gmail.com)
 
