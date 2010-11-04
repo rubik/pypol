@@ -771,25 +771,6 @@ def abel(n, variable='a'):
     p = poly1d([n])
     return x * (x - p*variable) ** (n - 1)
 
-def spread(n): ## Should work but it doesn't
-    '''
-    Returns the *n-th* Spread polynomial in ``x``.
-    
-    :raises: :exc:`ValueError` if *n* is negative
-    :rtype: :class:`pypol.Polynomial`
-    '''
-
-    if n < 0:
-        raise ValueError('Spread polynomials only defined for n >= 0')
-    if n == 0:
-        return NULL
-    if n == 1:
-        return x
-    p = [NULL, x]
-    for _ in xrange(n - 2):
-        p.append(2*x - p[-2] + (2 - 4*x) * p[-1])
-    return p[-1]
-
 def touchard(n):
     '''
     Returns the *n-th* Touchard polynomial in ``x``.
@@ -1207,3 +1188,22 @@ def bernstein(v, n): ## Still in development
     if v == n:
         return x ** v
     return bin_coeff(n, v) * (x**v) * (1 - x) ** (n - v)
+
+def spread(n): ## Should work but it doesn't
+    '''
+    Returns the *n-th* Spread polynomial in ``x``.
+    
+    :raises: :exc:`ValueError` if *n* is negative
+    :rtype: :class:`pypol.Polynomial`
+    '''
+
+    if n < 0:
+        raise ValueError('Spread polynomials only defined for n >= 0')
+    if n == 0:
+        return NULL
+    if n == 1:
+        return x
+    p = [NULL, x]
+    for _ in xrange(n - 2):
+        p.append(2*x - p[-2] + (2 - 4*x) * p[-1])
+    return p[-1]

@@ -1,6 +1,8 @@
 Tutorial
 ========
 
+.. contents:: Table of contents
+
 This is the pypol tutorial. If you haven't installed it yet, see below.
 
 First steps with pypol
@@ -100,7 +102,7 @@ Now run the setup.py script::
 Running the tests
 +++++++++++++++++
 
-If you want to run pypol's tests you only have to run *test_pypol.py*, that is in the *tests* directory::
+If you want to run pypol's tests you only have to run :file:`test_pypol.py`, that is in the :file:`tests` directory::
 
     $ cd pypol_-0.3/tests
     $ python test_pypol.py
@@ -182,10 +184,10 @@ To build the documentation, change directory and go to pypol/doc::
     $ cd pypol_-0.3/doc
 
 * On **Windows**
-    Run make.bat *<target>*
+    Run :command:`make.bat <target>`
 
 * On **Unix**/**Mac OS X**
-    Run make *<target>*
+    Run :command:`make <target>`
 
 Where *<target>* is one of: 
 

@@ -34,6 +34,7 @@ The :mod:`pypol.funcs` module offers these basic functions:
     * :func:`polyder`
     * :func:`polyint`
     * :func:`polyint_`
+    * :func:`interpolate`
 
 .. autofunction:: divisible
 
@@ -47,7 +48,11 @@ The :mod:`pypol.funcs` module offers these basic functions:
 
 .. autofunction:: polyint_
 
+.. autofunction:: interpolate
+
 Numbers
 -------
 
 .. autofunction:: bin_coeff
+
+.. autofunction:: harmonic

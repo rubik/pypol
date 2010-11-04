@@ -459,9 +459,85 @@ def bin_coeff(n, k):
     return float(math.factorial(n) / (math.factorial(k) * math.factorial(n - k)))
 
 def harmonic(n):
+    '''
+    Returns the *n-th* Harmonic number
+
+    :raises: :exc:`ValueError` if *n* is negative or equal to 0
+    :rtype: :class:`fractions.Fraction`
+
+    **Examples**
+
+    ::
+
+        >>> harmonic(0)
+        Traceback (most recent call last):
+          File "<pyshell#1>", line 1, in <module>
+            harmonic(0)
+          File "funcs.py", line 469, in harmonic
+            raise ValueError('Hamonic numbers only defined for n > 0')
+        ValueError: Hamonic numbers only defined for n > 0
+        >>> harmonic(1)
+        Fraction(1, 1)
+        >>> harmonic(2)
+        Fraction(3, 2)
+        >>> harmonic(3)
+        Fraction(11, 6)
+        >>> harmonic(4)
+        Fraction(25, 12)
+        >>> harmonic(5)
+        Fraction(137, 60)
+        >>> harmonic(6)
+        Fraction(49, 20)
+        >>> harmonic(26)
+        Fraction(34395742267, 8923714800)
+
+    **References**
+
+    `MathWorld <http://mathworld.wolfram.com/HarmonicNumber.html>`_
+    '''
+
+    if n <= 0:
+        raise ValueError('Hamonic numbers only defined for n > 0')
     return sum(fractions.Fraction(1, k) for k in xrange(1, n + 1))
 
 def harmonic_g(n, m):
+    '''
+    Returns the *n-th* Harmonic number
+
+    :raises: :exc:`ValueError` if *n* is negative or equal to 0
+    :rtype: :class:`fractions.Fraction`
+
+    **Examples**
+
+    ::
+
+        >>> harmonic(0)
+        Traceback (most recent call last):
+          File "<pyshell#1>", line 1, in <module>
+            harmonic(0)
+          File "funcs.py", line 469, in harmonic
+            raise ValueError('Hamonic numbers only defined for n > 0')
+        ValueError: Hamonic numbers only defined for n > 0
+        >>> harmonic(1)
+        Fraction(1, 1)
+        >>> harmonic(2)
+        Fraction(3, 2)
+        >>> harmonic(3)
+        Fraction(11, 6)
+        >>> harmonic(4)
+        Fraction(25, 12)
+        >>> harmonic(5)
+        Fraction(137, 60)
+        >>> harmonic(6)
+        Fraction(49, 20)
+        >>> harmonic(26)
+        Fraction(34395742267, 8923714800)
+
+    **References**
+
+    `MathWorld <http://mathworld.wolfram.com/HarmonicNumber.html>`_
+    '''
+
     return sum(fractions.Fraction(1, k ** m) for k in xrange(1, n + 1))
 
 def stirling(n, k):
@@ -512,23 +588,87 @@ def interpolate(x_values, y_values): ## Still in development
 
     ::
 
-        
-    '''
+        >>> interpolate([1, 2, 3], [1, 4, 9])
+        + x^2
+        >>> p = interpolate([1, 2, 3], [1, 4, 9])
+        >>> p(1)
+        1
+        >>> p(2)
+        4
+        >>> p(3)
+        9
+        >>> p = interpolate([1, 2, 3], [1, 8, 27])
+        >>> p
+        + 6x^2 - 11x + 6
+        >>> p(1)
+        1
+        >>> p(2)
+        8
+        >>> p(3)
+        27
 
-    def _basis(j):
-        p = [(x - x_values[m])/(x_values[j] - x_values[m]) for m in xrange(k + 1) if m != j]
-        return reduce(operator.mul, p)
+    but if we try with 4::
+
+        >>> p(4)
+        58
+
+    With one more value, the result is perfect::
+
+        >>> p = interpolate([1, 2, 3, 4], [1, 8, 27, 64])
+        >>> p
+        + x^3
+        >>> p(1)
+        1
+        >>> p(2)
+        8
+        >>> p(3)
+        27
+        >>> p(4)
+        64
+
+    Now we try the cosine function::
+
+        >>> import math
+        >>>
+        >>> x_v = [1, -32.2, 0.2, -12.2, 0.4]
+        >>> y_v = map(math.cos, x_v)
+        >>> y_v
+        [0.5403023058681398, 0.7080428643420057, 0.9800665778412416, 0.9336336440746373, 0.9210609940028851]
+        >>> p = interpolate(x_v, y_v)
+        >>> p ## A very long poly!
+        - 2417067429553017973005099476715844103379446789540038909310678504698270901105495/2707409624012905618588119802194467013735315173565700662238302437019821480374960128x^4 - 1942267679000251038989987154422384683928962465119931442239925165453801873763059175207737627343679/48772355895375265692471784351434957835024042172475236371981878692129204441317416127174693934333952x^3 - 12133766064251675639470092058084556745619727603471504062793227297260084623414714553791778090859658672043937021451/33792486744060501594993042946329990651637576923390278726204278046693250936252763136559703626455271403773983981568x^2 - 8449198638314223862904690273041499535188022044569033231622065815369263940698277030042252113946248523072534698219424954503422045/123652612450634556751613947964695531352620963102614623319086521485616582380529318624956122225181581909568555469636340836051451904x + 27464264348045643407214010143652897475518958796010450956562975494384484993333061039123466505868232298596969866565225313125932431546586323/27235073155919889010032712909016054859325624636397564063940286275647413113828884649402576122673520100673957703182051533535911984666509312
+        >>> p = p.to_float() ## Convert the coefficients into floats
+        >>> p ## A normal poly!
+        - 0.000892760152773x^4 - 0.0398231260997x^3 - 0.359066977111x^2 - 0.068330126399x + 1.00841529563
+        >>> p(1)
+        0.5403023058675271
+
+    Let's find the errors::
+
+        >>> map(lambda i: abs(i[0] - i[1]), zip(y_v, map(p, x_v)))
+        [6.126210649881614e-13, 5.11210518361338e-10, 5.235811784132238e-13, 2.090960737888281e-11, 5.367928324062632e-13]
+
+    and the error is minimized too::
+
+        >>> sum(((p(x_v[i]) - y_v[i]) ** 2) for i in xrange(len(x_v)))
+        2.617743433523715e-19
+    '''
 
     assert len(x_values) != 0 and (len(x_values) == len(y_values)), 'x and y cannot be empty and must have the same length'
 
-    k = len(x_values) - 1
-    r = [_basis(j) for j in xrange(k)]
-    c = copy.deepcopy(r)
-    for i, v in enumerate(c):
-        if isinstance(v, AlgebraicFraction):
-            q = divmod(*v.terms)
-            if len(q) > 1:
-                r[i] = q[0] + q[1]
-            else:
-                r[i] = q
-    return sum(r)
+    #k = len(x_values) - 1
+    #r = [_basis(j) for j in xrange(k)]
+    #c = copy.deepcopy(r)
+    #for i, v in enumerate(c):
+    #    if isinstance(v, AlgebraicFraction):
+    #        q = divmod(*v.terms)
+    #        if len(q) > 1:
+    #            r[i] = q[0] + q[1]
+    #        else:
+    #            r[i] = q
+    #return sum(r)
+
+    x = monomial(x=1)
+    f_x = reduce(operator.mul, ((x - x_i) for x_i in x_values))
+    f__x = polyder(f_x)
+    return sum(f_x / ((x - x_i) * f__x(x_i)) * y_values[i] for i, x_i in enumerate(x_values))

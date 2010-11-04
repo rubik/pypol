@@ -43,6 +43,7 @@ Utility functions
     pypol.funcs.polyder
     pypol.funcs.polyint
     pypol.funcs.polyint_
+    pypol.funcs.interpolate
 
 Numbers
 +++++++
@@ -50,6 +51,7 @@ Numbers
 .. autosummary::
 
     pypol.funcs.bin_coeff
+    pypol.funcs.harmonic
 
 The :mod:`~pypol.roots` module
 --------------------------------
