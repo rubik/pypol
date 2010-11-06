@@ -1,7 +1,7 @@
 import fractions
 
-from pypol import poly1d, monomial, NULL, ONE, TWO, x
-from pypol.funcs import bin_coeff, stirling_2, harmonic, harmonic_g
+from pypol import poly1d, polynomial, monomial, NULL, ONE, TWO, x
+from pypol.funcs import polyder, bin_coeff, stirling_2, harmonic, harmonic_g
 
 
 def lucas_seq(n, p, q, zero=NULL, one=ONE):
@@ -90,7 +90,7 @@ def fibonacci(n):
     The Fibonacci polynomials are the *W*-polynomials in the Lucas sequence (:func:`lucas_seq`) obtained setting ``p = x`` and ``q = 1``::
 
         >>> from pypol import x, ONE
-        >>> from pypol.funcs import lucas_seq
+        >>> from pypol.series import lucas_seq
         >>> 
         >>> def fibonacci_poly(n):
             return lucas_seq(n, x, ONE)
@@ -113,13 +113,13 @@ def fibonacci(n):
 
     if n <= 0:
         raise ValueError('Fibonacci polynomials only defined for n > 0')
-    elif n == 1:
+    if n == 1:
         return ONE
-    elif n == 2:
-        return monomial(x=1)
-    p = [ONE, monomial(x=1)]
-    for x in xrange(n - 2):
-        p.append(polynomial('x') * p[-1] + p[-2])
+    if n == 2:
+        return x
+    p = [ONE, x]
+    for _ in xrange(n - 2):
+        p.append(x * p[-1] + p[-2])
     return p[-1]
 
 def lucas(n):
@@ -150,7 +150,7 @@ def lucas(n):
     You can generate them with this small piece of code::
 
         >>> from pypol import x, ONE, TWO
-        >>> from pypol.funcs import lucas_seq
+        >>> from pypol.series import lucas_seq
         >>> 
         >>> def lucas_poly(n):
             return lucas_seq(n, x, ONE, TWO, x)
@@ -213,7 +213,7 @@ def pell(n):
     We can easily generate them::
 
         >>> from pypol import x, ONE
-        >>> from pypol.funcs import lucas_seq
+        >>> from pypol.series import lucas_seq
         >>> 
         >>> def pell_poly(n):
             return lucas_seq(n, 2*x, ONE)
@@ -277,7 +277,7 @@ def pell_lucas(n):
     We can easily generate them::
 
         >>> from pypol import x, ONE, TWO
-        >>> from pypol.funcs import lucas_seq
+        >>> from pypol.series import lucas_seq
         >>> 
         >>> def pell_lucas_poly(n):
             return lucas_seq(n, 2*x, ONE, TWO, 2*x)
@@ -342,7 +342,7 @@ def jacobsthal(n):
     The Jacobsthal polynomials are the *W*-polynomials in the Lucas sequence (see :func:`lucas_seq`), obtained setting ``p = 1`` and ``q = 2x``::
 
         >>> from pypol import x, ONE
-        >>> from pypol.funcs import lucas_seq
+        >>> from pypol.series import lucas_seq
         >>> 
         >>> def jacobsthal_poly(n):
             return lucas_seq(n, ONE, 2*x)
@@ -417,7 +417,7 @@ def jacob_lucas(n):
     The Jacobsthal-Lucas polynomials are the *w*-polynomials in the Lucas sequence (see :func:`lucas_seq`), obtained setting ``p = 1`` and ``q = 2x``::
 
         >>> from pypol import x, ONE, TWO
-        >>> from pypol.funcs import lucas_seq
+        >>> from pypol.series import lucas_seq
         >>> 
         >>> def jacob_lucas_poly(n):
             return lucas_seq(n, ONE, 2*x, TWO, ONE)
@@ -488,7 +488,7 @@ def fermat(n):
     The Fermat polynomials are the *W*-polynomials in the Lucas sequence (see :func:`lucas_seq`), obtained setting ``p = 3x`` and ``q = -2``::
 
         >>> from pypol import x, TWO
-        >>> from pypol.funcs import lucas_seq
+        >>> from pypol.series import lucas_seq
         >>> 
         >>> def fermat_poly(n):
             return lucas_seq(n, 3*x, -TWO)
@@ -553,6 +553,12 @@ def fermat_lucas(n):
         + 19683x^9 - 39366x^7 + 26244x^5 - 6480x^3 + 432x
 
     The Fermat-Lucas polynomials are the *w*-polynomials in the Lucas sequence (see :func:`lucas_seq`), obtained setting ``p = 3x`` and ``q = -2``::
+        
+        >>> from pypol import x, TWO
+        >>> from pypol.series import lucas_seq
+        >>> 
+        >>> def fermat_lucas_poly(n):
+            return lucas_seq(n, 3*x, -TWO, TWO, 3*x)
 
         >>> fermat_lucas_poly(0)
         + 2
@@ -818,6 +824,15 @@ def touchard(n):
         return NULL
     if n == 0:
         return ONE    
+    return sum(stirling_2(n, k) * x ** k for k in xrange(n + 1))
+
+def bell(n):
+    if n < 0:
+        raise ValueError('Bell polynomials only defined for n >= 0')
+    if n == 0:
+        return ONE
+    if n == 1:
+        return x
     return sum(stirling_2(n, k) * x ** k for k in xrange(n + 1))
 
 def gegenbauer(n, a='a'):
@@ -1114,11 +1129,24 @@ def euler_num(m):
 
     ::
 
-        
+        >>> euler_num(0)
+        + 1
+        >>> euler_num(2)
+        -1
+        >>> euler_num(3)
+        0
+        >>> euler_num(4)
+        5
+        >>> euler_num(6)
+        -61
+        >>> euler_num(8)
+        1385
+        >>> euler_num(10)
+        -50521
 
     **References**
 
-    `Wikipedia <http://en.wikipedia.org/wiki/Bernoulli_numbers>`_ | `MathWorld <http://mathworld.wolfram.com/BernoulliNumber.html>`_
+    `Wikipedia <http://en.wikipedia.org/wiki/Euler_numbers>`_ | `MathWorld <http://mathworld.wolfram.com/EulerNumber.html>`_
     '''
 
     if m < 0:
@@ -1156,7 +1184,7 @@ def genocchi(n):
     Should be quite fast::
 
         >>> from timeit import timeit
-        >>> timeit('(genocchi(i) for i in xrange(1000))', 'from pypol.funcs import genocchi', number=1000000)
+        >>> timeit('(genocchi(i) for i in xrange(1000))', 'from pypol.series import genocchi', number=1000000)
         1.8470048904418945
     '''
 

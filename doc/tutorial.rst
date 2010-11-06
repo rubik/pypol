@@ -230,7 +230,7 @@ Here is pypol cookbook. All examples assume::
 Creating a polynomial
 +++++++++++++++++++++
 
-Use :func:`pypol.poly1d`, :func:`pypol.poly1d_2`, :func:`pypol.polynomial`, and :func:`pypol.monomial`::
+Use :func:`pypol.poly1d`, :func:`pypol.poly1d_2`, :func:`pypol.polynomial`, or :func:`pypol.monomial`::
 
     >>> p = poly1d([1, 2, -3, 4])
     >>> p

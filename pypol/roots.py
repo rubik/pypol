@@ -64,10 +64,6 @@ def ruffini(poly):
         return []
     return [x for x in _divs(p) if not poly(x)]
 
-def linear(poly):
-    assert 0 not in (poly[0], poly[1]), 'b or c cannot be equal to 0'
-    return -1 * poly[0] / poly[1]
-
 def quadratic(poly):
     '''
     Finds the two roots of the polynomial *poly* solving the quadratic equation: |p1|

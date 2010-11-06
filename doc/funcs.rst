@@ -56,3 +56,7 @@ Numbers
 .. autofunction:: bin_coeff
 
 .. autofunction:: harmonic
+
+.. autofunction:: harmonic_g
+
+.. autofunction:: stirling

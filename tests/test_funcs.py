@@ -1,10 +1,12 @@
 import nose
 from nose.tools import *
 
+import fractions
+
 import pypol
 import pypol.funcs as funcs
+from pypol import ONE, x
 
-x = pypol.monomial(x=1)
 a = pypol.monomial(a=1)
 
 class TestFuncs(object):
@@ -40,73 +42,48 @@ class TestFuncs(object):
     def testPolyint(self):
         pass
 
-    def testFibonacci(self):
-        assert not funcs.fibonacci(0)
-        assert_equal(funcs.fibonacci(1), 1)
-        assert_equal(funcs.fibonacci(2), x)
-        assert_equal(funcs.fibonacci(3), x**2 + 1)
-        assert_equal(funcs.fibonacci(4), x**3 + 2*x)
-        assert_equal(funcs.fibonacci(5), x**4 + 3 * x**2 + 1)
-
-    def testHermite_prob(self):
-        assert_equal(funcs.hermite_prob(1), x)
-        assert_equal(funcs.hermite_prob(2), x**2 - 1)
-        assert_equal(funcs.hermite_prob(3), x**3 - 3*x)
-        assert_equal(funcs.hermite_prob(4), x**4 - 6*x**2 + 3)
-
-    def testHermite_phys(self):
-        assert_equal(funcs.hermite_phys(0), 1)
-        assert_equal(funcs.hermite_phys(1), 2*x)
-        assert_equal(funcs.hermite_phys(2), 4*x**2 - 2)
-        assert_equal(funcs.hermite_phys(3), 8*x**3 - 12*x)
-        assert_equal(funcs.hermite_phys(4), 16*x**4 - 48*x**2 + 12)
-
-    def testChebyshev_t(self):
-        assert_equal(funcs.chebyshev_t(0), 1)
-        assert_equal(funcs.chebyshev_t(1), x)
-        assert_equal(funcs.chebyshev_t(2), 2*x**2 - 1)
-        assert_equal(funcs.chebyshev_t(3), 4*x**3 - 3*x)
-        assert_equal(funcs.chebyshev_t(4), 8*x**4 - 8*x**2 + 1)
-        assert_equal(funcs.chebyshev_t(5), 16*x**5 - 20*x**3 + 5*x)
-
-    def testChebyshev_u(self):
-        assert_equal(funcs.chebyshev_u(0), 1)
-        assert_equal(funcs.chebyshev_u(1), 2*x)
-        assert_equal(funcs.chebyshev_u(2), 4*x**2 - 1)
-        assert_equal(funcs.chebyshev_u(3), 8*x**3 - 4*x)
-        assert_equal(funcs.chebyshev_u(4), 16*x**4 - 12*x**2 + 1)
-        assert_equal(funcs.chebyshev_u(5), 32*x**5 - 32*x**3 + 6*x)
-
-    def testAbel(self):
-        assert_equal(funcs.abel(0), 1)
-        assert_equal(funcs.abel(1), x)
-        assert_equal(funcs.abel(2), x**2 - 2*a*x)
-        assert_equal(funcs.abel(3), x**3 - 6*a*x**2 + 9*a**2*x)
-        assert_equal(funcs.abel(4), x**4 - 12*a*x**3 + 48*a**2*x**2 - 64*a**3*x)
-
-    def testGegenbauer(self):
+    def testInterpolation(self):
         pass
 
-    def testLaguerre(self):
+    def testBinCoeff(self):
         pass
 
-    def testLaguerreG(self):
+    def testHarmonic(self):
+        assert_raises(ValueError, funcs.harmonic, -1)
+        assert_raises(ValueError, funcs.harmonic, 0)
+        assert_equal(funcs.harmonic(1), fractions.Fraction(1, 1))
+        assert_equal(funcs.harmonic(2), fractions.Fraction(3, 2))
+        assert_equal(funcs.harmonic(3), fractions.Fraction(11, 6))
+        assert_equal(funcs.harmonic(4), fractions.Fraction(25, 12))
+        assert_equal(funcs.harmonic(5), fractions.Fraction(137, 60))
+        assert_equal(funcs.harmonic(6), fractions.Fraction(49, 20))
+        assert_equal(funcs.harmonic(7), fractions.Fraction(363, 140))
+        assert_equal(funcs.harmonic(8), fractions.Fraction(761, 280))
+        assert_equal(funcs.harmonic(9), fractions.Fraction(7129, 2520))
+        assert_equal(funcs.harmonic(10), fractions.Fraction(7381, 2520))
+
+    def testGeneralizedHarmonic(self):
         pass
 
-    def testBernoulli(self):
+    def testStirling(self):
         pass
 
-    def testBernoulliNumbers(self):
+    def testStirling2(self):
         pass
 
-    def testEuler(self):
-        pass
+    def testPochammer(self):
+        assert_equal(funcs.pochammer(0), ONE)
+        assert_equal(funcs.pochammer(1), x)
+        assert_equal(funcs.pochammer(2), x**2 + x)
+        assert_equal(funcs.pochammer(3), x**3 + 3*x**2 + 2*x)
+        assert_equal(funcs.pochammer(4), x**4 + 6*x**3 + 11*x**2 + 6*x)
 
-    def testEulerNumbers(self):
-        pass
-
-    def testGenocchi(self):
-        pass
+    def testFactorialPower(self):
+        assert_equal(funcs.factorial_power(0), ONE)
+        assert_equal(funcs.factorial_power(1), x)
+        assert_equal(funcs.factorial_power(2), x**2 - x)
+        assert_equal(funcs.factorial_power(3), x**3 - 3*x**2 + 2*x)
+        assert_equal(funcs.factorial_power(4), x**4 - 6*x**3 + 11*x**2 - 6*x)
 
 
 if __name__ == '__main__':

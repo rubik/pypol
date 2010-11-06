@@ -28,6 +28,9 @@ class TestRoots(object):
     def testSchroeder(self):
         pass
 
+    def testLaguerre(self):
+        pass
+
     def testBrent(self):
         pass
 
