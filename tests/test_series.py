@@ -129,7 +129,12 @@ class TestSeries(object):
         assert_equal(series.abel(4), x**4 - 12*a*x**3 + 48*a**2*x**2 - 64*a**3*x)
 
     def testTouchard(self):
-        pass
+        assert_equal(series.touchard(0), ONE)
+        assert_equal(series.touchard(1), x)
+        assert_equal(series.touchard(2), x**2 + x)
+        assert_equal(series.touchard(3), x**3 + 3*x**2 + x)
+        assert_equal(series.touchard(4), x**4 + 6*x**3 + 7*x**2 + x)
+        assert_equal(series.touchard(5), x**5 + 10*x**4 + 25*x**3 + 15*x**2 + x)
 
     def testBell(self):
         assert_raises(ValueError, series.bell, -1)
@@ -160,19 +165,51 @@ class TestSeries(object):
         assert_equal(series.laguerre_g(3), fractions.Fraction(1, 6) * (-x**3 + 3*(a + 3)*x**2 - 3*(a + 2) * (a + 3)*x + (a + 1) * (a + 2) * (a + 3)))
 
     def testBernoulli(self):
-        pass
+        assert_raises(ValueError, series.bernoulli, -1)
+        assert_equal(series.bernoulli(0), ONE)
+        assert_equal(series.bernoulli(1), x - fractions.Fraction(1, 2))
+        assert_equal(series.bernoulli(2), x**2 - x + fractions.Fraction(1, 6))
+        assert_equal(series.bernoulli(3), x**3 - fractions.Fraction(3, 2)*x**2 + fractions.Fraction(1, 2)*x)
+        assert_equal(series.bernoulli(4), x**4 - 2*x**3 + x**2 - fractions.Fraction(1, 30))
+        assert_equal(series.bernoulli(5), x**5 - fractions.Fraction(5, 2)*x**4 + fractions.Fraction(5, 3)*x**3 - fractions.Fraction(1, 6)*x)
+        assert_equal(series.bernoulli(6), x**6 - 3*x**5 + fractions.Fraction(5, 2)*x**4 - fractions.Fraction(1, 2)*x**2 + fractions.Fraction(1, 42))
 
     def testBernoulliNumbers(self):
-        pass
+        assert_raises(ValueError, series.bern_num, -1)
+        assert not series.bern_num(3)
+        assert_equal(series.bern_num(0), 1)
+        assert_equal(series.bern_num(1), fractions.Fraction(-1, 2))
+        assert_equal(series.bern_num(2), fractions.Fraction(1, 6))
+        assert_equal(series.bern_num(4), fractions.Fraction(-1, 30))
+        assert_equal(series.bern_num(6), fractions.Fraction(1, 42))
+        assert_equal(series.bern_num(8), fractions.Fraction(-1, 30))
+        assert_equal(series.bern_num(10), fractions.Fraction(5, 66))
+        assert_equal(series.bern_num(12), fractions.Fraction(-691, 2730))
+        assert_equal(series.bern_num(14), fractions.Fraction(7, 6))
+        assert_equal(series.bern_num(16), fractions.Fraction(-3617, 510))
+        assert_equal(series.bern_num(18), fractions.Fraction(43867, 798))
 
     def testEuler(self):
-        pass
+        assert_raises(ValueError, series.euler, -1)
 
     def testEulerNumbers(self):
-        pass
+        assert_raises(ValueError, series.euler_num, -1)
+        assert_equal(series.euler_num(0), 1)
+        assert_equal(series.euler_num(1), 0)
+        assert_equal(series.euler_num(2), -1)
+        assert_equal(series.euler_num(4), 5)
+        assert_equal(series.euler_num(6), -61)
+        assert_equal(series.euler_num(8), 1385)
+        assert_equal(series.euler_num(10), -50521)
 
     def testGenocchi(self):
-        pass
+        assert_raises(ValueError, series.genocchi, -1)
+        assert_equal(series.genocchi(0), 0)
+        assert_equal(series.genocchi(1), 1)
+        assert_equal(series.genocchi(2), -1)
+        assert_equal(series.genocchi(4), 1)
+        assert_equal(series.genocchi(6), -3)
+        assert_equal(series.genocchi(8), 17)
 
 
 if __name__ == '__main__':

@@ -643,7 +643,27 @@ def harmonic_g(n, m):
 
     ::
 
-        
+        >>> harmonic_g(0, 2)
+        Traceback (most recent call last):
+          File "<pyshell#2>", line 1, in <module>
+            harmonic_g(0, 2)
+          File "funcs.py", line 654, in harmonic_g
+            raise ValueError('Generalized Hamonic number only defined for n > 0')
+        ValueError: Generalized Hamonic number only defined for n > 0
+        >>> harmonic_g(1, 2)
+        Fraction(1, 1)
+        >>> harmonic_g(1, 3)
+        Fraction(1, 1)
+        >>> harmonic_g(2, 3)
+        Fraction(9, 8)
+        >>> harmonic_g(2, 4)
+        Fraction(17, 16)
+        >>> harmonic_g(3, 4)
+        Fraction(1393, 1296)
+        >>> harmonic_g(3, 7)
+        Fraction(282251, 279936)
+        >>> harmonic_g(7, 7)
+        Fraction(774879868932307123, 768464444160000000)
 
     **References**
 
@@ -656,7 +676,7 @@ def harmonic_g(n, m):
 
 def stirling(n, k):
     '''
-    Returns the Stirling number of the first kind *s*<sub>n, k</sub>
+    Returns the Stirling number of the first kind 
     '''
 
     if n == k:
@@ -689,16 +709,30 @@ def bell_num(n):
         return 1.
     return sum(stirling_2(n, k) for k in xrange(n + 1))
 
-def pochammer(n):
-    if n == 0:
-        return ONE
-    if n == 1:
-        return x
-    return x * reduce(operator.mul, ((x + k - 1) for k in xrange(2, n + 1)))
+def divided_diff(p, x_values):
+    '''
+    Computes the divided difference |p33|
+    '''
 
-def factorial_power(n):
-    if n == 0:
-        return ONE
-    if n == 1:
-        return x
-    return x * reduce(operator.mul, ((x - k + 1) for k in xrange(2, n + 1)))
+    if len(x_values) == 1:
+        return p(x_values[0])
+    if len(x_values) == 2:
+        return (p(x_values[0]) - p(x_values[1])) / (x_values[0] - x_values[1])
+    q = polyder(reduce(operator.mul, ((x - x_i) for x_i in x_values)))
+    return sum(p(x_values[j]) / q(x_values[j]) for j in xrange(len(x_values)))
+
+
+################################################################################
+##                            Still in development                            ##
+################################################################################
+
+def entringer(n, k):
+    if n < 0 or k < 0:
+        raise ValueError('Entringer numbers only defined for n >= 0 and k >= 0')
+    if k > n:
+        raise ValueError('k cannot be greater than n')
+    if n == k == 0:
+        return 1
+    if k == 0:
+        return 0
+    return entringer(n, k - 1) + entringer(n - 1, n - k)

@@ -4,7 +4,7 @@ from pypol import poly1d, polynomial, monomial, NULL, ONE, TWO, x
 from pypol.funcs import polyder, bin_coeff, stirling_2, harmonic, harmonic_g
 
 
-def lucas_seq(n, p, q, zero=NULL, one=ONE):
+class LucasSeq(object):
     '''
     "The Lucas polynomial sequence is a pair of generalized polynomials which generalize the Lucas sequence to polynomials ..." [MathWorld]_
 
@@ -42,14 +42,26 @@ def lucas_seq(n, p, q, zero=NULL, one=ONE):
     .. versionadded:: 0.4
     '''
 
-    if n < 0:
-        raise ValueError('Lucas sequence only defined for n >= 0')
-    o = [zero, one]
-    if n in (0, 1):
-        return o[n]
-    for _ in xrange(n - 1):
-        o.append(p * o[-1] + q * o[-2])
-    return o[-1]
+    def __init__(self, p, q, type='W'):
+        self.p, self.q = p, q
+        if type == 'W':
+            zero, one = NULL, ONE
+        elif type == 'w':
+            zero, one = TWO, self.p
+        else:
+            raise ValueError('type should be either W or w')
+
+        self.cache = [zero, one]
+
+    def __call__(self, n):
+        if n < 0:
+            raise ValueError('Lucas sequence only defined for n >= 0')
+        try:
+            return self.cache[n]
+        except IndexError:
+            for _n in xrange(len(self.cache) - 2, n - 1):
+                self.cache.append(self.p * self.cache[-1] + self.q * self.cache[-2])
+            return self.cache[-1]
 
 def fibonacci(n):
     '''
@@ -90,11 +102,9 @@ def fibonacci(n):
     The Fibonacci polynomials are the *W*-polynomials in the Lucas sequence (:func:`lucas_seq`) obtained setting ``p = x`` and ``q = 1``::
 
         >>> from pypol import x, ONE
-        >>> from pypol.series import lucas_seq
+        >>> from pypol.series import LucasSeq
         >>> 
-        >>> def fibonacci_poly(n):
-            return lucas_seq(n, x, ONE)
-        
+        >>> fibonacci_poly = LucasSeq(x, ONE)
         >>> fibonacci_poly(0) ## A null polynomial
         
         >>> fibonacci_poly(1)
@@ -107,6 +117,12 @@ def fibonacci(n):
         + x^5 + 4x^3 + 3x
         >>> fibonacci_poly(16)
         + x^15 + 14x^13 + 78x^11 + 220x^9 + 330x^7 + 252x^5 + 84x^3 + 8x
+        >>> fibonacci_poly(24)
+        + x^23 + 22x^21 + 210x^19 + 1140x^17 + 3876x^15 + 8568x^13 + 12376x^11 + 11440x^9 + 6435x^7 + 2002x^5 + 286x^3 + 12x
+        >>> fibonacci_poly(54)
+        + x^53 + 52x^51 + 1275x^49 + 19600x^47 + 211876x^45 + 1712304x^43 + 10737573x^41 + 53524680x^39 + 215553195x^37 + 708930508x^35 + 1917334783x^33 + 4280561376x^31 + 7898654920x^29 + 12033222880x^27 + 15084504396x^25 + 15471286560x^23 + 12875774670x^21 + 8597496600x^19 + 4537567650x^17 + 1855967520x^15 + 573166440x^13 + 129024480x^11 + 20160075x^9 + 2035800x^7 + 118755x^5 + 3276x^3 + 27x
+        >>> fibonacci_poly(54) ## Instantaneous
+        + x^53 + 52x^51 + 1275x^49 + 19600x^47 + 211876x^45 + 1712304x^43 + 10737573x^41 + 53524680x^39 + 215553195x^37 + 708930508x^35 + 1917334783x^33 + 4280561376x^31 + 7898654920x^29 + 12033222880x^27 + 15084504396x^25 + 15471286560x^23 + 12875774670x^21 + 8597496600x^19 + 4537567650x^17 + 1855967520x^15 + 573166440x^13 + 129024480x^11 + 20160075x^9 + 2035800x^7 + 118755x^5 + 3276x^3 + 27x
 
     .. versionadded:: 0.3
     '''
@@ -149,12 +165,9 @@ def lucas(n):
     The Lucas polynomials are the *w*-polynomials obtained setting ``p = x`` and ``q = 1`` in the Lucas polynomial sequence (see :func:`lucas_seq`).
     You can generate them with this small piece of code::
 
-        >>> from pypol import x, ONE, TWO
-        >>> from pypol.series import lucas_seq
+        >>> from pypol import x, ONE
         >>> 
-        >>> def lucas_poly(n):
-            return lucas_seq(n, x, ONE, TWO, x)
-        
+        >>> lucas_poly = LucasSeq(x, ONE, 'w')
         >>> lucas_poly(0)
         + 2
         >>> lucas_poly(1)
@@ -799,7 +812,7 @@ def touchard(n):
     The Touchard polynomials also satisfy:
         |p15|
 
-    where |p16| is the *n-th* Bell number (:func:`bell_num`)::
+    where |p16| is the *n-th* Bell number (:func:`funcs.bell_num`)::
 
         >>> long(touchard(19)(1)) == long(bell_num(19))
         True
@@ -878,6 +891,83 @@ def gegenbauer(n, a='a'):
     return fractions.Fraction(1, n) * ((2*x * (n + a - ONE) * gegenbauer(n - 1) \
                                     - (n + 2*a - 2) * gegenbauer(n - 2)))
 
+def bernstein(v, n):
+    '''
+    Returns the Bernstein polynomial
+        |p32|
+
+    :raises: :exc:`ValueError` if *v* or *n* are negative or *v* is greater than *n*
+    :rtype: :class:`pypol.Polynomial`
+
+    **Examples**
+
+    ::
+
+        >>> bernstein(0, 0)
+        + 1
+        >>> bernstein(0, 1)
+        - x + 1
+        >>> bernstein(0, 2)
+        + x^2 - 2x + 1
+        >>> bernstein(1, 2)
+        - 2x^2 + 2x
+        >>> bernstein(-1, 2)
+        Traceback (most recent call last):
+          File "<pyshell#5>", line 1, in <module>
+            bernstein(-1, 2)
+          File "series.py", line 897, in bernstein
+            raise ValueError('Bernstein polynomials only defined for v >= 0 and n >= 0')
+        ValueError: Bernstein polynomials only defined for v >= 0 and n >= 0
+        >>> bernstein(3, 2)
+        Traceback (most recent call last):
+          File "<pyshell#6>", line 1, in <module>
+            bernstein(3, 2)
+          File "series.py", line 899, in bernstein
+            raise ValueError('v cannot be greater than n')
+        ValueError: v cannot be greater than n
+        >>> bernstein(3, 6)
+        - 20x^6 + 60x^5 - 60x^4 + 20x^3
+        >>> bernstein(13, 16)
+        - 560x^16 + 1680x^15 - 1680x^14 + 560x^13
+        >>> bernstein(18, 19)
+        - 19x^19 + 19x^18
+
+    **References**
+    
+    `MathWorld <http://mathworld.wolfram.com/BernsteinPolynomial.html>`_
+    '''
+
+    if v < 0 or n < 0:
+        raise ValueError('Bernstein polynomials only defined for v >= 0 and n >= 0')
+    if v > n:
+        raise ValueError('v cannot be greater than n')
+    if not v and not n:
+        return ONE
+    if v == n:
+        return x ** v
+    if n == (v + 1):
+        return -n*x**n + n*x**v
+    return bin_coeff(n, v) * x**v * (ONE - x) ** (n - v)
+
+def spread(n):
+    '''
+    Returns the *n-th* Spread polynomial in ``x``.
+    
+    :raises: :exc:`ValueError` if *n* is negative
+    :rtype: :class:`pypol.Polynomial`
+    '''
+
+    if n < 0:
+        raise ValueError('Spread polynomials only defined for n >= 0')
+    if n == 0:
+        return NULL
+    if n == 1:
+        return x
+    p = [NULL, x]
+    for _ in xrange(n - 1):
+        p.append((TWO - 4*x) * p[-1] - p[-2] + 2*x)
+    return p[-1]
+
 def laguerre(n):
     '''
     Returns the *n-th* Laguerre polynomial in ``x``.
@@ -922,10 +1012,7 @@ def laguerre(n):
     l1, ll = NULL, ONE
     for i in xrange(1, n + 1):
         l0, l1 = l1, ll
-        ll = ((2*i - 1 - x) * l1 - (i - 1) * l0) / monomial(i)
-
-    if n & 1: ## little hack for odd n
-        return -ll
+        ll = ((2*i - ONE - x) * l1 - (i - ONE) * l0) / monomial(i)
     return ll
 
 def laguerre_g(n, a='a'):
@@ -984,6 +1071,20 @@ def laguerre_g(n, a='a'):
         ll = ((2*i - 1 + a - x) * l1 - (i - 1 + a) * l0) / monomial(i)
     return ll
 
+def pochammer(n):
+    if n == 0:
+        return ONE
+    if n == 1:
+        return x
+    return x * reduce(operator.mul, ((x + k - 1) for k in xrange(2, n + 1)))
+
+def factorial_power(n):
+    if n == 0:
+        return ONE
+    if n == 1:
+        return x
+    return x * reduce(operator.mul, ((x - k + 1) for k in xrange(2, n + 1)))
+
 def bernoulli(m):
     '''
     Returns the *m-th* Bernoulli polynomial.
@@ -1020,12 +1121,12 @@ def bernoulli(m):
     '''
 
     def _sum(n):
-        return sum([(-1) ** k * bin_coeff(n, k) * (x + k) ** m for k in xrange(0, n + 1)])
+        return sum((-1) ** k * bin_coeff(n, k) * (x + k) ** m for k in xrange(0, n + 1))
     if m < 0:
         raise ValueError('Bernoulli polynomials only defined for m >= 0')
     if m == 0:
         return ONE
-    return x ** m + sum([fractions.Fraction(1, n + 1) * _sum(n) for n in xrange(1, m + 1)])
+    return x ** m + sum(fractions.Fraction(1, n + 1) * _sum(n) for n in xrange(1, m + 1))
 
 def bern_num(m):
     '''
@@ -1064,17 +1165,48 @@ def bern_num(m):
     '''
 
     def _sum(k):
-        return sum([(-1) ** v * fractions.Fraction.from_float(bin_coeff(k, v)) * fractions.Fraction(v ** m, k + 1) for v in xrange(k + 1)])
+        return sum((-1) ** v * fractions.Fraction.from_float(bin_coeff(k, v)) * fractions.Fraction(v ** m, k + 1) for v in xrange(k + 1))
     if m < 0:
         raise ValueError('Bernoulli numbers only defined for m >= 0')
     if m == 0:
-        return 0
+        return 1
     if m == 1:
         return fractions.Fraction(-1, 2)
     if m & 1:
         return 0
     #return bernoulli(n).right_hand_side
     return sum(_sum(k) for k in xrange(m + 1))
+
+def b2(m):
+    def b_c(j):
+        return bin_coeff(m + 3, m - 6 * j)
+    def b_c3():
+        return bin_coeff(m + 3, m)
+    def c(l):
+        s, j = 0, 1
+        while j <= l:
+            s += b_c(j) * b2(m - 6 * j)
+            j += 1
+        return s
+    def m0():
+        return (fractions.Fraction(m + 3, 3) - c(m / 6)) / b_c3()
+    def m2():
+        return (fractions.Fraction(m + 3, 3) - c((m - 2) / 6)) / b_c3()
+    def m4():
+        return (-fractions.Fraction(m + 3, 6) - c((m - 4) / 6)) / b_c3()
+
+    if m == 0:
+        return 1
+    if m == 1:
+        return fractions.Fraction(-1, 2)
+    if m & 1:
+        return 0
+    if m % 6 == 0:
+        return m0()
+    if m % 6 == 2:
+        return m2()
+    if m % 6 == 4:
+        return m4()
 
 def euler(m):
     '''
@@ -1108,7 +1240,7 @@ def euler(m):
     '''
 
     def _sum(n):
-        return sum([(- 1) ** k * bin_coeff(n, k) * (x + k) ** m for k in xrange(n + 1)])
+        return sum((- 1) ** k * bin_coeff(n, k) * (x + k) ** m for k in xrange(n + 1))
     if m < 0:
         raise ValueError('Euler polynomials only defined for m >= 0')
     if m == 0:
@@ -1151,9 +1283,9 @@ def euler_num(m):
 
     if m < 0:
         raise ValueError('Euler numbers only defined for m >= 0')
-    if m == 0:
-        return ONE
-    if m & 1:
+    elif m == 0:
+        return 1
+    elif m & 1:
         return 0
     return int(2 ** m * euler(m)(.5))
 
@@ -1188,6 +1320,8 @@ def genocchi(n):
         1.8470048904418945
     '''
 
+    if n < 0:
+        raise ValueError('Genocchi numbers only defined for n >= 0')
     if not n:
         return 0
     if n == 1:
@@ -1209,29 +1343,3 @@ def genocchi(n):
 ################################################################################
 ##                            Still in development                            ##
 ################################################################################
-
-def bernstein(v, n): ## Still in development
-    if not v and not n:
-        return ONE
-    if v == n:
-        return x ** v
-    return bin_coeff(n, v) * (x**v) * (1 - x) ** (n - v)
-
-def spread(n): ## Should work but it doesn't
-    '''
-    Returns the *n-th* Spread polynomial in ``x``.
-    
-    :raises: :exc:`ValueError` if *n* is negative
-    :rtype: :class:`pypol.Polynomial`
-    '''
-
-    if n < 0:
-        raise ValueError('Spread polynomials only defined for n >= 0')
-    if n == 0:
-        return NULL
-    if n == 1:
-        return x
-    p = [NULL, x]
-    for _ in xrange(n - 2):
-        p.append(2*x - p[-2] + (2 - 4*x) * p[-1])
-    return p[-1]

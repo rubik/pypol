@@ -278,9 +278,7 @@ def coerce_poly(wrapped):
     If the second term is not a polynomial, it is coerced.
     '''
     def wrapper(self, other):
-        if isinstance(other, int):
-            other = monomial(other)
-        elif isinstance(other, long):
+        if isinstance(other, int) or isinstance(other, long):
             other = monomial(other)
         elif isinstance(other, str):
             other =  polynomial(other)
@@ -1489,8 +1487,9 @@ class Polynomial(object):
         except (AttributeError, TypeError):
             return NotImplemented
 
+    @ coerce_poly
     def __rsub__(self, other):
-        return self - other
+        return Polynomial((-self)._monomials + other._monomials)
 
     @ coerce_poly
     def __mul__(self, other):

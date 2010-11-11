@@ -35,6 +35,7 @@ The :mod:`pypol.funcs` module offers these basic functions:
     * :func:`polyint`
     * :func:`polyint_`
     * :func:`interpolate`
+    * :func:`divided_diff`
 
 .. autofunction:: divisible
 
@@ -50,6 +51,8 @@ The :mod:`pypol.funcs` module offers these basic functions:
 
 .. autofunction:: interpolate
 
+.. autofunction:: divided_diff
+
 Numbers
 -------
 
@@ -60,3 +63,7 @@ Numbers
 .. autofunction:: harmonic_g
 
 .. autofunction:: stirling
+
+.. autofunction:: stirling_2
+
+.. autofunction:: bell_num

@@ -20,6 +20,8 @@ class TestPolynomial(object):
         assert_equal(pypol.polynomial('x^3 - 2x^2 + x - 5 + y^2'), self.a + 'y^2')
 
     def testSub(self):
+        assert_equal(pypol.ONE - pypol.x, self.c)
+        assert_equal(1 - pypol.x, self.c)
         assert_equal(pypol.polynomial('x^3 - a^3  + x + b - 8'), self.a - self.b)
         assert_equal(pypol.polynomial('x^3 - 2x^2 + x - 7'), self.a - 2)
         assert_equal(pypol.polynomial('x^3 - 2x^2 + x - 5 - y^2'), self.a - 'y^2')

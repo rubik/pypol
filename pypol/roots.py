@@ -12,7 +12,7 @@ import cmath
 import decimal
 import operator
 from pypol import poly1d, monomial, Polynomial
-from funcs import polyder
+from funcs import polyder, divided_diff
 
 def ruffini(poly):
     '''
@@ -356,7 +356,7 @@ def newton(poly, start, epsilon=float('-inf')):
     .. versionadded:: 0.3
     '''
 
-    poly_d = polyder(poly);print poly_d
+    poly_d = polyder(poly)
 
     while True:
         p_s = poly(start)
@@ -584,9 +584,31 @@ def laguerre(poly, start, epsilon=float('-inf')):
             return start
         start = x_n
 
+def muller(poly, x_k, x_k2=None, x_k3=None, epsilon=float('-inf')):
+    if not x_k2:
+        x_k2 = x_k + .25
+    if not x_k3:
+        x_k3 = x_k2 + .25
+
+    x = monomial(x=1)
+    while True:
+        w = divided_diff(poly, [x_k, x_k2]) + divided_diff(poly, [x_k, x_k3]) - divided_diff(poly, [x_k2, x_k3])
+        y = poly(x_k) - w * (x - x_k) + divided_diff(poly, [x_k, x_k2, x_k3]) * (x - x_k) ** 2
+        n = 2 * poly(x_k)
+        k = w ** 2 - 4 * poly(x_k) * divided_diff(poly, [x_k, x_k2, x_k3])
+        if k < 0:
+            d_part = -math.sqrt(-k)
+        else:
+            d_part = math.sqrt(k)
+        d = max(w + d_part, w - d_part)
+        x_k1 = x_k - n / d
+        if x_k1 == x_k or abs(x_k1 - x_k) < epsilon:
+            return x_k1
+        x_k = x_k1
+
 def durand_kerner(poly, start=complex(.4, .9), epsilon=1.12e-16):
     '''
-    The Durand-Kerner method. It finds all the roots of the polynomials *poly*
+    The Durand-Kerner method. It finds all the roots of the polynomials *poly* simultaneously.
     '''
 
     roots = []
@@ -754,6 +776,27 @@ def bisection(poly, k=0.5, epsilon=float('-inf')):
 ##                            Still in development                            ##
 ################################################################################
 
+
+def ridder(poly, x0, x1, x2, epsilon=float('-inf')):
+    def closest(k):
+        a1 = [abs(x0 - k), abs(x1 - k), abs(x2 - k)]
+        return [x0, x1, x2][a1.index(min(a1))]
+
+    assert abs(x0 - x1) == abs(x1 - x2), 'The three points x0, x1 and x2 must be equally distanced'
+
+    while True:
+        d0 = abs(x0 - x1)
+        y0, y1, y2 = poly(x0), poly(x1), poly(x2)
+        a = (y0 - y1) / (y1 - y2)
+        b = (y0 - y1) / (y0 - a*y1)
+        u = (b - 1) / (b + 1)
+        v = (a - 1) / (a + 1)
+        x3 = x1 - d0 * (u*(3 + u**2) / (v*(3 + v**2)))
+        x0 = closest(x3)
+        if x0 == x3 or abs(x0 - x3) < epsilon:
+            return x3
+        x1 = x3
+        x2 = x1 + (x1 - x0)
 
 def lambert(poly, start, epsilon=float('-inf')):
     def _hg(n):

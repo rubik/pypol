@@ -13,31 +13,12 @@ The :mod:`~pypol.series` module
 
 .. contents:: Table of contents
 
-This module implements the most common polynomial sequences, like:
-
-.. hlist::
-    :columns: 3
-
-    * :func:`lucas_seq`
-    * :func:`fibonacci`
-    * :func:`hermite_prob`
-    * :func:`hermite_phys`
-    * :func:`chebyshev_t`
-    * :func:`chebyshev_u`
-    * :func:`abel`
-    * :func:`gegenbauer`
-    * :func:`laguerre`
-    * :func:`laguerre_g`
-    * :func:`bernoulli`
-    * :func:`bern_num`
-    * :func:`euler`
-    * :func:`euler_num`
-    * :func:`genocchi`
+This module implements the most common polynomial sequences, like Fibonacci's sequence (:func:`fibonacci`)
 
 Lucas polynomials sequences
 ---------------------------
 
-.. autofunction:: lucas_seq(n, p, q, zero=Polynomial(), one=monomial(1))
+.. autoclass:: LucasSeq
 
 .. autofunction:: fibonacci
 
@@ -88,3 +69,5 @@ Other series
 .. autofunction:: gegenbauer
 
 .. autofunction:: touchard
+
+.. autofunction:: bernstein

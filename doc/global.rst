@@ -32,3 +32,5 @@
 .. |p23| image:: images/laguerre.gif
 .. |p30| image:: images/G.png
 .. |p31| image:: images/H.png
+.. |p32| image:: images/bernstein.gif
+.. |p33| image:: images/divided_diff.gif

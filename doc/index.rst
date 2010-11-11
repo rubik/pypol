@@ -47,7 +47,6 @@ Contents
    :numbered:
    
    tutorial.rst
-   mainmod.rst
    functions.rst
    classes.rst
    operations.rst
