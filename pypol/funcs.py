@@ -490,7 +490,7 @@ def interpolate(x_values, y_values): ## Still in development
         7.731095950923788e-14
     '''
 
-    assert len(x_values) != 0 and (len(x_values) == len(y_values)), 'x and y cannot be empty and must have the same length'
+    assert len(x_values) != 0 and (len(x_values) == len(y_values)), 'x_values and y_values cannot be empty and must have the same length'
 
     #k = len(x_values) - 1
     #r = [_basis(j) for j in xrange(k)]
@@ -508,6 +508,26 @@ def interpolate(x_values, y_values): ## Still in development
     f_x = reduce(operator.mul, ((x - x_i) for x_i in x_values))
     f__x = polyder(f_x)
     return sum(f_x / ((x - x_i) * f__x(x_i)) * y_values[i] for i, x_i in enumerate(x_values))
+
+def divided_diff(p, x_values):
+    '''
+    Computes the divided difference |p33|
+    '''
+
+    if len(x_values) == 1:
+        return p(x_values[0])
+    if len(x_values) == 2:
+        return (p(x_values[0]) - p(x_values[1])) / (x_values[0] - x_values[1])
+    q = polyder(reduce(operator.mul, ((x - x_i) for x_i in x_values)))
+    return sum(p(x_values[j]) / q(x_values[j]) for j in xrange(len(x_values)))
+
+def interpolate_newton(x_values, y_values):
+    def _basis(j):
+        return reduce(operator.mul, ((x - x_values[i]) for i in xrange(j)), 0)
+    assert len(x_values) != 0 and (len(x_values) == len(y_values)), 'x_values and y_values cannot be empty and must have the same length'
+
+    k = len(x_values)
+    return sum(_basis(j) * divided_diff(y_values[j]) for j in xrange(k))
 
 def bin_coeff(n, k):
     '''
@@ -709,24 +729,43 @@ def bell_num(n):
         return 1.
     return sum(stirling_2(n, k) for k in xrange(n + 1))
 
-def divided_diff(p, x_values):
-    '''
-    Computes the divided difference |p33|
-    '''
+def lucas_num(n):
+    if n <= 0:
+        raise ValueError('Lucas numbers only defined for n > 0')
+    if n == 1:
+        return 1.
+    n -= 1
+    return sum((n + 1) * bin_coeff(n - k + 1, k) / (n - k + 1) for k in xrange(int((n + 1) / 2) + 1))
 
-    if len(x_values) == 1:
-        return p(x_values[0])
-    if len(x_values) == 2:
-        return (p(x_values[0]) - p(x_values[1])) / (x_values[0] - x_values[1])
-    q = polyder(reduce(operator.mul, ((x - x_i) for x_i in x_values)))
-    return sum(p(x_values[j]) / q(x_values[j]) for j in xrange(len(x_values)))
+def pell_num(n):
+    if n < 0:
+        raise ValueError('Pell numbers only defined for n >= 0')
+    if n == 0:
+        return 0.
+    if n == 1:
+        return 1.
+    return math.ceil(((1 + math.sqrt(2)) ** n - (1 - math.sqrt(2)) ** n) / (2 * math.sqrt(2)))
 
+def pell_lucas_num(n):
+    if n < 0:
+        raise ValueError('Pell numbers only defined for n >= 0')
+    if n == 0:
+        return 0.
+    if n == 1:
+        return 1.
+    return math.ceil((1 + s2) ** n + (1 - s2)**n)
+
+def jacobsthal_num(n):
+    return (2 ** n + (-1) ** (n - 1)) / 3
+
+def fermat_num(n):
+    return 2 ** (2 ** n) + 1
 
 ################################################################################
 ##                            Still in development                            ##
 ################################################################################
 
-def entringer(n, k):
+def entringer(n, k): ## very very slow
     if n < 0 or k < 0:
         raise ValueError('Entringer numbers only defined for n >= 0 and k >= 0')
     if k > n:

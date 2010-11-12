@@ -45,23 +45,47 @@ class LucasSeq(object):
     def __init__(self, p, q, type='W'):
         self.p, self.q = p, q
         if type == 'W':
-            zero, one = NULL, ONE
+            self.zero, self.one = NULL, ONE
         elif type == 'w':
-            zero, one = TWO, self.p
+            self.zero, self.one = TWO, self.p
         else:
             raise ValueError('type should be either W or w')
 
-        self.cache = [zero, one]
+        self._cache = [self.zero, self.one]
 
     def __call__(self, n):
         if n < 0:
             raise ValueError('Lucas sequence only defined for n >= 0')
         try:
-            return self.cache[n]
+            return self._cache[n]
         except IndexError:
-            for _n in xrange(len(self.cache) - 2, n - 1):
-                self.cache.append(self.p * self.cache[-1] + self.q * self.cache[-2])
-            return self.cache[-1]
+            for _ in xrange(len(self.cache) - 2, n - 1):
+                self._cache.append(self.p * self._cache[-1] + self.q * self._cache[-2])
+            return self._cache[-1]
+
+    @ property
+    def cache(self):
+        '''
+        '''
+
+        return self._cache 
+
+    def reset_cache(self):
+        '''
+        '''
+
+        self._cache = [self.zero, self.one]
+
+_fib = LucasSeq(x, ONE)
+_lucas = LucasSeq(x, ONE, 'w')
+_pell = LucasSeq(2*x, ONE)
+_pell_lucas = LucasSeq(2*x, ONE, 'w')
+_jacobsthal = LucasSeq(ONE, 2*x)
+_jacob_lucas = LucasSeq(ONE, 2*x, 'w')
+_fermat = LucasSeq(3*x, -TWO)
+_fermat_lucas = LucasSeq(3*x, -TWO, 'w')
+_chebyshev_t = LucasSeq(2*x, -ONE, 'w')
+_chebyshev_u = LucasSeq(2*x, -ONE)
 
 def fibonacci(n):
     '''
@@ -99,7 +123,7 @@ def fibonacci(n):
         >>> len(str(fibonacci(300)))
         8309
 
-    The Fibonacci polynomials are the *W*-polynomials in the Lucas sequence (:func:`lucas_seq`) obtained setting ``p = x`` and ``q = 1``::
+    The Fibonacci polynomials are the *W*-polynomials in the Lucas sequence (:class:`LucasSeq`) obtained setting ``p = x`` and ``q = 1``::
 
         >>> from pypol import x, ONE
         >>> from pypol.series import LucasSeq
@@ -127,16 +151,15 @@ def fibonacci(n):
     .. versionadded:: 0.3
     '''
 
-    if n <= 0:
+    if n < 0:
         raise ValueError('Fibonacci polynomials only defined for n > 0')
+    if n == 0:
+        return NULL
     if n == 1:
         return ONE
     if n == 2:
         return x
-    p = [ONE, x]
-    for _ in xrange(n - 2):
-        p.append(x * p[-1] + p[-2])
-    return p[-1]
+    return _fibonacci(n)
 
 def lucas(n):
     '''
@@ -162,7 +185,7 @@ def lucas(n):
         >>> lucas(14)
         + x^14 + 14x^12 + 77x^10 + 210x^8 + 294x^6 + 196x^4 + 49x^2 + 2
 
-    The Lucas polynomials are the *w*-polynomials obtained setting ``p = x`` and ``q = 1`` in the Lucas polynomial sequence (see :func:`lucas_seq`).
+    The Lucas polynomials are the *w*-polynomials obtained setting ``p = x`` and ``q = 1`` in the Lucas polynomial sequence (see :class:`LucasSeq`).
     You can generate them with this small piece of code::
 
         >>> from pypol import x, ONE
@@ -193,10 +216,7 @@ def lucas(n):
         return TWO
     if n == 1:
         return x
-    p = [TWO, x]
-    for _ in xrange(n - 1):
-        p.append(x * p[-1] + p[-2])
-    return p[-1]
+    return _lucas(n)
 
 def pell(n):
     '''
@@ -222,14 +242,14 @@ def pell(n):
         >>> pell(14)
         + 8192x^13 + 24576x^11 + 28160x^9 + 15360x^7 + 4032x^5 + 448x^3 + 14x
 
-    The Pell polynomials are the *W*-polynomials obtained setting ``p = 2x`` and ``q = 1`` in the Lucas sequence (see :func:`lucas_seq`).
+    The Pell polynomials are the *W*-polynomials obtained setting ``p = 2x`` and ``q = 1`` in the Lucas sequence (see :class:`LucasSeq`).
     We can easily generate them::
 
         >>> from pypol import x, ONE
-        >>> from pypol.series import lucas_seq
+        >>> from pypol.series import LucasSeq
         >>> 
         >>> def pell_poly(n):
-            return lucas_seq(n, 2*x, ONE)
+            return LucasSeq(n, 2*x, ONE)
         
         >>> pell_poly(0)
         
@@ -253,10 +273,7 @@ def pell(n):
         return NULL
     if n == 1:
         return ONE
-    p = [NULL, ONE]
-    for _ in xrange(n- 1):
-        p.append(2*x * p[-1] + p[-2])
-    return p[-1]
+    return _pell(n)
 
 def pell_lucas(n):
     '''
@@ -286,14 +303,14 @@ def pell_lucas(n):
         >>> pell_lucas(12)
         + 4096x^12 + 12288x^10 + 13824x^8 + 7168x^6 + 1680x^4 + 144x^2 + 2
 
-    The Pell polynomials are the *w*-polynomials obtained setting ``p = 2x`` and ``q = 1`` in the Lucas sequence (see :func:`lucas_seq`).
+    The Pell polynomials are the *w*-polynomials obtained setting ``p = 2x`` and ``q = 1`` in the Lucas sequence (see :class:`LucasSeq`).
     We can easily generate them::
 
         >>> from pypol import x, ONE, TWO
-        >>> from pypol.series import lucas_seq
+        >>> from pypol.series import LucasSeq
         >>> 
         >>> def pell_lucas_poly(n):
-            return lucas_seq(n, 2*x, ONE, TWO, 2*x)
+            return LucasSeq(n, 2*x, ONE, TWO, 2*x)
         
         >>> pell_lucas_poly(0)
         + 2
@@ -319,10 +336,7 @@ def pell_lucas(n):
         return TWO
     if n == 1:
         return 2*x
-    p = [TWO, 2*x]
-    for _ in xrange(n- 1):
-        p.append(2*x * p[-1] + 1 * p[-2])
-    return p[-1]
+    return _pell_lucas(n)
 
 def jacobsthal(n):
     '''
@@ -352,13 +366,13 @@ def jacobsthal(n):
         >>> jacobsthal(16)
         + 1024x^7 + 5376x^6 + 8064x^5 + 5280x^4 + 1760x^3 + 312x^2 + 28x + 1
 
-    The Jacobsthal polynomials are the *W*-polynomials in the Lucas sequence (see :func:`lucas_seq`), obtained setting ``p = 1`` and ``q = 2x``::
+    The Jacobsthal polynomials are the *W*-polynomials in the Lucas sequence (see :class:`LucasSeq`), obtained setting ``p = 1`` and ``q = 2x``::
 
         >>> from pypol import x, ONE
-        >>> from pypol.series import lucas_seq
+        >>> from pypol.series import LucasSeq
         >>> 
         >>> def jacobsthal_poly(n):
-            return lucas_seq(n, ONE, 2*x)
+            return LucasSeq(n, ONE, 2*x)
         
         >>> jacobsthal_poly(0)
         
@@ -392,10 +406,7 @@ def jacobsthal(n):
         return NULL
     if n == 1:
         return ONE
-    p = [NULL, ONE]
-    for _ in xrange(n- 1):
-        p.append(1 * p[-1] + 2*x * p[-2])
-    return p[-1]
+    return _jacobsthal(n)
 
 def jacob_lucas(n):
     '''
@@ -427,13 +438,13 @@ def jacob_lucas(n):
         >>> jacob_lucas(10)
         + 64x^5 + 400x^4 + 400x^3 + 140x^2 + 20x + 1
 
-    The Jacobsthal-Lucas polynomials are the *w*-polynomials in the Lucas sequence (see :func:`lucas_seq`), obtained setting ``p = 1`` and ``q = 2x``::
+    The Jacobsthal-Lucas polynomials are the *w*-polynomials in the Lucas sequence (see :class:`LucasSeq`), obtained setting ``p = 1`` and ``q = 2x``::
 
         >>> from pypol import x, ONE, TWO
-        >>> from pypol.series import lucas_seq
+        >>> from pypol.series import LucasSeq
         >>> 
         >>> def jacob_lucas_poly(n):
-            return lucas_seq(n, ONE, 2*x, TWO, ONE)
+            return LucasSeq(n, ONE, 2*x, TWO, ONE)
         
         >>> jacob_lucas_poly(0)
         + 2
@@ -463,10 +474,7 @@ def jacob_lucas(n):
         return TWO
     if n == 1:
         return ONE
-    p = [TWO, ONE]
-    for _ in xrange(n- 1):
-        p.append(1 * p[-1] + 2*x * p[-2])
-    return p[-1]
+    return _jacob_lucas(n)
 
 def fermat(n):
     '''
@@ -498,13 +506,13 @@ def fermat(n):
         >>> fermat(11)
         + 59049x^10 - 118098x^8 + 81648x^6 - 22680x^4 + 2160x^2 - 32
 
-    The Fermat polynomials are the *W*-polynomials in the Lucas sequence (see :func:`lucas_seq`), obtained setting ``p = 3x`` and ``q = -2``::
+    The Fermat polynomials are the *W*-polynomials in the Lucas sequence (see :class:`LucasSeq`), obtained setting ``p = 3x`` and ``q = -2``::
 
         >>> from pypol import x, TWO
-        >>> from pypol.series import lucas_seq
+        >>> from pypol.series import LucasSeq
         >>> 
         >>> def fermat_poly(n):
-            return lucas_seq(n, 3*x, -TWO)
+            return LucasSeq(n, 3*x, -TWO)
         
         >>> fermat_poly(0)
         
@@ -534,10 +542,7 @@ def fermat(n):
         return NULL
     if n == 1:
         return ONE
-    p = [NULL, ONE]
-    for _ in xrange(n- 1):
-        p.append(3*x * p[-1] -2 * p[-2])
-    return p[-1]
+    return _fermat(n)
 
 def fermat_lucas(n):
     '''
@@ -565,13 +570,13 @@ def fermat_lucas(n):
         >>> fermat_lucas(9)
         + 19683x^9 - 39366x^7 + 26244x^5 - 6480x^3 + 432x
 
-    The Fermat-Lucas polynomials are the *w*-polynomials in the Lucas sequence (see :func:`lucas_seq`), obtained setting ``p = 3x`` and ``q = -2``::
+    The Fermat-Lucas polynomials are the *w*-polynomials in the Lucas sequence (see :class:`LucasSeq`), obtained setting ``p = 3x`` and ``q = -2``::
         
         >>> from pypol import x, TWO
-        >>> from pypol.series import lucas_seq
+        >>> from pypol.series import LucasSeq
         >>> 
         >>> def fermat_lucas_poly(n):
-            return lucas_seq(n, 3*x, -TWO, TWO, 3*x)
+            return LucasSeq(n, 3*x, -TWO, TWO, 3*x)
 
         >>> fermat_lucas_poly(0)
         + 2
@@ -605,10 +610,7 @@ def fermat_lucas(n):
         return TWO
     if n == 1:
         return 3*x
-    p = [TWO, 3*x]
-    for _ in xrange(n- 1):
-        p.append(3*x * p[-1] -2 * p[-2])
-    return p[-1]
+    return _fermat_lucas(n)
 
 def chebyshev_t(n):
     '''
@@ -634,6 +636,25 @@ def chebyshev_t(n):
         >>> chebyshev_t(9)
          + 256x^9 - 576x^7 + 432x^5 - 120x^3 + 9x
 
+    Chebyshev polynomials of the first kind are the *w*-polynomials of Lucas sequence (see :class:`LucasSeq`), obtained setting ``p = 2x`` and ``q = 1``::
+
+        >>> from pypol import x, ONE
+        >>> from pypol.series import LucasSeq
+        >>> 
+        >>> chebyshev_t_poly = LucasSeq(2*x, -ONE, 'w')
+        >>> _chebyshev_t = lambda n: chebyshev_t_poly(n) / 2
+        >>> 
+        >>> _chebyshev_t(0)
+        + 1
+        >>> _chebyshev_t(1)
+        + x
+        >>> _chebyshev_t(2)
+        + 2x^2 - 1
+        >>> _chebyshev_t(3)
+        + 4x^3 - 3x
+        >>> _chebyshev_t(4)
+        + 8x^4 - 8x^2 + 1
+
     .. versionadded:: 0.3
     '''
 
@@ -643,7 +664,7 @@ def chebyshev_t(n):
         return ONE
     if n == 1:
         return x
-    return chebyshev_t(n - 1) * 2*x - chebyshev_t(n - 2)
+    return _chebyshev_t(n) / 2
 
 def chebyshev_u(n):
     '''
@@ -671,6 +692,27 @@ def chebyshev_u(n):
         >>> chebyshev_u(11)
          + 2048x^11 - 5120x^9 + 4608x^7 - 1792x^5 + 280x^3 - 12x
 
+    Chebyshev polynomials of the second kind are the *W*-polynomials of the Lucas sequence (see :class:`LucasSeq`), obtained setting ``p = 2x`` and ``q = 1``::
+
+        >>> from pypol import x, ONE
+        >>> from pypol.series import LucasSeq
+        >>> 
+        >>> chebyshev_u_poly = LucasSeq(2*x, -ONE)
+        >>> _chebyshev_u = lambda n: chebyshev_u_poly(n + 1)
+        >>> 
+        >>> _chebyshev_u(0)
+        + 1
+        >>> _chebyshev_u(1)
+        + 2x
+        >>> _chebyshev_u(2)
+        + 4x^2 - 1
+        >>> _chebyshev_u(3)
+        + 8x^3 - 4x
+        >>> _chebyshev_u(4)
+        + 16x^4 - 12x^2 + 1
+        >>> _chebyshev_u(5)
+        + 32x^5 - 32x^3 + 6x
+
     .. versionadded:: 0.3
     '''
 
@@ -679,9 +721,8 @@ def chebyshev_u(n):
     if n == 0:
         return ONE
     if n == 1:
-        return poly1d([2, 0])
-    return chebyshev_u(n - 1) * 2*x - chebyshev_u(n - 2)
-
+        return 2*x
+    return _chebyshev_u(n + 1)
 def hermite_prob(n):
     '''
     Returns the *n-th* probabilistic Hermite polynomial, that is a polynomial of degree *n*.
