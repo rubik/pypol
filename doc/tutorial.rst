@@ -63,33 +63,9 @@ Now run the setup.py script::
             running egg_info
             writing pypol_.egg-info/PKG-INFO
             writing top-level names to pypol_.egg-info/top_level.txt
-            writing dependency_links to pypol_.egg-info/dependency_links.txt
-            reading manifest file 'pypol_.egg-info/SOURCES.txt'
-            reading manifest template 'MANIFEST.in'
-            warning: no files found matching 'README.textile'
-            writing manifest file 'pypol_.egg-info/SOURCES.txt'
-            installing library code to build/bdist.linux-i686/egg
-            running install_lib
-            running build_py
-            copying pypol/__init__.py -> build/lib.linux-i686-2.6/pypol
-            copying pypol/funcs.py -> build/lib.linux-i686-2.6/pypol
-            copying pypol/core.py -> build/lib.linux-i686-2.6/pypol
-            creating build/bdist.linux-i686/egg
-            creating build/bdist.linux-i686/egg/pypol
-            copying build/lib.linux-i686-2.6/pypol/__init__.py -> build/bdist.linux-i686/egg/pypol
-            copying build/lib.linux-i686-2.6/pypol/funcs.py -> build/bdist.linux-i686/egg/pypol
-            copying build/lib.linux-i686-2.6/pypol/core.py -> build/bdist.linux-i686/egg/pypol
-            byte-compiling build/bdist.linux-i686/egg/pypol/__init__.py to __init__.pyc
-            byte-compiling build/bdist.linux-i686/egg/pypol/funcs.py to funcs.pyc
-            byte-compiling build/bdist.linux-i686/egg/pypol/core.py to core.pyc
-            creating build/bdist.linux-i686/egg/EGG-INFO
-            copying pypol_.egg-info/PKG-INFO -> build/bdist.linux-i686/egg/EGG-INFO
-            copying pypol_.egg-info/SOURCES.txt -> build/bdist.linux-i686/egg/EGG-INFO
-            copying pypol_.egg-info/dependency_links.txt -> build/bdist.linux-i686/egg/EGG-INFO
-            copying pypol_.egg-info/top_level.txt -> build/bdist.linux-i686/egg/EGG-INFO
-            zip_safe flag not set; analyzing archive contents...
-            creating 'dist/pypol_-0.3-py2.6.egg' and adding 'build/bdist.linux-i686/egg' to it
-            removing 'build/bdist.linux-i686/egg' (and everything under it)
+
+            ... cut ...
+
             Processing pypol_-0.3-py2.6.egg
             creating /usr/local/lib/python2.6/dist-packages/pypol_-0.3-py2.6.egg
             Extracting pypol_-0.3-py2.6.egg to /usr/local/lib/python2.6/dist-packages
@@ -128,45 +104,9 @@ or run them with setup.py::
     pypol_.tests.test_pypol.TestFunctions.testGcd ... ok
     pypol_.tests.test_pypol.TestFunctions.testLcm ... ok
     pypol_.tests.test_pypol.TestFunctions.testMonomial ... ok
-    pypol_.tests.test_pypol.TestFunctions.testParsePolynomial ... ok
-    pypol_.tests.test_pypol.TestFunctions.testPolynomial ... ok
-    pypol_.tests.test_pypol.TestFunctions.testRandomPoly ... ok
-    pypol_.tests.test_pypol.TestFunctions.testRoot ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testAdd ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testCoeffGcd ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testCoeffLcm ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testComplete ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testContains ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testDelitem ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testDiv ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testDivAll ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testDivmod ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testEq ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testEvalForm ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testGcd ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testGetitem ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testIsSquareDiff ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testJointLetters ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testLcm ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testLen ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testLetters ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testLinear ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testMod ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testMul ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testNe ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testNeg ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testNonzero ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testOrdered ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testOrderedMonomials ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testPos ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testPow ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testPowers ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testRawPowers ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testSetitem ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testSort ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testSub ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testTruediv ... ok
-    pypol_.tests.test_pypol.TestPolynomial.testUpdate ... ok
+
+    ... cut ...
+
     pypol_.tests.test_pypol.TestPolynomial.testZeros ... ok
     
     ----------------------------------------------------------------------
@@ -179,7 +119,7 @@ or run them with setup.py::
 Building this documentation
 +++++++++++++++++++++++++++
 
-To build the documentation, change directory and go to pypol/doc::
+To build the documentation, change directory and go to :file:`pypol/doc`::
 
     $ cd pypol_-0.3/doc
 
@@ -230,7 +170,7 @@ Here is pypol cookbook. All examples assume::
 Creating a polynomial
 +++++++++++++++++++++
 
-Use :func:`pypol.poly1d`, :func:`pypol.poly1d_2`, :func:`pypol.polynomial`, or :func:`pypol.monomial`::
+Use :func:`pypol.poly1d`, :func:`pypol.poly1d_2`, :func:`pypol.polynomial`, or :func:`pypol.monomial` to create a polynomial::
 
     >>> p = poly1d([1, 2, -3, 4])
     >>> p
@@ -260,6 +200,7 @@ The :class:`pypol.Polynomial` class
 
 ::
 
+    >>> p = poly1d([1, 2, -3, 4])
     >>> p.monomials
     ((1, {'x': 3}), (2, {'x': 2}), (-3, {'x': 1}), (4, {}))
     >>> p.coefficients
@@ -301,21 +242,15 @@ Operations
         raise ValueError('The polynomials are not divisible')
     ValueError: The polynomials are not divisible
     >>> q / p
-    Traceback (most recent call last):
-      File "<pyshell#21>", line 1, in <module>
-        q / p
-      File "core.py", line 1453, in __divmod__
-        raise ValueError('The polynomials are not divisible')
-    ValueError: The polynomials are not divisible
-    >>> del p[1]
-    >>> q / p
-    + 3x^6 + 9x^4 - 11x^3 + 27x^2 - 51x + 103
+    + 3x^6 - 6x^5 + 21x^4 - 77x^3 + 241x^2 - 797x + 2625
     >>> divmod(q, p)
-    (+ 3x^6 + 9x^4 - 11x^3 + 27x^2 - 51x + 103, - 207x^2 + 411x - 206)
+    (+ 3x^6 - 6x^5 + 21x^4 - 77x^3 + 241x^2 - 797x + 2625,
+     - 8605x^2 + 11063x - 10500)
     >>> quot, rem = divmod(q, p)
+    >>> quot, rem 
+    (+ 3x^6 - 6x^5 + 21x^4 - 77x^3 + 241x^2 - 797x + 2625,
+     - 8605x^2 + 11063x - 10500)
     >>> quot * p + rem
-    + 3x^9 - 5x^6
-    >>> q
     + 3x^9 - 5x^6
     >>> quot * p + rem == q
     True
@@ -346,7 +281,7 @@ Operations
 Differentiation and integration
 +++++++++++++++++++++++++++++++
 
-There are three functions: :func:`pypol.funcs.polyder` (to find the derivative),
+Currently, there are three functions: :func:`pypol.funcs.polyder` (to find the derivative),
 :func:`pypol.funcs.polyint` (to find the indefinite integral) and :func:`pypol.funcs.polyint_` (to find the definite integral)::
 
     >>> p = poly1d([1, 3, -3, -1])
@@ -385,9 +320,9 @@ There are three functions: :func:`pypol.funcs.polyder` (to find the derivative),
 Series
 ++++++
 
-In the :mod:`pypol.funcs` module there are some generator functions, like::
+The :mod:`pypol.series` module defines some functions, like::
 
-    >>> from pypol.funcs import *
+    >>> from pypol.series import *
     >>> fibonacci(2)
     + x
     >>> fibonacci(21)
@@ -418,7 +353,7 @@ In the :mod:`pypol.funcs` module there are some generator functions, like::
 Root-finding
 ++++++++++++
 
-The :mod:`pypol.roots` implements some root-findings algorithm::
+The :mod:`pypol.roots` module implements some root-finding algorithms::
 
     >>> from pypol.roots import *
     >>> k = poly1d([3, -4, -1, 4])

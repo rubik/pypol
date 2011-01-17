@@ -66,10 +66,10 @@ def ruffini(poly):
 
 def quadratic(poly):
     '''
-    Finds the two roots of the polynomial *poly* solving the quadratic equation: |p1|
+    Finds the two roots of the polynomial *poly* solving the quadratic equation: :math:`ax^2 + bx + c = 0`
 
     with the formula:
-        |p2|.
+        :math:`\\frac{-b\pm \sqrt{b^2 - 4ac}}{2a}`
 
     :raises: :exc:`AssertionError` if the polynomial's degree is not 2.
     :rtype: 2 numbers (integer, float or complex) in a tuple

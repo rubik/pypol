@@ -420,9 +420,7 @@ class Polynomial(object):
     @ property
     def monomials(self):
         '''
-        **property**
-
-        monomials is a property that returns the polynomial's monomials.
+        Returns the polynomial's monomials.
         Example::
 
             >>> Polynomial(parse_polynomial('2x^3 + 4xy')).monomials
@@ -475,8 +473,6 @@ class Polynomial(object):
     @ property
     def coefficients(self):
         '''
-        **property**
-
         Returns the polynomial's coefficients::
 
             >>> Polynomial(parse_polynomial('2x^3 + 4xy - 5')).coefficients
@@ -485,17 +481,16 @@ class Polynomial(object):
 
         return [monomial[0] for monomial in self._monomials]
 
-    @ property
     def gcd(self):
         '''
-        **property**
-
         Returns the Greatest Common Divisor of the polynomial's monomials::
 
-            >>> Polynomial(parse_polynomial('3x^4 - 9x')).gcd
+            >>> Polynomial(parse_polynomial('3x^4 - 9x')).gcd()
             - 3x
 
         .. versionadded:: 0.2
+        .. versionchanged:: 0.4
+            Become a method
         '''
 
         vars = {} ## Change for Py2.7
@@ -503,17 +498,16 @@ class Polynomial(object):
             vars[letter] = self.min_power(letter)
         return monomial(reduce(fractions.gcd, self.coefficients), **vars)
 
-    @ property
     def lcm(self):
         '''
-        **property**
-
         Returns the Least Common Multiple of the polynomial's monomials::
 
-            >>> Polynomial(parse_polynomial('3x^4 - 9x')).lcm
+            >>> Polynomial(parse_polynomial('3x^4 - 9x')).lcm()
             + 9x^4
 
         .. versionadded:: 0.2
+        .. versionchanged:: 0.4
+            Become a method
         '''
 
         vars = {} ## Change for Py2.7
@@ -527,8 +521,6 @@ class Polynomial(object):
     @ property
     def degree(self):
         '''
-        **property**
-
         Returns the degree of the polynomial, i.e. the maximum degree of its monomials.
         An example::
 
@@ -545,8 +537,6 @@ class Polynomial(object):
     @ property
     def eval_form(self):
         '''
-        **property**
-
         Returns a string form of the polynomial that can be used with eval::
 
             >>> e = Polynomial(parse_polynomial('2x^2 - 4x + 4')).eval_form
@@ -578,16 +568,11 @@ class Polynomial(object):
     @ property
     def letters(self):
         '''
-        **property**
-
         Returns a tuple of all the letters that appear in the polynomial.
         ::
 
             >>> Polynomial(parse_polynomial('2x^3 + 4xy')).letters
             ('x', 'y')
-
-        .. seealso::
-            :meth:`joint_letters`.
         '''
 
         return tuple(sorted(reduce(operator.or_, [set(m[1].keys()) \
@@ -596,17 +581,12 @@ class Polynomial(object):
     @ property
     def joint_letters(self):
         '''
-        **property**
-
         Returns a tuple of the letters that appear in all the polynomial's monomials::
 
             >>> Polynomial(parse_polynomial('2x^3 + 4xy - 16')).joint_letters
             ()
             >>> Polynomial(parse_polynomial('2x^3 + 4xy - 16ax')).joint_letters
             ('x',)
-
-        .. seealso::
-            :meth:`letters`.
 
         .. versionadded:: 0.2
         '''
@@ -672,8 +652,6 @@ class Polynomial(object):
     @ property
     def right_hand_side(self):
         '''
-        **property**
-
         Returns the right-hand side, if it exist, False otherwise.
         ::
 
@@ -690,8 +668,6 @@ class Polynomial(object):
     @ property
     def zeros(self):
         '''
-        **property**
-
         Returns a tuple containing all the polynomial's zeros, based on the right-hand side.
 
         .. warning::
@@ -828,9 +804,6 @@ class Polynomial(object):
             KeyError: 'letter not in polynomial'
 
         It raises KeyError if the letter is not in the polynomial.
-
-        .. seealso::
-            :meth:`min_power`.
         '''
 
         if letter not in self.letters:
@@ -855,9 +828,6 @@ class Polynomial(object):
             KeyError: 'letter not in polynomial'
 
         It raises KeyError if the letter is not in the polynomial.
-
-        .. seealso::
-            :meth:`max_power`.
         '''
 
         if letter not in self.letters:
@@ -879,9 +849,6 @@ class Polynomial(object):
             {'a': [2, 0],
             'x': [3, 1, 0],
             }
-
-        .. seealso::
-            :meth:`raw_powers`.
         '''
 
         if not letter:
@@ -933,12 +900,12 @@ class Polynomial(object):
 
         def is_p_square(n):
             '''
-            Internal method used to check if a power is divisible by 2
+            Internal function used to check if a power is divisible by 2
             '''
             return n & 1 == 0 ## n % 2
         def is_perfect_square(n):
             '''
-            Internal method to check if an integer is a perfect square
+            Internal function to check if an integer is a perfect square
             '''
             return int(n ** 0.5) ** 2 == n
         def _check(a):
@@ -1665,8 +1632,6 @@ class AlgebraicFraction(object):
     @ property
     def denominator(self):
         '''
-        **property**
-
         Returns the denominator of the :class:`AlgebraicFraction`.
         ::
 
@@ -1687,8 +1652,6 @@ class AlgebraicFraction(object):
     @ property
     def terms(self):
         '''
-        **property**
-
         Returns both the :meth:`numerator` and the :meth:`denominator`::
 
             >>> AlgebraicFraction(a, b).terms

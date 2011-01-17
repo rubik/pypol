@@ -23,33 +23,33 @@ The main class in pypol is :class:`Polynomial`:
 
 .. class:: Polynomial([, monomials=()[, simplify=True]])
 
-    .. automethod:: monomials()
+    .. autoattribute:: monomials
 
-    .. automethod:: ordered_monomials()
+    .. automethod:: ordered_monomials
 
-    .. automethod:: sort()
+    .. automethod:: sort
 
-    .. automethod:: coefficients()
+    .. autoattribute:: coefficients
 
     .. automethod:: gcd()
 
     .. automethod:: lcm()
 
-    .. automethod:: degree()
+    .. autoattribute:: degree
 
-    .. automethod:: letters()
+    .. autoattribute:: letters
 
-    .. automethod:: joint_letters()
+    .. autoattribute:: joint_letters
 
     .. automethod:: max_letter(alphabetically=True)
 
-    .. automethod:: eval_form()
+    .. autoattribute:: eval_form
 
-    .. automethod:: right_hand_side()
+    .. autoattribute:: right_hand_side
 
-    .. automethod:: zeros()
+    .. autoattribute:: zeros
 
-    .. automethod:: get()
+    .. automethod:: get
 
     .. automethod:: raw_powers
 
@@ -174,7 +174,7 @@ The main class in pypol is :class:`Polynomial`:
 
     This class is still in development and could have some bugs.
 
-pypol supports the algebraic fractions, although now it is very limited. It supports all the four basic operation but at the moment it does not decompose the terms.
+pypol supports the algebraic fractions, although now it is very limited. It supports all the four basic operation but at the moment it does not simplify the fraction.
 
 In all these examples we assume::
 
@@ -183,11 +183,11 @@ In all these examples we assume::
 
 .. autoclass:: AlgebraicFraction(numerator, denominator)
 
-    .. automethod:: numerator()
+    .. autoattribute:: numerator
 
-    .. automethod:: denominator()
+    .. autoattribute:: denominator
 
-    .. automethod:: terms()
+    .. autoattribute:: terms
 
     .. automethod:: invert
 

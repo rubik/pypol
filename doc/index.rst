@@ -12,21 +12,11 @@ Welcome to pypol v0.3 documentation!
 
 pypol is a Python library that allows you to manipulate polynomials. This is the main page of the documentation.
 
-.. contents:: Table of contents
-
-Indeces and tables
-------------------
-
-Main index: :ref:`genindex`
-
-Modules index: :ref:`modindex`
-
-Search: :ref:`search`
 
 Installation
 ------------
 
-pypol is on `PyPI <http://pypi.python.org/pypi/pypol_/0.3>`_ too. If you have setuptools installed, you can use **easy_install**::
+pypol is on `PyPI <http://pypi.python.org/pypi/pypol_/0.3>`_ too. If you have setuptools installed, you can use `easy_install <http://peak.telecommunity.com/DevCenter/EasyInstall>`_::
 
     $ easy_install -U pypol_
 

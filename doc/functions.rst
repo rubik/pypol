@@ -7,10 +7,10 @@
 .. |c_5| image:: images/c_5.gif
 .. |c_6| image:: images/c_6.gif
 
-Functions
-=========
+Global functions
+================
 
-pypol module has some functions to work with polynomials
+pypol module has some functions to work with polynomials. If you need other utility functions check the :mod:`pypol.funcs` and :mod:`pypol.roots` modules.
 
 .. hlist::
 
@@ -23,25 +23,16 @@ pypol module has some functions to work with polynomials
     * :func:`lcm`
 
 
-poly1d
-------
-
 .. autofunction:: poly1d
 
-poly1d_2
---------
-
 .. autofunction:: poly1d_2
-
-polynomial
-----------
 
 .. autofunction:: polynomial
 
 .. _syntax-rules:
 
 :func:`polynomial`'s syntax rules
-+++++++++++++++++++++++++++++++++
+---------------------------------
 
 Powers can be expressed using the ``^`` symbol. If a digit follows a letter then it is interpreted as an exponent. So the following expressions are equal::
 
@@ -63,29 +54,14 @@ represents this polynomial::
     >>> polynomial('2x3y 2 + 1')
     + 2x^3y + 3
 
-algebraic_fraction
-------------------
-
 .. autofunction:: algebraic_fraction
-
-monomial
---------
 
 .. autofunction:: monomial
 
-parse_polynomial
-----------------
-
 .. autofunction:: parse_polynomial
-
-gcd
----
 
 .. autofunction:: gcd
 
-lcm
----
-
 .. autofunction:: lcm
 
-.. seealso:: :mod:`pypol.funcs` for utility functions.
+.. seealso:: :mod:`pypol.funcs` for other utility functions.

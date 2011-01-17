@@ -10,8 +10,6 @@ The :mod:`funcs` module
 
 .. versionadded:: 0.3
 
-.. contents:: Table of contents
-
 This module add some utility function to pypol.
 
 .. note::
@@ -67,3 +65,13 @@ Numbers
 .. autofunction:: stirling_2
 
 .. autofunction:: bell_num
+
+.. autofunction:: lucas_num
+
+.. autofunction:: pell_lucas_num
+
+.. autofunction:: pell_num
+
+.. autofunction:: jacobsthal_num
+
+.. autofunction:: fermat_num

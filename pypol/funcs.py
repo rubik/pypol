@@ -185,7 +185,7 @@ def polyder(poly, m=1):
 
     **Examples**
 
-    Let's calculate the derivative of the polynomials |p3| and |p4|::
+    Let's calculate the derivative of the polynomials :math:`x^2` and :math:`2x^3 - 4x^2 + 1`::
 
         >>> p1 = poly1d([1, 0, 0]) ## or poly1d([1, 0], right_hand_side=False)
         >>> p1
@@ -232,7 +232,7 @@ def polyder(poly, m=1):
 def polyint(poly, m=1, C=[]):
     '''
     Returns the indefinite integral of the polynomial *poly*:
-        |p5|
+        :math:`\int p(x)dx`
 
     :param Polynomial poly: the polynomial
     :param integer m: the order of the antiderivative (default 1)
@@ -336,7 +336,7 @@ def polyint(poly, m=1, C=[]):
 def polyint_(poly, a, b):
     '''
     Returns the definite integral of the polynomial *poly*, with upper and lower limits:
-        |p8|
+        :math:`\int_{a}^{b}p(x)dx`
 
     :param integer a: the lower limit
     :param integer b: the upper limit
@@ -511,7 +511,7 @@ def interpolate(x_values, y_values): ## Still in development
 
 def divided_diff(p, x_values):
     '''
-    Computes the divided difference |p33|
+    Computes the divided difference :math:`p[x_{0},x_{1},\ldots,x_{n}]`
     '''
 
     if len(x_values) == 1:
@@ -531,9 +531,9 @@ def interpolate_newton(x_values, y_values):
 
 def bin_coeff(n, k):
     '''
-    Returns the binomial coefficient |p11|, i.e. the coefficient of the |p12| term of the binomial power |p13|.
+    Returns the binomial coefficient :math:`\\binom{n}{k}`, i.e. the coefficient of the :math:`x^k` term of the binomial power :math:`(1 + x)^n`.
 
-    :param integer n: the power of the binomial. If ``n == 1`` the result will be |p14|
+    :param integer n: the power of the binomial. If ``n == 1`` the result will be :math:`(-1)^k`
     :param integer k: the power of the term
     :rtype: float
 
@@ -612,7 +612,7 @@ def bin_coeff(n, k):
 
 def harmonic(n):
     '''
-    Returns the *n-th* Harmonic number
+    Returns the *n-th* Harmonic number.
 
     :raises: :exc:`ValueError` if *n* is negative or equal to 0
     :rtype: :class:`fractions.Fraction`
@@ -753,7 +753,7 @@ def pell_lucas_num(n):
         return 0.
     if n == 1:
         return 1.
-    return math.ceil((1 + s2) ** n + (1 - s2)**n)
+    return math.ceil((1 + s2)**n + (1 - s2)**n)
 
 def jacobsthal_num(n):
     return (2 ** n + (-1) ** (n - 1)) / 3
