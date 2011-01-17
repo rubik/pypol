@@ -4,9 +4,7 @@
 .. moduleauthor:: Michele Lacchia (michelelacchia@gmail.com)
 .. sectionauthor:: Michele Lacchia (michelelacchia@gmail.com)
 
-.. include:: global.rst
-
-The :mod:`roots` module
+The :mod:`~pypol.roots` module
 =======================
 
 .. versionadded:: 0.4

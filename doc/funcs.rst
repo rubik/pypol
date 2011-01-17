@@ -3,9 +3,7 @@
 .. moduleauthor:: Michele Lacchia <michelelacchia@gmail.com>
 .. sectionauthor:: Michele Lacchia <michelelacchia@gmail.com>
 
-.. include:: global.rst
-
-The :mod:`funcs` module 
+The :mod:`~pypol.funcs` module 
 ========================
 
 .. versionadded:: 0.3

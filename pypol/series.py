@@ -6,35 +6,32 @@ from pypol.funcs import polyder, bin_coeff, stirling_2, harmonic, harmonic_g
 
 class LucasSeq(object):
     '''
-    "The Lucas polynomial sequence is a pair of generalized polynomials which generalize the Lucas sequence to polynomials ..." [MathWorld]_
+    *"The Lucas polynomial sequence is a pair of generalized polynomials which generalize the Lucas sequence to polynomials ..."* [MathWorld]_
 
-    :param integer n: the *n-th* element of the sequence
     :param p: The *p* parameter
     :param q: The *q* parameter
     :param zero: The first element of the sequence (at index 0)
     :type zero: :class:`pypol.Polynomial`
     :param one: The second element of the sequence (at index 1)
     :type one: :class:`pypol.Polynomial`
-    :raises: :exc:`ValueError` if *n* is negative
-    :rtype: :class:`pypol.Polynomial`
 
-    Setting different values for *p* and *q* we obtain some polynomial sequences, for every *p* and *q* pair there are two polynomials sequences, |p17| and |p18|:
+    Setting different values for *p* and *q* we obtain some polynomial sequences, for every *p* and *q* pair there are two polynomials sequences, :math:`W(x)` and :math:`w(x)`:
 
-    +--------+--------+-----------------------------------------------------------------------+---------------------------------------------------------------------+
-    | **p**  | **q**  |    **W(x)**                                                           |   **w(x)**                                                          |
-    +--------+--------+-----------------------------------------------------------------------+---------------------------------------------------------------------+
-    | x      | 1      |  Fibonacci polynomials (:func:`fibonacci`)                            | Lucas polynomials (:func:`lucas`)                                   |
-    +--------+--------+-----------------------------------------------------------------------+---------------------------------------------------------------------+
-    | 2x     | 1      |  Pell polynomials (:func:`pell`)                                      | Pell-Lucas polynomials (:func:`pell_lucas`)                         |
-    +--------+--------+-----------------------------------------------------------------------+---------------------------------------------------------------------+
-    | 1      | 2x     |  Jacobsthal polynomials (:func:`jacobsthal`)                          | Jacobsthal-Lucas polynomials (:func:`jacob_lucas`)                  |
-    +--------+--------+-----------------------------------------------------------------------+---------------------------------------------------------------------+
-    | 3x     | -2     |  Fermat polynomials (:func:`fermat`)                                  | Fermat-Lucas polynomials (:func:`fermat_lucas`)                     |
-    +--------+--------+-----------------------------------------------------------------------+---------------------------------------------------------------------+
-    | 2x     | -1     |  Chebyshev polynomials of the second kind |p19| (:func:`chebyshev_u`) | Chebyshev polynomials of the first kind |p20| (:func:`chebyshev_t`) |
-    +--------+--------+-----------------------------------------------------------------------+---------------------------------------------------------------------+
+    +--------+--------+--------------------------------------------------------------------------------------+-------------------------------------------------------------------------------+
+    | **p**  | **q**  |    **W(x)**                                                                          |   **w(x)**                                                                    |
+    +--------+--------+--------------------------------------------------------------------------------------+-------------------------------------------------------------------------------+
+    | x      | 1      |  Fibonacci polynomials (:func:`fibonacci`)                                           | Lucas polynomials (:func:`lucas`)                                             |
+    +--------+--------+--------------------------------------------------------------------------------------+-------------------------------------------------------------------------------+
+    | 2x     | 1      |  Pell polynomials (:func:`pell`)                                                     | Pell-Lucas polynomials (:func:`pell_lucas`)                                   |
+    +--------+--------+--------------------------------------------------------------------------------------+-------------------------------------------------------------------------------+
+    | 1      | 2x     |  Jacobsthal polynomials (:func:`jacobsthal`)                                         | Jacobsthal-Lucas polynomials (:func:`jacob_lucas`)                            |
+    +--------+--------+--------------------------------------------------------------------------------------+-------------------------------------------------------------------------------+
+    | 3x     | -2     |  Fermat polynomials (:func:`fermat`)                                                 | Fermat-Lucas polynomials (:func:`fermat_lucas`)                               |
+    +--------+--------+--------------------------------------------------------------------------------------+-------------------------------------------------------------------------------+
+    | 2x     | -1     |  Chebyshev polynomials of the second kind :math:`U_{n - 1}(x)` (:func:`chebyshev_u`) | Chebyshev polynomials of the first kind :math:`2T_n(x)` (:func:`chebyshev_t`) |
+    +--------+--------+--------------------------------------------------------------------------------------+-------------------------------------------------------------------------------+
 
-    The starting value for the |p17| polynomials is always 2, for the |p18| polynomials is always a null polynomial.
+    The starting value for the :math:`W(x)` polynomials is always 2, for the :math:`w(x)` polynomials is always a null polynomial.
 
 
     .. [MathWorld] `Weisstein, Eric W. <http://mathworld.wolfram.com/about/author.html>`_ `"Lucas Polynomial Sequence. " <http://mathworld.wolfram.com/LucasPolynomialSequence.html>`_ From `MathWorld <http://mathworld.wolfram.com/>`_ -- A Wolfram Web Resource.
@@ -54,6 +51,31 @@ class LucasSeq(object):
         self._cache = [self.zero, self.one]
 
     def __call__(self, n):
+        '''
+        Returns the *n-th* element of the sequence
+
+        :param integer n: the *n-th* element of the sequence
+        :raises: :exc:`ValueError` if *n* is negative
+        :rtype: :class:`pypol.Polynomial`
+
+        ::
+
+            >>> from pypol import *
+            >>> from pypol.series import *
+            >>> 
+            >>> fibo = LucasSeq(x, ONE)
+            >>> fibo(0)
+            
+            >>> fibo(1)
+            + 1
+            >>> fibo(12)
+            + x^11 + 10x^9 + 36x^7 + 56x^5 + 35x^3 + 6x
+            >>> fibo(19)
+            + x^18 + 17x^16 + 120x^14 + 455x^12 + 1001x^10 + 1287x^8 + 924x^6 + 330x^4 + 45x^2 + 1
+            >>> f = fibo(45)
+            >>> f = fibo(65) ## Almost instantaneous
+        '''
+
         if n < 0:
             raise ValueError('Lucas sequence only defined for n >= 0')
         try:
@@ -65,15 +87,9 @@ class LucasSeq(object):
 
     @ property
     def cache(self):
-        '''
-        '''
-
         return self._cache 
 
     def reset_cache(self):
-        '''
-        '''
-
         self._cache = [self.zero, self.one]
 
 _fib = LucasSeq(x, ONE)
@@ -851,9 +867,9 @@ def touchard(n):
         + x^12 + 66x^11 + 7498669301432319/4398046511104x^10 + 22275x^9 + 159027x^8 + 627396x^7 + 1323652x^6 + 1379400x^5 + 611501x^4 + 86526x^3 + 2047x^2 + x
 
     The Touchard polynomials also satisfy:
-        |p15|
+        :math:`T_n(1) = B_n`
 
-    where |p16| is the *n-th* Bell number (:func:`funcs.bell_num`)::
+    where :math:`B_n` is the *n-th* Bell number (:func:`funcs.bell_num`)::
 
         >>> long(touchard(19)(1)) == long(bell_num(19))
         True
@@ -935,7 +951,7 @@ def gegenbauer(n, a='a'):
 def bernstein(v, n):
     '''
     Returns the Bernstein polynomial
-        |p32|
+        :math:`B_{v,n}(x) = \\binom{n}{v}x^v(1 - x)^{n - v}`
 
     :raises: :exc:`ValueError` if *v* or *n* are negative or *v* is greater than *n*
     :rtype: :class:`pypol.Polynomial`

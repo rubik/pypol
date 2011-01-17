@@ -1,6 +1,4 @@
 from core import *
-import funcs
-import roots
 
 x = monomial(x=1)
 y = monomial(y=1)

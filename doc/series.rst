@@ -6,7 +6,6 @@
 
 .. versionadded:: 0.4
 
-.. include:: global.rst
 
 The :mod:`~pypol.series` module
 =================================
@@ -19,6 +18,12 @@ Lucas polynomials sequences
 ---------------------------
 
 .. autoclass:: LucasSeq
+
+.. automethod:: LucasSeq.__call__
+
+.. autoattribute:: LucasSeq.cache
+
+.. automethod:: LucasSeq.reset_cache
 
 .. autofunction:: fibonacci
 

@@ -137,7 +137,7 @@ def quadratic(poly):
 
 def cubic(poly):
     '''
-    Finds the three roots of the polynomial *poly* solving the equation: |p22|.
+    Finds the three roots of the polynomial *poly* solving the equation: :math:`ax^3 + bx^2 + cx + d = 0`.
 
     :raises: :exc:`AssertionError` if the polynomial's degree is not 3.
     :rtype: 3 numbers (integer, float or complex) in a tuple
@@ -300,7 +300,7 @@ def __quartic(poly):
 def newton(poly, start, epsilon=float('-inf')):
     '''
     Finds one root of the polynomial *poly*, with this iteration formula:
-        |p8_5|
+        :math:`x_{n + 1} = x_n - \\frac{f(x_n)}{f'(x_n)}`
 
     :param start: the start value for evaluate ``poly(x)``.
     :param epsilon: the precision of the calculus (default to ``float('-inf')``).
@@ -372,7 +372,7 @@ def newton(poly, start, epsilon=float('-inf')):
 def halley(poly, start, epsilon=float('-inf')):
     '''
     Finds one root of the polynomial *poly* using the Halley's method, with this iteration formula:
-        |p9|
+        :math:`x_{n + 1} = x_n - \\frac{2f(x_n)f'(x_n)}{2[f'(x_n)]^2 - f(x_n)f''(x_n)}`
 
     :param start: the start value to evaluate ``poly(x)``
     :param epsilon: the precision, default to ``float('-inf')``
@@ -429,7 +429,7 @@ def halley(poly, start, epsilon=float('-inf')):
 def householder(poly, start, epsilon=float('-inf')):
     '''
     Finds one root of the polynomial *poly* using the Householder's method, with this iteration formula:
-        |p10|
+        :math:`x_{n + 1} = x_n - \\frac{f(x_n)}{f'(x_n)} \\Big\{ 1 + \\frac{f(x_n)f''(x_n)}{2[f'(x_n)]^2} \\Big\}`
 
     :param start: the start value to evaluate ``poly(x)``
     :param epsilon: the precision, default to ``float('-inf')``
@@ -488,7 +488,7 @@ def householder(poly, start, epsilon=float('-inf')):
 def schroeder(poly, start, epsilon=float('-inf')):
     '''
     Finds one root of the polynomial *poly* using the Schröder's method, with the iteration formula:
-        |p21|
+        :math:`x_{n + 1} = x_n - \\frac{f(x_n)f'(x_n)}{[f'(x_n)]^2 - f(x_n)f''(x_n)}`
 
     :param start: the start value to evaluate ``poly(x)``
     :param epsilon: the precision, default to ``float('-inf')``
@@ -528,13 +528,13 @@ def schroeder(poly, start, epsilon=float('-inf')):
 def laguerre(poly, start, epsilon=float('-inf')):
     '''
     Finds one root of the polynomial *poly* using the Laguerre's method, with the iteration formula:
-        |p23|
+        :math:`x_{k + 1} = x_k - \\frac{n}{max[G \pm \sqrt{(n - 1)(nH - G^2)}]}`
 
     where:
 
-    |p30|
+    :math:`G = \\frac{p'(x_k)}{p(x_k)}`
 
-    |p31|
+    :math:`H = G^2 - \\frac{p''(x_k)}{p(x_k)}`
 
     :param start: the start value to evaluate ``poly(x)``
     :param epsilon: the precision, default to ``float('-inf')``
