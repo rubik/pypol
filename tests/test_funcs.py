@@ -1,5 +1,5 @@
-import nose
-from nose.tools import *
+#import nose
+#from nose.tools import *
 
 import fractions
 

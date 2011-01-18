@@ -243,7 +243,7 @@ def cubic(poly):
             x3 = round(x3)
         return x1, x2, x3
 
-def __quartic(poly):
+def quartic(poly):
     assert poly.degree == 4, 'The polynomial\'s degree must be 4'
     if len(poly.coefficients) == 5:
         a, b, c, d, e = poly.coefficients
@@ -277,13 +277,14 @@ def __quartic(poly):
     else:
         a, b, c, d, e = map(getattr(poly, 'get'), [4, 3, 2, 1, 0])
 
-    f = float(c - (3*b**2 / 8))
-    g = float(d + (b**3/ 8) - (b*c / 2))
-    h = e - (3*b**4 / 256) + (b**2 * c / 16) - (b*d / 4)
+    f = float(c - 3*b**2 / 8)
+    g = float(d + b**3 / 8 - b*c / 2)
+    h = e - 3*b**4 / 256 + b**2 * c / 16 - b*d / 4
+    print f, g, h
     y = monomial(y=1)
-    eq = y**3 + (f / 2) * y**2 + ((f**2 - 4*h) / 16) * y - g**2 / 64
+    eq = y**3 + (f / 2) * y**2 + ((f**2 - 4*h)/16)*y - g**2 / 64
     y1, y2, y3 = cubic(eq)
-    print eq, y1, y2, y3
+    print eq.to_float(), y1, y2, y3
     roots = [cmath.sqrt(r) for r in (y1, y2, y3) if isinstance(r, complex)]
     if len(roots) >= 2:
         p, q = roots[:2]

@@ -3,4 +3,5 @@ TODO
 ====
 
 0.4 -> Complete pypol.roots.durand_kerner documentation
-0.4 -> Complete pypol.roots.quartic
+0.4 -> Complete pypol.funcs.*_num documentation
+0.4-5 -> Complete pypol.roots.quartic

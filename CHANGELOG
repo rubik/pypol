@@ -1,15 +1,43 @@
+Release 0.5 (planning)
+----------------------
+
+New in :mod:`pypol.roots`:
+    + :func:`pypol.quartic` (to find roots of quadratic equation all-in one)
+
 Release 0.4 (in development)
 ----------------------------
 
-Added:
-    + moved gcd() and lcm() from :mod:`pypol.funcs` to :mod:`pypol` (core)
-    + new module: :mod:`pypol.roots`
-    + moved :func:`pypol.funcs.newton` to :func:`pypol.roots.newton`
-    + moved :func:`pypol.funcs.newton` to :func:`pypol.roots.ruffini`
-    + moved :func:`pypol.funcs.newton` to :func:`pypol.roots.bisection`
+New modules:
+    + New module: :mod:`pypol.roots`
+    + New module: :mod:`pypol.series`
+
+Changes:
+    + Moved :func:`gcd` and :func:`lcm` from :mod:`pypol.funcs` to :mod:`pypol` (core)
+    + Moved :func:`pypol.funcs.newton` to :func:`pypol.roots.newton`
+    + Moved :func:`pypol.funcs.newton` to :func:`pypol.roots.ruffini`
+    + Moved :func:`pypol.funcs.newton` to :func:`pypol.roots.bisection`
+    + Renamed :func:`pypol.funcs.fib_poly` to :func:`pypol.funcs.fibonacci`
+
+New in :mod:`pypol.roots`:
     + :func:`pypol.roots.halley`
     + :func:`pypol.roots.householder`
     + :func:`pypol.roots.brent`
+
+New in :mod:`pypol.series`:
+    + :class:`pypol.series.LucasSeq`
+    + :func:`pypol.series.gegenbauer`
+    + :func:`pypol.series.laguerre`
+    + :func:`pypol.series.laguerre_g`
+    + :func:`pypol.series.touchard`
+    + :func:`pypol.series.lucas`
+    + :func:`pypol.series.pell`
+    + :func:`pypol.series.pell_lucas`
+    + :func:`pypol.series.jacobsthal`
+    + :func:`pypol.series.jacobshtal_lucas`
+    + :func:`pypol.series.fermat`
+    + :func:`pypol.series.fermat_lucas`
+
+Added in :mod:`pypol.funcs`:
     + :func:`pypol.funcs.polyint_`
     + :func:`pypol.funcs.bin_coeff`
     + :func:`pypol.funcs.harmonic`
@@ -17,15 +45,15 @@ Added:
     + :func:`pypol.funcs.stirling`
     + :func:`pypol.funcs.stirling2`
     + :func:`pypol.funcs.bell_num`
-    + :func:`pypol.funcs.gegenbauer`
-    + :func:`pypol.funcs.laguerre`
-    + :func:`pypol.funcs.laguerre_g`
-    + :func:`pypol.funcs.touchard`
-    + :func:`pypol.funcs.lucas`
-    + :func:`pypol.funcs.lucas_seq`
+    + :func:`pypol.funcs.lucas_num`
+    + :func:`pypol.funcs.pell_num`
+    + :func:`pypol.funcs.pell_lucas_num`
+    + :func:`pypol.funcs.jacobsthal_num`
+    + :func:`pypol.funcs.fermat_num`
+
+New :class:`pypol.Polynomial` methods:
     + :meth:`pypol.Polynomial.get`
     + :meth:`pypol.Polynomial.filter`
-    + Changed the name of :func:`pypol.funcs.fib_poly` now is :func:`pypol.funcs.fibonacci`
 
 Removed:
     - :meth:`Polynomial.zeros`
@@ -62,18 +90,19 @@ Added:
     + :func:`pypol.funcs.ruffini`
 
 Removed:
-    - pypol.root
-    - make_polynomial
-    - Polynomial.insert
-    - Polynomial.coeff_gcd
-    - Polynomial.coeff_lcm
+    - :func:`testpypol.run`
+    - :func:`pypol.root`
+    - :func:`pypol.make_polynomial`
+    - :meth:`pypol.Polynomial.insert`
+    - :attr:`pypol.Polynomial.coeff_gcd`
+    - :attr:`pypol.Polynomial.coeff_lcm`
 
 
 Release 0.2
 -----------
 
 Added:
-    + testpypol.run
+    + :func:`testpypol.run`
     + :func:`pypol.monomial`
     + :func:`pypol.funcs.random_poly` :: unique
     + :meth:`pypol.Polynomial.sort`
@@ -88,7 +117,7 @@ Added:
     + :meth:`pypol.Polynomial._key`
 
 Removed:
-    - Polynomial._cmp
+    - :meth:`pypol.Polynomial._cmp`
 
 
 Release 0.1

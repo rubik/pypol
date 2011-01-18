@@ -53,7 +53,7 @@ def polynomial(string=None, simplify=True):
 
         **Examples**
 
-        We want to make the polynomial |c_1|::
+        We want to make the polynomial :math:`2x^-1 + 2`::
 
             >>> polynomial('2x^-1 + 2')
             + 2x + 1 ## Wrong!
@@ -144,7 +144,7 @@ def poly1d(coeffs, variable='x', right_hand_side=True):
 
     **Examples**
 
-    We create the polynomials |c_2|, |c_3| and |c_4|.
+    We create the polynomials :math:`3x^3 - 2x^2 + 4x - 2`, :math:`2x^3 - 2` and :math:`3x`.
     ::
 
         >>> poly1d([3, -2, 4, -2])
@@ -187,14 +187,14 @@ def poly1d_2(monomials, variable='x'):
 
     **Examples**
 
-    We want to create these two polynomials: |c_5| and |c_6|::
+    We want to create these two polynomials: :math:`2x^3 - 2x^2 + x` and :math:`x`::
 
         >>> poly1d_2([[-1, 7], [2, 3], [-2, 2], [1, 1]])
         - x^7 + 2x^3 - 2x^2 + x
         >>> poly1d_2([[1, 1]])
         + x
 
-    This function is very useful when you need a polynomial with negative powers or with powers very TODO:distant from each other::
+    This function is very useful when you need a polynomial with negative powers or with spread powers::
 
         >>> poly1d_2([[1, -1], [2, -3], [3, 5]])
         + 3x^5 + x^-1 + 2x^-3
@@ -670,12 +670,10 @@ class Polynomial(object):
         '''
         Returns a tuple containing all the polynomial's zeros, based on the right-hand side.
 
-        .. warning::
-            Returns NotImplemented when:
+        :rtype: :exc:`NotImplemented` when:
 
-            * there is more than one letter
-            * there isn't the right-hand side and there is more than one letter or the sum of the polynomial's
-                coefficients is not 0
+        * there is more than one letter
+        * there isn't the right-hand side and there is more than one letter or the sum of the polynomial's coefficients is not 0
 
         For example::
 
@@ -773,9 +771,6 @@ class Polynomial(object):
             {'a': [0, 2, 0, 0],
              'x': [3, 0, 1, 0],
              }
-
-        .. seealso::
-            :meth:`powers`.
         '''
 
         if not letter:
