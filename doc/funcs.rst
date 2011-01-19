@@ -63,13 +63,3 @@ Numbers
 .. autofunction:: stirling_2
 
 .. autofunction:: bell_num
-
-.. autofunction:: lucas_num
-
-.. autofunction:: pell_lucas_num
-
-.. autofunction:: pell_num
-
-.. autofunction:: jacobsthal_num
-
-.. autofunction:: fermat_num

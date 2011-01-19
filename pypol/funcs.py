@@ -696,9 +696,31 @@ def harmonic_g(n, m):
 
 def stirling(n, k):
     '''
-    Returns the Stirling number of the first kind 
+    Returns the signed Stirling number of the first kind :math:`s(n, k)`::
+
+        >>> stirling(0, 0)
+        1.0
+        >>> stirling(0, 1)
+        0.0
+        >>> stirling(1, 1)
+        1.0
+        >>> stirling(2, 1)
+        -1.0
+        >>> stirling(2, 4)
+        0.0
+        >>> stirling(22, 4)
+        2.8409331590181146e+20
+        >>> stirling(12, 4)
+        105258076.0
+        >>> stirling(9, 4)
+        -67284.0
+
+    **References**
+
+    `Wikipedia <http://en.wikipedia.org/wiki/Stirling_numbers_of_the_first_kind>`_
     '''
 
+    sign = (-1) ** (n - k)
     if n == k:
         return 1.
     if n > 0 and k == 0:
@@ -706,28 +728,86 @@ def stirling(n, k):
     if k > n:
         return 0.
     if k == 1:
-        return math.factorial(n - 1)
+        return sign * float(math.factorial(n - 1))
     if k == 2:
-        return math.factorial(n - 1) * harmonic(n - 1)
+        return sign * float(math.factorial(n - 1) * harmonic(n - 1))
     if k == 3:
-        return fractions.Fraction(1, 2) * math.factorial(n - 1) * (harmonic(n - 1) ** 2 - harmonic_g(n - 1, 2))
+        return float(sign * fractions.Fraction(1, 2) * math.factorial(n - 1) * (harmonic(n - 1) ** 2 - harmonic_g(n - 1, 2)))
     if k == (n - 1):
-        return bin_coeff(n, 2)
+        return sign * bin_coeff(n, 2)
     if k == (n - 2):
-        return fractions.Fraction(1, 4) * (3*n - 1) * bin_coeff(n, 3)
+        return sign * float(fractions.Fraction(1, 4) * (3*n - 1) * bin_coeff(n, 3))
     if k == (n - 3):
-        return bin_coeff(n, 2) * bin_coeff(n, 4)
-    return stirling(n - 1, k - 1) - (n - 1) * stirling(n - 1, k)
+        return sign * bin_coeff(n, 2) * bin_coeff(n, 4)
+
+    return float(stirling(n - 1, k - 1) - (n - 1) * stirling(n - 1, k))
 
 def stirling_2(n, k):
-    return fractions.Fraction(1, math.factorial(k)) * sum((-1) ** (k - j) * bin_coeff(k, j) * j ** n for j in xrange(k + 1))
+    '''
+    Returns the Stirling numbers of the second kind :math:`stirling_2(n, k)`::
+
+        >>> stirling_2(0, 0)
+        1
+        >>> stirling_2(0, 1)
+        0
+        >>> stirling_2(1, 1)
+        1
+        >>> stirling_2(2, 1)
+        1
+        >>> stirling_2(3, 1)
+        1
+        >>> stirling_2(3, 2)
+        3
+        >>> stirling_2(6, 4)
+        65
+        >>> stirling_2(96, 56)
+        601077471204201702246363542619610633289432609630600146569048337999099263354225431674880L
+        >>> stirling_2(961, 2)
+        9745314011399999080353382387875188310876226857595007526867906457212948690766426102465615065882010259225304916231408668183459169865203094046577987296312653419531277699956473029870789655490053648352799593479218378873685597925394874945746363615468965612827738803104277547081828589991914110975L
+
+    **References**
+
+    `Wikipedia <http://en.wikipedia.org/wiki/Stirling_numbers_of_the_second_kind>`_
+    '''
+
+    if k > n:
+        return 0
+    if n > 0 and k == 0:
+        return 0
+    if n == k:
+        return 1
+    if k == 1:
+        return 1
+    if k == 2:
+        return 2 ** (n - 1) - 1
+    
+    return int(fractions.Fraction(1, math.factorial(k)) * sum((-1) ** (k - j) * bin_coeff(k, j) * j ** n for j in xrange(k + 1)))
 
 def bell_num(n):
+    '''
+    Returns the Bell number :math:`B_n`
+    '''
+
     if n == 0:
         return 1.
     if n == 1:
         return 1.
     return sum(stirling_2(n, k) for k in xrange(n + 1))
+
+################################################################################
+##                            Still in development                            ##
+################################################################################
+
+def __entringer(n, k): ## very very slow
+    if n < 0 or k < 0:
+        raise ValueError('Entringer numbers only defined for n >= 0 and k >= 0')
+    if k > n:
+        raise ValueError('k cannot be greater than n')
+    if n == k == 0:
+        return 1
+    if k == 0:
+        return 0
+    return __entringer(n, k - 1) + __entringer(n - 1, n - k)
 
 def lucas_num(n):
     if n <= 0:
@@ -735,7 +815,7 @@ def lucas_num(n):
     if n == 1:
         return 1.
     n -= 1
-    return sum((n + 1) * bin_coeff(n - k + 1, k) / (n - k + 1) for k in xrange(int((n + 1) / 2) + 1))
+    return sum(int((n + 1) * bin_coeff(n - k + 1, k) / (n - k + 1)) for k in xrange(int((n + 1) / 2) + 1))
 
 def pell_num(n):
     if n < 0:
@@ -760,18 +840,3 @@ def jacobsthal_num(n):
 
 def fermat_num(n):
     return 2 ** (2 ** n) + 1
-
-################################################################################
-##                            Still in development                            ##
-################################################################################
-
-def entringer(n, k): ## very very slow
-    if n < 0 or k < 0:
-        raise ValueError('Entringer numbers only defined for n >= 0 and k >= 0')
-    if k > n:
-        raise ValueError('k cannot be greater than n')
-    if n == k == 0:
-        return 1
-    if k == 0:
-        return 0
-    return entringer(n, k - 1) + entringer(n - 1, n - k)

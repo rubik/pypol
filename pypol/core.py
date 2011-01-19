@@ -1129,7 +1129,7 @@ class Polynomial(object):
 
         if int: # the poly parameter is an integer
             return poly1d([c / poly for c in self.coefficients])
-        return sum([Polynomial((monomial,)) / poly for monomial in self._monomials], Polynomial())
+        return sum((Polynomial((monomial,)) / poly for monomial in self._monomials), Polynomial())
 
     def filter(self):
         '''

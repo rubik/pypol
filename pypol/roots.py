@@ -273,12 +273,12 @@ def quartic(poly):
 
     poly = poly.div_all(a, int=True)
     if len(poly.coefficients) == 5:
-        a, b, c, d, e = poly.coefficients
+        a, b, c, d, e = map(float, poly.coefficients)
     else:
-        a, b, c, d, e = map(getattr(poly, 'get'), [4, 3, 2, 1, 0])
+        a, b, c, d, e = map(float, map(getattr(poly, 'get'), [4, 3, 2, 1, 0]))
 
-    f = float(c - 3*b**2 / 8)
-    g = float(d + b**3 / 8 - b*c / 2)
+    f = c - 3*b**2 / 8
+    g = d + b**3 / 8 - b*c / 2
     h = e - 3*b**4 / 256 + b**2 * c / 16 - b*d / 4
     print f, g, h
     y = monomial(y=1)

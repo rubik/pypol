@@ -2,7 +2,10 @@ Release 0.5 (planning)
 ----------------------
 
 New in :mod:`pypol.roots`:
-    + :func:`pypol.quartic` (to find roots of quadratic equation all-in one)
+    + :func:`pypol.roots.quartic` (to find roots of quadratic equation all-in one)
+
+New in :mod:`pypol.funcs`:
+    + :func:`pypol.funcs.entringer`
 
 Release 0.4 (in development)
 ----------------------------
@@ -45,11 +48,6 @@ Added in :mod:`pypol.funcs`:
     + :func:`pypol.funcs.stirling`
     + :func:`pypol.funcs.stirling2`
     + :func:`pypol.funcs.bell_num`
-    + :func:`pypol.funcs.lucas_num`
-    + :func:`pypol.funcs.pell_num`
-    + :func:`pypol.funcs.pell_lucas_num`
-    + :func:`pypol.funcs.jacobsthal_num`
-    + :func:`pypol.funcs.fermat_num`
 
 New :class:`pypol.Polynomial` methods:
     + :meth:`pypol.Polynomial.get`
