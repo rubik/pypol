@@ -36,7 +36,3 @@ class TestRoots(object):
 
     def testDurandKerner(self):
         pass
-
-
-if __name__ == '__main__':
-    nose.runmodule()

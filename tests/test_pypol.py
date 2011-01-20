@@ -1,23 +1,15 @@
-#import nose
-#from nose.tools import *
-import operator
 import copy
+import operator
 
+import py
 import pypol
 
 class TestPolynomial(object):
-
-    a = pypol.polynomial('x^3 - 2x^2 + x -5')
-    b = pypol.polynomial('a^3 - 2x^2 - b + 3')
-    c = pypol.polynomial('-x + 1')
-    d = pypol.polynomial('a')
-
-    def setup_class(cls):
-        print cls.d
-        cls.a = pypol.polynomial('x^3 - 2x^2 + x -5')
-        cls.b = pypol.polynomial('a^3 - 2x^2 - b + 3')
-        cls.c = pypol.polynomial('-x + 1')
-        cls.d = pypol.polynomial('a')
+    def setup_method(self, method):
+        self.a = pypol.polynomial('x^3 - 2x^2 + x -5')
+        self.b = pypol.polynomial('a^3 - 2x^2 - b + 3')
+        self.c = pypol.polynomial('-x + 1')
+        self.d = pypol.polynomial('a')
 
     def testAdd(self):
         assert pypol.polynomial('x^3 + x + a^3 - 4x^2 - b - 2') == self.a + self.b
@@ -90,10 +82,11 @@ class TestPolynomial(object):
     def testEvalForm(self):
         assert '2*y**5*x**3-4*x**2+2', pypol.polynomial('2x^3y^5 - 4x^2 +2').eval_form
 
-    #def testZeros(self):  ## DEPRECATED
-    #    assert (1,), self.c.zeros)
-    #    assert (), self.a.zeros)
-    #    assert NotImplemented, self.b.zeros)
+    @ py.test.mark.skipif('__import__("pypol").__version__ >= (0, 4)')
+    def testZeros(self):  ## DEPRECATED
+        assert (1,) == self.c.zeros
+        assert () == self.a.zeros
+        assert NotImplemented == self.b.zeros
 
     def testRawPowers(self):
         assert [3, 0, 0, 0], self.b.raw_powers('a')
@@ -148,6 +141,7 @@ class TestPolynomial(object):
 
     def testLen(self):
         assert 4 == len(self.a)
+        print len(self.d)
         assert 1 == len(self.d)
         assert 0 == len(pypol.NULL)
 
@@ -161,10 +155,8 @@ class TestPolynomial(object):
         assert not (1, {'x': 5}) in self.a
 
     def testGetitem(self):
-        print self.a, self.b, self.c, self.d
-        assert (1, {'a': 1}) == self.d[0]
-        with py.test.raises(IndexError):
-            self.d[2]
+        assert (1, {'a': 1}) == pypol.polynomial('a')[0]
+        py.test.raises(IndexError, lambda: pypol.polynomial('a')[2])
 
     def testSetitem(self):
         self.a[2] = (3, {'x': 3, 'y': 4})
@@ -198,7 +190,3 @@ class TestFunctions(object):
 
     def testLcm(self):
         pass
-
-
-if __name__ == '__main__':
-    nose.runmodule()

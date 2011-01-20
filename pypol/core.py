@@ -30,8 +30,8 @@ import re
 
 
 __author__ = 'Michele Lacchia'
-__version__ = (0, 3)
-__version_str__ = '0.3'
+__version__ = (0, 4)
+__version_str__ = '0.4'
 
 __all__ = ['polynomial', 'algebraic_fraction', 'monomial','poly1d', 'poly1d_2',
            'coerce_poly', 'coerce_frac', 'gcd', 'lcm', 'are_similar', 'parse_polynomial',

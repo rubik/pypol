@@ -175,7 +175,7 @@ def fibonacci(n):
         return ONE
     if n == 2:
         return x
-    return _fibonacci(n)
+    return _fib(n)
 
 def lucas(n):
     '''
