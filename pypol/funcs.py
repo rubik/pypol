@@ -1,7 +1,27 @@
+#!/usr/bin/env python2.6
 # -*- coding: utf-8 -*-
 
 '''
+pypol - a Python library to manipulate polynomials and algebraic fractions.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+Requirements:
+- Python 2.6 (or 2.7)
+
 This module offer some utility functions like polyder, polyint or some generator functions
+
 (C) Copyright 2010 Michele Lacchia
 '''
 
@@ -375,7 +395,7 @@ def polyint_(poly, a, b):
     '''
 
     F = polyint(poly)
-    return F(a) - F(b)
+    return F(b) - F(a)
 
 def interpolate(x_values, y_values): ## Still in development
     '''

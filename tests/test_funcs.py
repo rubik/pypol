@@ -1,3 +1,26 @@
+#!/usr/bin/env python2.6
+# -*- coding: utf-8 -*-
+
+'''
+pypol - a Python library to manipulate polynomials and algebraic fractions.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+Requirements:
+- Python 2.6 (or 2.7)
+'''
+
 import fractions
 
 import py
@@ -34,6 +57,9 @@ class TestFuncs(object):
         assert pypol.poly1d([6]) == funcs.polyder(p, 3)
 
     def testPolyint(self):
+        pass
+
+    def testPolyint_(self):
         pass
 
     def testInterpolation(self):
