@@ -1,7 +1,19 @@
-from setuptools import find_packages, setup
+from setuptools import find_packages, setup, Command
+
+class PyTest(Command):
+    user_options = []
+    def initialize_options(self):
+        pass
+    def finalize_options(self):
+        pass
+    def run(self):
+        import subprocess
+        # Verify py.test is installed
+        subprocess.call(['easy_install', '-U', 'pytest'])
+        subprocess.call(['py.test', 'tests/', '-v'])
 
 setup(name='pypol_',
-      version='0.3',
+      version='0.4',
       description='Python polynomial library',
       author='Michele Lacchia',
       author_email='michelelacchia@gmail.com',
@@ -10,8 +22,7 @@ setup(name='pypol_',
       download_url='http://github.com/rubik/pypol/downloads/',
       packages=find_packages(),
       include_package_data=True,
-      test_suite='py.test',
-      tests_require=['pytest>=2'],
+      cmdclass={'test': PyTest},
       platforms='any',
       classifiers=['Topic :: Scientific/Engineering :: Mathematics',
                    'Intended Audience :: Science/Research',

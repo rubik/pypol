@@ -11,14 +11,16 @@ The :mod:`~pypol.roots` module
 
 Here are some root-finding algorithm, such as :func:`ruffini`'s method, :func:`quadratic` formula, :func:`cubic` formula, :func:`newton`'s method, :func:`halley`'s method, :func:`householder`'s method, :func:`schroeder`'s method, :func:`brent`'s method, and :func:`bisection`.
 
-Simple algorithms
-+++++++++++++++++
+Simple algorithms and formulas
+++++++++++++++++++++++++++++++
 
 .. autofunction:: ruffini
 
 .. autofunction:: quadratic
 
 .. autofunction:: cubic
+
+.. autofunction:: quartic
 
 Newton's method and derived
 +++++++++++++++++++++++++++

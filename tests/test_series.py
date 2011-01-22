@@ -216,6 +216,11 @@ class TestSeries(object):
 
     def testEuler(self):
         py.test.raises(ValueError, series.euler, -1)
+        assert series.euler(0) == ONE
+        assert series.euler(1) == x - .5
+        assert series.euler(2) == x**2 - x
+        assert series.euler(3) == x**3 - fractions.Fraction(3, 2)*x**2 + .25
+        assert series.euler(4) == x**4 - 2*x**3 + x
 
     def testEulerNumbers(self):
         py.test.raises(ValueError, series.euler_num, -1)
@@ -235,3 +240,8 @@ class TestSeries(object):
         assert series.genocchi(4) == 1
         assert series.genocchi(6) == -3
         assert series.genocchi(8) == 17
+
+if __name__ == '__main__':
+    import sys
+    import os.path
+    py.test.main(args=[os.path.abspath(__file__)] + sys.argv[1:])

@@ -110,9 +110,17 @@ class LucasSeq(object):
 
     @ property
     def cache(self):
+        '''
+        The cache used to speed up the calculation
+        '''
+
         return self._cache 
 
     def reset_cache(self):
+        '''
+        Resets the cache, i.e. sets it to list containing only the first 2 values of the series (`self.zero` and `self.one`)
+        '''
+
         self._cache = [self.zero, self.one]
 
 _fib = LucasSeq(x, ONE)

@@ -1,11 +1,15 @@
 Release 0.5 (planning)
 ----------------------
 
-New in :mod:`pypol.roots`:
-    + :func:`pypol.roots.quartic` (to find roots of quadratic equation all-in one)
-
 New in :mod:`pypol.funcs`:
     + :func:`pypol.funcs.entringer`
+    + :func:`pypol.funcs.lucas_num`
+    + :func:`pypol.funcs.pell_num`
+    + :func:`pypol.funcs.jacobsthal_num`
+    + :func:`pypol.funcs.fermat_num`
+    + :func:`pypol.funcs.pell_lucas_num`
+    + :func:`pypol.funcs.jacobshtal_lucas_num`
+    + :func:`pypol.funcs.fermat_lucas_num`
 
 Release 0.4 (in development)
 ----------------------------
@@ -20,6 +24,7 @@ Changes:
     + Moved :func:`pypol.funcs.newton` to :func:`pypol.roots.ruffini`
     + Moved :func:`pypol.funcs.newton` to :func:`pypol.roots.bisection`
     + Renamed :func:`pypol.funcs.fib_poly` to :func:`pypol.funcs.fibonacci`
+    + Changed: :func:`pypol.funcs.bin_coeff` now returns integers
 
 New in :mod:`pypol.roots`:
     + :func:`pypol.roots.halley`

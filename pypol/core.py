@@ -220,16 +220,13 @@ def poly1d_2(monomials, variable='x'):
 
 def gcd(a, b):
     '''
-    Returns the Greatest Common Divisor between the two polynomials::
+    Returns the Greatest Common Divisor between two polynomials::
 
        >>> gcd(polynomial('3x'), polynomial('6x^2'))
        + 3x
-
-    .. seealso::
-        :func:`lcm`. 
     '''
 
-    def _internal(x, y):
+    def _gcd(x, y):
         if not y:
             return x
         while True:
@@ -239,25 +236,24 @@ def gcd(a, b):
             x, y = y, r
 
     try:
-        return _internal(a, b)
+        return _gcd(a, b)
     except ValueError:
-        return _internal(b, a)
+        return _gcd(b, a)
 
 def lcm(a, b):
     '''
-    Returns the Least Common Multiple of the two polynomials::
+    Returns the Least Common Multiple between two polynomials::
 
         >>> lcm(polynomial('3x'), polynomial('6x^2'))
         + 6x^2
-
-    .. seealso::
-        :func:`gcd`.
     '''
 
     k = operator.truediv(a, gcd(a, b)) * b
-
-    if int(k) == k:
-        return int(k)
+    try:
+        if int(k) == k:
+            return int(k)
+    except TypeError:
+        return k
     return k
 
 def are_similar(a, b):

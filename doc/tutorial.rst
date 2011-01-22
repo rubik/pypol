@@ -78,41 +78,81 @@ Now run the setup.py script::
 Running the tests
 +++++++++++++++++
 
-If you want to run pypol's tests you only have to run :file:`test_pypol.py`, that is in the :file:`tests` directory::
+If you want to run pypol's tests you only have to run the python files in the :file:`tests` directory::
 
-    $ cd pypol_-0.3/tests
     $ python test_pypol.py
-    ...............................
-    ----------------------------------------------------------------------
-    Ran 44 tests in 0.036s
+    ================================= test session starts =================================
+    platform linux2 -- Python 2.6.6 -- pytest-2.0.0
+    collected 40 items 
     
-    OK
+    test_pypol.py .................s......................
+    
+    ======================== 39 passed, 1 skipped in 0.31 seconds =========================
+    $ python test_funcs.py -v
+    ================================= test session starts =================================
+    platform linux2 -- Python 2.6.6 -- pytest-2.0.0 -- /usr/bin/python
+    collected 12 items 
+    
+    test_funcs.py:34: TestFuncs.testDivisible PASSED
+    test_funcs.py:38: TestFuncs.testRandomPoly PASSED
+    test_funcs.py:53: TestFuncs.testPolyder PASSED
+    test_funcs.py:59: TestFuncs.testPolyint PASSED
+    test_funcs.py:68: TestFuncs.testPolyint_ PASSED
+    test_funcs.py:78: TestFuncs.testInterpolation PASSED
+    test_funcs.py:81: TestFuncs.testBinCoeff PASSED
+    test_funcs.py:90: TestFuncs.testHarmonic PASSED
+    test_funcs.py:104: TestFuncs.testGeneralizedHarmonic PASSED
+    test_funcs.py:115: TestFuncs.testStirling PASSED
+    test_funcs.py:124: TestFuncs.testStirling2 PASSED
+    test_funcs.py:132: TestFuncs.testBellNumbers PASSED
+    
+    ============================== 12 passed in 0.80 seconds ==============================
 
-or run them with setup.py::
+or run them with :file:`setup.py`::
 
-    $ cd pypol_-0.3
+    $ cd pypol_-0.4
     $ sudo python setup.py test
     running test
-    running egg_info
-    writing pypol_.egg-info/PKG-INFO
-    writing top-level names to pypol_.egg-info/top_level.txt
-    writing dependency_links to pypol_.egg-info/dependency_links.txt
-    reading manifest file 'pypol_.egg-info/SOURCES.txt'
-    writing manifest file 'pypol_.egg-info/SOURCES.txt'
-    running build_ext
-    pypol_.tests.test_pypol.TestFunctions.testAreSimilar ... ok
-    pypol_.tests.test_pypol.TestFunctions.testGcd ... ok
-    pypol_.tests.test_pypol.TestFunctions.testLcm ... ok
-    pypol_.tests.test_pypol.TestFunctions.testMonomial ... ok
-
+    install_dir /usr/local/lib/python2.6/dist-packages/
+    Searching for pytest
+    Reading http://pypi.python.org/simple/pytest/
+    Reading http://pytest.org
+    Best match: pytest 2.0.0
+    Processing pytest-2.0.0-py2.6.egg
+    pytest 2.0.0 is already the active version in easy-install.pth
+    Installing py.test script to /usr/local/bin
+    Installing py.test-2.6 script to /usr/local/bin
+    
+    Using /usr/local/lib/python2.6/dist-packages/pytest-2.0.0-py2.6.egg
+    Processing dependencies for pytest
+    Finished processing dependencies for pytest
+    ================================= test session starts =================================
+    platform linux2 -- Python 2.6.6 -- pytest-2.0.0 -- /usr/bin/python
+    collected 86 items 
+    
+    tests/test_funcs.py:34: TestFuncs.testDivisible PASSED
+    tests/test_funcs.py:38: TestFuncs.testRandomPoly PASSED
+    tests/test_funcs.py:53: TestFuncs.testPolyder PASSED
+    tests/test_funcs.py:59: TestFuncs.testPolyint PASSED
+    tests/test_funcs.py:68: TestFuncs.testPolyint_ PASSED
+    tests/test_funcs.py:78: TestFuncs.testInterpolation PASSED
+    tests/test_funcs.py:81: TestFuncs.testBinCoeff PASSED
+    tests/test_funcs.py:90: TestFuncs.testHarmonic PASSED
+    tests/test_funcs.py:104: TestFuncs.testGeneralizedHarmonic PASSED
+    tests/test_funcs.py:115: TestFuncs.testStirling PASSED
     ... cut ...
-
-    pypol_.tests.test_pypol.TestPolynomial.testZeros ... ok
+    tests/test_series.py:156: TestSeries.testTouchard PASSED
+    tests/test_series.py:164: TestSeries.testBell PASSED
+    tests/test_series.py:174: TestSeries.testGegenbauer PASSED
+    tests/test_series.py:180: TestSeries.testLaguerre PASSED
+    tests/test_series.py:186: TestSeries.testGeneralizedLaguerre PASSED
+    tests/test_series.py:192: TestSeries.testBernoulli PASSED
+    tests/test_series.py:202: TestSeries.testBernoulliNumbers PASSED
+    tests/test_series.py:217: TestSeries.testEuler PASSED
+    tests/test_series.py:225: TestSeries.testEulerNumbers PASSED
+    tests/test_series.py:235: TestSeries.testGenocchi PASSED
     
-    ----------------------------------------------------------------------
-    Ran 44 tests in 0.461s
-    
-    OK
+    ======================== 85 passed, 1 skipped in 3.38 seconds =========================
 
 
 
@@ -201,6 +241,8 @@ The :class:`pypol.Polynomial` class
 ::
 
     >>> p = poly1d([1, 2, -3, 4])
+    >>> type(p)
+    <class 'pypol.core.Polynomial'>
     >>> p.monomials
     ((1, {'x': 3}), (2, {'x': 2}), (-3, {'x': 1}), (4, {}))
     >>> p.coefficients

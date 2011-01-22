@@ -264,6 +264,9 @@ def cubic(poly):
         return x1, x2, x3
 
 def quartic(poly):
+    '''
+    '''
+
     assert poly.degree == 4, 'The polynomial\'s degree must be 4'
     if len(poly.coefficients) == 5:
         a, b, c, d, e = poly.coefficients
@@ -279,7 +282,7 @@ def quartic(poly):
         roots = [-1]
         roots.extend(cubic(poly / 'x + 1'))
         return roots
-    #if b == d == 0: # biquadratic
+    #if b == d == 0: # biquadratic ## DECOMMENT THIS?
     #    l = poly.letters[0]
     #    for m in poly.monomials:
     #        m[1][l] = m[1][l] / 2
@@ -300,11 +303,9 @@ def quartic(poly):
     f = c - 3*b**2 / 8
     g = d + b**3 / 8 - b*c / 2
     h = e - 3*b**4 / 256 + b**2 * c / 16 - b*d / 4
-    print f, g, h
     y = monomial(y=1)
     eq = y**3 + (f / 2) * y**2 + ((f**2 - 4*h)/16)*y - g**2 / 64
     y1, y2, y3 = cubic(eq)
-    print eq.to_float(), y1, y2, y3
     roots = [cmath.sqrt(r) for r in (y1, y2, y3) if isinstance(r, complex)]
     if len(roots) >= 2:
         p, q = roots[:2]
@@ -630,6 +631,69 @@ def muller(poly, x_k, x_k2=None, x_k3=None, epsilon=float('-inf')):
 def durand_kerner(poly, start=complex(.4, .9), epsilon=1.12e-16):
     '''
     The Durand-Kerner method. It finds all the roots of the polynomials *poly* simultaneously.
+    With some polynomials it works quite well::
+
+        >>> from pypol.funcs import from_roots
+        >>> p = from_roots([1, -3, 14, 5, -100])
+        >>> p
+        + x^5 + 83x^4 - 1671x^3 + 3097x^2 + 19490x - 21000
+        >>> durand_kerner(p)
+        ((1+0j), (5+0j), (-100+0j), (-3+0j), (13.999999999999998+0j))
+        >>> map(p, durand_kerner(p))
+        [0j, 0j, 0j, 0j, (-7.5669959187507629e-10+0j)]
+        >>> p = from_roots([1, -3, 14, 5, -10, 4242])
+        >>> p
+        + x^6 - 4249x^5 + 29553x^4 + 598609x^3 - 2064094x^2 - 7468020x + 8908200
+        >>> durand_kerner(p)
+        ((1+0j), (-3+0j), (-10+0j), (5+0j), (4242-1.2727475858741762e-49j), (14+0j))
+        >>> map(p, durand_kerner(p))
+        [0j, 0j, 0j, 0j, (60112-1.7453195261352414e-31j), 0j]
+        >>> p = poly1d([1, 2, -3, 1, -4])
+        >>> durand_kerner(p)
+        ((1.3407787867177585-9.656744866722633e-34j), (-0.084897978584602823-0.96623889223617843j), (-3.1709828295485529+8.2085042293591779e-34j), (-0.084897978584602823+0.96623889223617843j))
+        >>> map(p, durand_kerner(p))
+        [(-8.8817841970012523e-16-1.2923293554560813e-32j), (-4.4408920985006262e-16-2.2204460492503131e-16j), (3.5527136788005009e-15-3.8729295219100667e-32j), (-4.4408920985006262e-16+2.2204460492503131e-16j)]
+        >>> durand_kerner(p)
+        ((1+0j), (-2424+6.2230152778611417e-61j), (14+1.2446030555722283e-60j), (381.99999999999994+4.6672614583958563e-61j), (133-7.0008921875937844e-61j), (5-2.4892061111444567e-60j), (-100+3.3735033418337674e-80j), (-3+4.9784122222889134e-60j))
+        >>> map(p, durand_kerner(p))
+        [0j, (116436291584-3.6076395061767809e-37j), 3.0129989385594897e-47j, (-110296.125+3.1986819282098692e-42j), (212+2.8399399457319209e-44j), 8.8231056584250621e-48j, 1.032541429306196e-63j, -3.3300895740082056e-47j]
+
+    But with other polynomials it could raise an :exc:`OverflowError`::
+
+        >>> p = poly1d([-1, 2, -3, 1, 4])
+        >>> p
+        - x^4 + 2x^3 - 3x^2 + x + 4
+        >>> durand_kerner(p)
+        Traceback (most recent call last):
+          File "<pyshell#20>", line 1, in <module>
+            durand_kerner(p)
+          File "roots.py", line 641, in durand_kerner
+            >>> map(p, durand_kerner(p))
+          File "core.py", line 1429, in __call__
+            return eval(self.eval_form, letters)
+          File "<string>", line 1, in <module>
+        OverflowError: complex exponentiation
+
+    In this cases you can use other root-finding algorithms, like :func:`laguerre` or :func:`halley`::
+
+        >>> laguerre(p, 10)
+        (5.0000000000018261+0j)
+        >>> laguerre(p, 5)
+        (5+0j)
+        >>> p((5+0j))
+        0j
+        >>> halley(p, 10)
+        5.0
+        >>> halley(p, 100)
+        14.0
+        >>> halley(p, 1000)
+        382.0
+        >>> halley(p, -1000)
+        -100.0
+        >>> halley(p, -100)
+        -100.0
+        >>> halley(p, -10)
+        -3.0
     '''
 
     roots = []
@@ -732,9 +796,6 @@ def brent(poly, a, b, epsilon=float('-inf')):
 
 def bisection(poly, k=0.5, epsilon=float('-inf')):
     '''
-    .. warning::
-        In some case this function may not work!
-
     Finds the root of the polynomial *poly* using the *bisection method*.
     When it finds the root, it checks if ``-root`` is one root too. If so, it returns a two-length tuple, else a tuple
     with one root.
@@ -744,8 +805,8 @@ def bisection(poly, k=0.5, epsilon=float('-inf')):
     So, if *a* is 50, after the increment ``50 + 50*0.5`` *a* will be 75.
     *epsilon* sets the precision of the calculation. Smaller it is, greater is the precision.
 
-    .. warning:: If *epsilon* is bigger than 5 or *k* is negative, :exc:`ValueError` is raised.
-    .. warning:: NotImplemented is returned if:
+    :raises: :exc:`ValueError` if *epsilon* is bigger than 5 or *k* is negative
+    :rtype: integer or float or NotImplemented when:
 
             * *poly* has more than one letter
             * or the root is a complex number
@@ -753,6 +814,9 @@ def bisection(poly, k=0.5, epsilon=float('-inf')):
     **References**
 
     `Wikipedia <http://en.wikipedia.org/wiki/Bisection_method>`_
+
+    .. warning::
+        In some case this function may not work!
 
     .. versionadded:: 0.2
     .. versionchanged:: 0.3

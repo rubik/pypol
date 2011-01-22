@@ -1,5 +1,5 @@
 ===================================================
-Pypol - A Python library for manupulate polynomials
+pypol - A Python library for manupulate polynomials
 ===================================================
 
 © Copyrigth 2010 Michele Lacchia alias (rubik, Python, python, Pythoner, x-reynik-x)
@@ -13,14 +13,14 @@ Installation
 
 pypol is on PyPI too, so you can install it with *easy_install*::
 
-    easy_install pypol_
+    easy_install -U pypol_
 
 WARNING
 #######
 
 Don't forget the underscore after pypol, because with::
 
-    easy_install pypol
+    easy_install -U pypol
 
 You will install another package and not this!
 

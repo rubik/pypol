@@ -319,13 +319,13 @@ def polyint(poly, m=1, C=[]):
             n = var[1] + 1
             if not n:
                 return [0, 0]
-            j = fractions.Fraction(str(var[0])) / fractions.Fraction(str(n))
+            j = fractions.Fraction(var[0], 1) / n
             jint = int(j)
             if jint == j:
                 return [jint, n]
             return [j, n]
 
-        p = poly1d_2([_single_int(t) for t in p.to_float().to_plist()])
+        p = poly1d_2([_single_int(t) for t in p.to_plist()])
         if c:
             p += c
         return p
@@ -394,6 +394,8 @@ def polyint_(poly, a, b):
     +-------------------------------------------------------------------+
     '''
 
+    if a == b:
+        return 0.0
     F = polyint(poly)
     return F(b) - F(a)
 
@@ -555,7 +557,7 @@ def bin_coeff(n, k):
 
     :param integer n: the power of the binomial. If ``n == 1`` the result will be :math:`(-1)^k`
     :param integer k: the power of the term
-    :rtype: float
+    :rtype: integer
 
     **Examples**
 
@@ -568,15 +570,15 @@ def bin_coeff(n, k):
             
         ValueError: k cannot be greater than n
         >>> bin_coeff(6, 4)
-        15.0
+        15
         >>> bin_coeff(16, 9)
-        11440.0
+        11440
         >>> bin_coeff(-1, 9)
         -1
         >>> bin_coeff(-1, 8)
         1
         >>> bin_coeff(124, 98)
-        3.9616705576337044e+26
+        396167055763370435149824000L
 
     It is the same as::
 
@@ -586,7 +588,7 @@ def bin_coeff(n, k):
             return ((1 + x) ** n).get(k)
         
         >>> bin_coeff(5, 4)
-        5.0
+        5
         >>> bin_coeff_2(5, 4)
         5
         >>> bin_coeff_2(3, 4)
@@ -604,11 +606,14 @@ def bin_coeff(n, k):
             raise ValueError('k cannot be greater than n')
         ValueError: k cannot be greater than n
         >>> bin_coeff(56, 54)
-        1540.0
+        1540
         >>> bin_coeff_2(56, 54)
         1540
+
+    When using large numbers, :func:`bin_coeff` approximate a bit, :func:`bin_coeff_2` does not (but it is slower)::
+
         >>> bin_coeff(123, 54)
-        3.0748160713247975e+35
+        307481607132479749691410373710708736L
         >>> bin_coeff_2(123, 54)
         307481607132479763736986522890815830L
 
@@ -622,13 +627,13 @@ def bin_coeff(n, k):
     '''
 
     if n == -1:
-        return float((-1) ** k)
+        return (-1) ** k
     if n == k:
-        return 1.
+        return 1
     if n < k:
         raise ValueError('k cannot be greater than n')
 
-    return float(math.factorial(n) / (math.factorial(k) * math.factorial(n - k)))
+    return int(math.factorial(n) / (math.factorial(k) * math.factorial(n - k)))
 
 def harmonic(n):
     '''
@@ -741,6 +746,8 @@ def stirling(n, k):
     '''
 
     sign = (-1) ** (n - k)
+    if n < 0 and k < n:
+        raise ValueError('if n is negative k cannot be smaller than ns')
     if n == k:
         return 1.
     if n > 0 and k == 0:
@@ -790,6 +797,8 @@ def stirling_2(n, k):
     `Wikipedia <http://en.wikipedia.org/wiki/Stirling_numbers_of_the_second_kind>`_
     '''
 
+    if k < 0:
+        raise ValueError('Stirling numbers of the second kind not defined for k < 0')
     if k > n:
         return 0
     if n > 0 and k == 0:
@@ -805,13 +814,38 @@ def stirling_2(n, k):
 
 def bell_num(n):
     '''
-    Returns the Bell number :math:`B_n`
+    Returns the *n-th* Bell number :math:`B_n`::
+
+        >>> bell_num(0)
+        1
+        >>> bell_num(1)
+        1
+        >>> bell_num(2)
+        2
+        >>> bell_num(3)
+        5
+        >>> bell_num(4)
+        15
+        >>> bell_num(5)
+        52
+        >>> bell_num(6)
+        203
+        >>> bell_num(7)
+        877
+        >>> bell_num(8)
+        4140
+
+    **References**
+
+    `MathWorld <http://mathworld.wolfram.com/BellNumber.html>`_
     '''
 
+    if n < 0:
+        return 0
     if n == 0:
-        return 1.
+        return 1
     if n == 1:
-        return 1.
+        return 1
     return sum(stirling_2(n, k) for k in xrange(n + 1))
 
 ################################################################################

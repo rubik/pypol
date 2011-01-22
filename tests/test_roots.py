@@ -56,3 +56,8 @@ class TestRoots(object):
 
     def testDurandKerner(self):
         pass
+
+if __name__ == '__main__':
+    import sys
+    import os.path
+    py.test.main(args=[os.path.abspath(__file__)] + sys.argv[1:])

@@ -26,7 +26,7 @@ import fractions
 import py
 import pypol
 import pypol.funcs as funcs
-from pypol import ONE, x
+from pypol import ONE, TWO, x
 
 a = pypol.monomial(a=1)
 
@@ -57,16 +57,35 @@ class TestFuncs(object):
         assert pypol.poly1d([6]) == funcs.polyder(p, 3)
 
     def testPolyint(self):
-        pass
+        p = pypol.poly1d([4, -3, 4, 1])
+        py.test.raises(ValueError, lambda: funcs.polyint(ONE, -1))
+        assert funcs.polyint(ONE) == x
+        assert funcs.polyint(TWO) == 2*x
+        assert funcs.polyint(p) == pypol.poly1d([1, -1, 2, 1, 0])
+        assert funcs.polyint(p, 2) == funcs.polyint(funcs.polyint(p)) \
+                                   == pypol.polynomial('+ 1/5x^5 - 1/4x^4 + 2/3x^3 + 1/2x^2')
 
     def testPolyint_(self):
-        pass
+        assert funcs.polyint_(ONE, 1, 1) == 0.0
+        assert funcs.polyint_(3*x - 4, 2, 12) == 170.0
+        assert funcs.polyint_(-TWO*2, 7, -2) == 36.0
+        import random
+        for i in xrange(20):
+            r = random.randint(1, 100)
+            r2 = random.randint(1, 100)
+            assert funcs.polyint_(ONE, r, r2) == r2 - r ## More generally: polyint_(p, r1, r2) with p integer = (r2 - r1) * p
 
     def testInterpolation(self):
         pass
 
     def testBinCoeff(self):
-        pass
+        py.test.raises(ValueError, lambda: funcs.bin_coeff(1, 2))
+        assert funcs.bin_coeff(2, 1) == 2
+        assert funcs.bin_coeff(4, 3) == 4
+        assert funcs.bin_coeff(12, 11) == 12
+        assert funcs.bin_coeff(10, 3) == 120
+        assert funcs.bin_coeff(20, 15) == 15504
+        assert funcs.bin_coeff(49, 8) == 450978066
 
     def testHarmonic(self):
         py.test.raises(ValueError, funcs.harmonic, -1)
@@ -83,10 +102,43 @@ class TestFuncs(object):
         assert funcs.harmonic(10) == fractions.Fraction(7381, 2520)
 
     def testGeneralizedHarmonic(self):
-        pass
+        py.test.raises(ValueError, funcs.harmonic_g, -1, 1)
+        py.test.raises(ValueError, funcs.harmonic_g, 0, 1)
+        assert funcs.harmonic_g(10, 1) == funcs.harmonic(10)
+        assert funcs.harmonic_g(2, 1) == fractions.Fraction(3, 2)
+        assert funcs.harmonic_g(3, 2) == fractions.Fraction(49, 36)
+        assert funcs.harmonic_g(4, 4) == fractions.Fraction(22369, 20736)
+        assert funcs.harmonic_g(2, 3) == fractions.Fraction(9, 8)
+        assert funcs.harmonic_g(4, 2) == fractions.Fraction(205, 144)
+        assert funcs.harmonic_g(4, 4) == fractions.Fraction(22369, 20736)
 
     def testStirling(self):
-        pass
+        py.test.raises(ValueError, lambda: funcs.stirling(-1, -2))
+        assert funcs.stirling(0, 0) == 1
+        assert funcs.stirling(1, 1) == 1
+        assert funcs.stirling(2, 1) == -1
+        assert funcs.stirling(3, 1) == 2
+        assert funcs.stirling(4, 3) == -6
+        assert funcs.stirling(9, 4) == -67284
 
     def testStirling2(self):
-        pass
+        py.test.raises(ValueError, lambda: funcs.stirling_2(1, -1))
+        assert funcs.stirling_2(0, 0) == 1
+        assert funcs.stirling_2(2, 1) == 1
+        assert funcs.stirling_2(12, 3) == 86526
+        assert funcs.stirling_2(13, 13) == 1
+        assert funcs.stirling_2(13, 12) == 78
+
+    def testBellNumbers(self):
+        assert funcs.bell_num(-1) == 0
+        assert funcs.bell_num(0) == 1
+        assert funcs.bell_num(1) == 1
+        assert funcs.bell_num(2) == 2
+        assert funcs.bell_num(3) == 5
+        assert funcs.bell_num(4) == 15
+        assert funcs.bell_num(5) == 52
+
+if __name__ == '__main__':
+    import sys
+    import os.path
+    py.test.main(args=[os.path.abspath(__file__)] + sys.argv[1:])

@@ -22,7 +22,7 @@ pypol is on `PyPI <http://pypi.python.org/pypi/pypol_/0.3>`_ too. If you have se
 
 and **don't forget the underscore!** Because if you try::
 
-    $ easy_install pypol
+    $ easy_install -U pypol
 
 **you will install a different package!**
 

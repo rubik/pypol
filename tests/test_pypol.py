@@ -75,10 +75,10 @@ class TestPolynomial(object):
         assert ((-2, {'x': 2}), (1, {'a': 3}), (-1, {'b': 1}), (3, {})) == self.b.monomials
 
     def testGcd(self):
-        pass
+        assert pypol.polynomial('3x^4 - 9x').gcd() in (pypol.polynomial('3x'), pypol.polynomial('-3x'))
 
     def testLcm(self):
-        pass
+        assert pypol.polynomial('3x^4 - 9x').lcm() in (pypol.polynomial('9x^4'), pypol.polynomial('-9x^4'))
 
     def testIsSquareDiff(self):
         assert pypol.polynomial('a6 - 9').is_square_diff()
@@ -209,7 +209,14 @@ class TestFunctions(object):
         assert not pypol.are_similar((2, {'y': 3}), (2, {'y': 2}))
 
     def testGcd(self):
-        pass
+        x = pypol.x
+        assert pypol.gcd(3*x, 6*x**2) == 3*x
 
     def testLcm(self):
-        pass
+        x = pypol.x
+        assert pypol.lcm(3*x, 6*x**2) == 6*x**2
+
+if __name__ == '__main__':
+    import sys
+    import os.path
+    py.test.main(args=[os.path.abspath(__file__)] + sys.argv[1:])
