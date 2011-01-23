@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to pypol v0.3 documentation!
+Welcome to pypol v0.4 documentation!
 ====================================
 
 :Author: Michele Lacchia (michelelacchia@gmail.com)
@@ -16,7 +16,7 @@ pypol is a Python library that allows you to manipulate polynomials. This is the
 Installation
 ------------
 
-pypol is on `PyPI <http://pypi.python.org/pypi/pypol_/0.3>`_ too. If you have setuptools installed, you can use `easy_install <http://peak.telecommunity.com/DevCenter/EasyInstall>`_::
+pypol is on `PyPI <http://pypi.python.org/pypi/pypol_/0.4>`_ too. If you have setuptools installed, you can use `easy_install <http://peak.telecommunity.com/DevCenter/EasyInstall>`_::
 
     $ easy_install -U pypol_
 

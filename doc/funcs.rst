@@ -4,7 +4,7 @@
 .. sectionauthor:: Michele Lacchia <michelelacchia@gmail.com>
 
 The :mod:`~pypol.funcs` module 
-========================
+==============================
 
 .. versionadded:: 0.3
 

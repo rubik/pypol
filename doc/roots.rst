@@ -5,7 +5,7 @@
 .. sectionauthor:: Michele Lacchia (michelelacchia@gmail.com)
 
 The :mod:`~pypol.roots` module
-=======================
+==============================
 
 .. versionadded:: 0.4
 

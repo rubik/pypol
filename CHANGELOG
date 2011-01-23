@@ -11,8 +11,8 @@ New in :mod:`pypol.funcs`:
     + :func:`pypol.funcs.jacobshtal_lucas_num`
     + :func:`pypol.funcs.fermat_lucas_num`
 
-Release 0.4 (in development)
-----------------------------
+Release 0.4 (23/01/2011)
+------------------------
 
 New modules:
     + New module: :mod:`pypol.roots`
@@ -21,8 +21,8 @@ New modules:
 Changes:
     + Moved :func:`gcd` and :func:`lcm` from :mod:`pypol.funcs` to :mod:`pypol` (core)
     + Moved :func:`pypol.funcs.newton` to :func:`pypol.roots.newton`
-    + Moved :func:`pypol.funcs.newton` to :func:`pypol.roots.ruffini`
-    + Moved :func:`pypol.funcs.newton` to :func:`pypol.roots.bisection`
+    + Moved :func:`pypol.funcs.ruffini` to :func:`pypol.roots.ruffini`
+    + Moved :func:`pypol.funcs.bisection` to :func:`pypol.roots.bisection`
     + Renamed :func:`pypol.funcs.fib_poly` to :func:`pypol.funcs.fibonacci`
     + Changed: :func:`pypol.funcs.bin_coeff` now returns integers
 
@@ -47,6 +47,7 @@ New in :mod:`pypol.series`:
 
 Added in :mod:`pypol.funcs`:
     + :func:`pypol.funcs.polyint_`
+    + :func:`pypol.funcs.divided_diff`
     + :func:`pypol.funcs.bin_coeff`
     + :func:`pypol.funcs.harmonic`
     + :func:`pypol.funcs.harmonic_g`

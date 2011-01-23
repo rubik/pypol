@@ -265,6 +265,55 @@ def cubic(poly):
 
 def quartic(poly):
     '''
+    Finds all four roots of a fourth-degree polynomial *poly*::
+
+    :raises: :exc:`AssertionError` if the polynomial's degree is not 4
+    :rtype: 4 numbers (integer, float or complex) in a tuple
+
+    **Examples**
+
+    When all the roots are real::
+
+        >>> from pypol.roots import *
+        >>> from pypol.funcs import from_roots
+        >>> p = from_roots([1, -4, 2, 3])
+        >>> p
+        + x^4 - 2x^3 - 13x^2 + 38x - 24
+        >>> quartic(p)
+        [1, 3.0, -4.0, 2.0]
+        >>> map(p, quartic(p))
+        [0, 0.0, 0.0, 0.0]
+        >>> p = from_roots([-1, 42, 2, -19239])
+        >>> p
+        + x^4 + 19196x^3 - 827237x^2 + 769644x + 1616076
+        >>> quartic(p)
+        [-1, 42.0, -19239.0, 2.0]
+        >>> map(p, quartic(p))
+        [0, 0.0, 3.0, 0.0]
+
+    Otherwise, if there are complex roots it loses precision and this is due to floating point numbers::
+
+        >>> from pypol import *
+        >>> from pypol.roots import *
+        >>> 
+        >>> p = poly1d([1, -3, 4, 2, 1])
+        >>> p
+        + x^4 - 3x^3 + 4x^2 + 2x + 1
+        >>> quartic(p)
+        ((1.7399843312651568+1.5686034407060976j), (1.7399843312651568-1.5686034407060976j), (-0.23998433126515695+0.35301727734776445j), (-0.23998433126515695-0.35301727734776445j))
+        >>> map(p, quartic(p))
+        [(8.8817841970012523e-16+8.4376949871511897e-15j), (8.8817841970012523e-16-8.4376949871511897e-15j), (8.3266726846886741e-15-2.7755575615628914e-15j), (8.3266726846886741e-15+2.7755575615628914e-15j)]
+        >>> p = poly1d([4, -3, 4, 2, 1])
+        >>> p
+        + 4x^4 - 3x^3 + 4x^2 + 2x + 1
+        >>> quartic(p)
+        ((0.62277368382725595+1.0277469284099872j), (0.62277368382725595-1.0277469284099872j), (-0.24777368382725601+0.33425306402324328j), (-0.24777368382725601-0.33425306402324328j))
+        >>> map(p, quartic(p))
+        [(-2.5313084961453569e-14+3.730349362740526e-14j), (-2.5313084961453569e-14-3.730349362740526e-14j), (1.354472090042691e-14-1.2101430968414206e-14j), (1.354472090042691e-14+1.2101430968414206e-14j)]
+
+    **References**
+
+    `MathWorld <http://mathworld.wolfram.com/QuarticEquation.html>`_
     '''
 
     assert poly.degree == 4, 'The polynomial\'s degree must be 4'
@@ -310,7 +359,10 @@ def quartic(poly):
     if len(roots) >= 2:
         p, q = roots[:2]
     else:
-        p, q = map(math.sqrt, [r for r in (y1, y2, y3) if r][:2])
+        try:
+            p, q = map(math.sqrt, [r for r in (y1, y2, y3) if r][:2])
+        except ValueError:
+            p, q = map(cmath.sqrt, [r for r in (y1, y2, y3) if r][:2])
     r = -g / (8*p*q)
     s = b / (4*a)
     x1 = p + q + r - s

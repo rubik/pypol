@@ -661,48 +661,49 @@ class Polynomial(object):
             return self._monomials[-1][0]
         return False
 
-    @ property
-    def zeros(self):
-        '''
-        Returns a tuple containing all the polynomial's zeros, based on the right-hand side.
-
-        :rtype: :exc:`NotImplemented` when:
-
-        * there is more than one letter
-        * there isn't the right-hand side and there is more than one letter or the sum of the polynomial's coefficients is not 0
-
-        For example::
-
-            >>> Polynomial(parse_polynomial('2x - 4')).zeros
-            (2,)
-            >>> Polynomial(parse_polynomial('2x')).zeros
-            NotImplemented
-            >>> Polynomial(parse_polynomial('2xy')).zeros
-            NotImplemented
-
-        .. deprecated:: 0.4
-            Use :func:`pypol.funcs.ruffini` instead.
-        '''
-
-        raise DeprecationWarning('This method is deprecated, use pypol.funcs.ruffini instead')
-        if len(self.letters) - 1: ## Polynomial has more than one letter or none
-            if len(self) == 1 and self.right_hand_side: ## For example polynomial('-4'), i.e. no letters
-                return -self.right_hand_side
-            return NotImplemented
-
-        if not self.right_hand_side:
-            if len(self.letters) == 1:
-                if not sum(self.coefficients):
-                    return 1
-            return NotImplemented
-
-        divisors = lambda n: ([1] if n != 1 else []) + \
-                        [x for x in xrange(2, n//2 +1) if not n % x] + [n]
-
-        divs = divisors((-self.right_hand_side if self.right_hand_side < 0 \
-                                               else self.right_hand_side))
-        negdivs = map(operator.neg, divs)
-        return tuple([x for x in divs + negdivs if not self(x)])
+    # DEPRECATED since 0.3
+    #@ property
+    #def zeros(self):
+    #    '''
+    #    Returns a tuple containing all the polynomial's zeros, based on the right-hand side.
+    #
+    #    :rtype: :exc:`NotImplemented` when:
+    #
+    #    * there is more than one letter
+    #    * there isn't the right-hand side and there is more than one letter or the sum of the polynomial's coefficients is not 0
+    #
+    #    For example::
+    #
+    #        >>> Polynomial(parse_polynomial('2x - 4')).zeros
+    #        (2,)
+    #        >>> Polynomial(parse_polynomial('2x')).zeros
+    #        NotImplemented
+    #        >>> Polynomial(parse_polynomial('2xy')).zeros
+    #        NotImplemented
+    #
+    #    .. deprecated:: 0.4
+    #        Use :func:`pypol.funcs.ruffini` instead.
+    #    '''
+    #
+    #    raise DeprecationWarning('This method is deprecated and will be removed in pypol 0.4. Use pypol.funcs.ruffini instead')
+    #    if len(self.letters) - 1: ## Polynomial has more than one letter or none
+    #        if len(self) == 1 and self.right_hand_side: ## For example polynomial('-4'), i.e. no letters
+    #            return -self.right_hand_side
+    #        return NotImplemented
+    #
+    #    if not self.right_hand_side:
+    #        if len(self.letters) == 1:
+    #            if not sum(self.coefficients):
+    #                return 1
+    #        return NotImplemented
+    #
+    #    divisors = lambda n: ([1] if n != 1 else []) + \
+    #                    [x for x in xrange(2, n//2 +1) if not n % x] + [n]
+    #
+    #    divs = divisors((-self.right_hand_side if self.right_hand_side < 0 \
+    #                                           else self.right_hand_side))
+    #    negdivs = map(operator.neg, divs)
+    #    return tuple([x for x in divs + negdivs if not self(x)])
 
     def get(self, power, letter=None):
         '''

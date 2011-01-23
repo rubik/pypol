@@ -533,7 +533,24 @@ def interpolate(x_values, y_values): ## Still in development
 
 def divided_diff(p, x_values):
     '''
-    Computes the divided difference :math:`p[x_{0},x_{1},\ldots,x_{n}]`
+    Computes the divided difference :math:`p[x_{0},x_{1},\ldots,x_{n}]`::
+
+        >>> from pypol import *
+        >>> from pypol.funcs import divided_diff
+        >>> 
+        >>> p = poly1d([1, -43, 2, 4])
+        >>> p
+        + x^3 - 43x^2 + 2x + 4
+        >>> divided_diff(p, [1, -4, 3])
+        -43.0
+        >>> divided_diff(p, [1, -4, 3, 4])
+        1.0
+        >>> divided_diff(p, [1])
+        -36
+        >>> divided_diff(p, [0]) ## divided_diff(p, [x_0]) == p(x_0)
+        4
+
+    .. versionadded:: 0.4
     '''
 
     if len(x_values) == 1:

@@ -47,8 +47,6 @@ The main class in pypol is :class:`Polynomial`:
 
     .. autoattribute:: right_hand_side
 
-    .. autoattribute:: zeros
-
     .. automethod:: get
 
     .. automethod:: raw_powers
