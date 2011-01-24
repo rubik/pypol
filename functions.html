@@ -1,0 +1,412 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2. Global functions &mdash; pypol v0.4 documentation</title>
+    <link rel="stylesheet" href="_static/celery.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pypol v0.4 documentation" href="index.html" />
+    <link rel="next" title="3. Classes" href="classes.html" />
+    <link rel="prev" title="1. Tutorial" href="tutorial.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="classes.html" title="3. Classes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="1. Tutorial"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">pypol v0.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="global-functions">
+<h1>2. Global functions<a class="headerlink" href="#global-functions" title="Permalink to this headline">¶</a></h1>
+<p>pypol module has some functions to work with polynomials. If you need other utility functions check the <a class="reference internal" href="funcs.html#module-pypol.funcs" title="pypol.funcs: Utility functions to work with polynomials"><tt class="xref py py-mod docutils literal"><span class="pre">pypol.funcs</span></tt></a> and <a class="reference internal" href="roots.html#module-pypol.roots" title="pypol.roots: A collection of some root-finding algorithms"><tt class="xref py py-mod docutils literal"><span class="pre">pypol.roots</span></tt></a> modules.</p>
+<table class="hlist"><tr><td><ul class="simple">
+<li><a class="reference internal" href="#pypol.polynomial" title="pypol.polynomial"><tt class="xref py py-func docutils literal"><span class="pre">polynomial()</span></tt></a></li>
+<li><a class="reference internal" href="#pypol.algebraic_fraction" title="pypol.algebraic_fraction"><tt class="xref py py-func docutils literal"><span class="pre">algebraic_fraction()</span></tt></a></li>
+<li><a class="reference internal" href="#pypol.monomial" title="pypol.monomial"><tt class="xref py py-func docutils literal"><span class="pre">monomial()</span></tt></a></li>
+<li><a class="reference internal" href="#pypol.poly1d" title="pypol.poly1d"><tt class="xref py py-func docutils literal"><span class="pre">poly1d()</span></tt></a></li>
+</ul>
+</td><td><ul class="simple">
+<li><a class="reference internal" href="#pypol.poly1d_2" title="pypol.poly1d_2"><tt class="xref py py-func docutils literal"><span class="pre">poly1d_2()</span></tt></a></li>
+<li><a class="reference internal" href="#pypol.gcd" title="pypol.gcd"><tt class="xref py py-func docutils literal"><span class="pre">gcd()</span></tt></a></li>
+<li><a class="reference internal" href="#pypol.lcm" title="pypol.lcm"><tt class="xref py py-func docutils literal"><span class="pre">lcm()</span></tt></a></li>
+</ul>
+</td></tr></table>
+<dl class="function">
+<dt id="pypol.poly1d">
+<tt class="descclassname">pypol.</tt><tt class="descname">poly1d</tt><big>(</big><em>coeffs</em>, <em>variable='x'</em>, <em>right_hand_side=True</em><big>)</big><a class="headerlink" href="#pypol.poly1d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a 1 dimension polynomial from a list of coefficients.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>coeffs</strong> (<em>list</em>) &#8211; the list of the polynomial coefficients</li>
+<li><strong>variable</strong> (<em>string</em>) &#8211; the letter of the polynomial, default <tt class="docutils literal"><span class="pre">x</span></tt></li>
+<li><strong>right_hand_side</strong> (<em>bool or None</em>) &#8211; if True, the last term of <em>coeffs</em> will be the right hand-side of the polynomial</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<p>We create the polynomials <img class="math" src="_images/math/f67095e7d2fd675ad4960173cf66647ed92a7222.png" alt="3x^3 - 2x^2 + 4x - 2"/>, <img class="math" src="_images/math/5c41964901ed79b04afb5876bacc645acff3a046.png" alt="2x^3 - 2"/> and <img class="math" src="_images/math/70e634348f8df9eaeac4ced35db64d08a906532e.png" alt="3x"/>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">poly1d</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+<span class="go">+ 3x^3 - 2x^2 + 4x - 2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly1d</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+<span class="go">+ 2x^3   - 2</span>
+</pre></div>
+</div>
+<p>pay attention here:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">poly1d</span><span class="p">([</span><span class="mi">3</span><span class="p">],</span> <span class="n">right_hand_side</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="go">+ 3x</span>
+</pre></div>
+</div>
+<p>because if you don&#8217;t do this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">poly1d</span><span class="p">([</span><span class="mi">3</span><span class="p">])</span>
+<span class="go">+ 3</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">3</span></tt> will be interpreted as the right_hand_side of the polynomial.</p>
+<p>An alternative solution may be:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">poly1d</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="go">+ 3x</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pypol.poly1d_2">
+<tt class="descclassname">pypol.</tt><tt class="descname">poly1d_2</tt><big>(</big><em>monomials</em>, <em>variable='x'</em><big>)</big><a class="headerlink" href="#pypol.poly1d_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a 1 dimension polynomial from a list of lists.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>monomials</strong> (<em>list</em>) &#8211; a list of lists that represents the polynomial&#8217;s monomial; evary sub-list has the coefficient and the power of the variable</li>
+<li><strong>variable</strong> (<em>string</em>) &#8211; the letter of the polynomial (default <tt class="docutils literal"><span class="pre">x</span></tt>)</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="classes.html#pypol.Polynomial" title="pypol.Polynomial"><tt class="xref py py-class docutils literal"><span class="pre">Polynomial</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<p>We want to create these two polynomials: <img class="math" src="_images/math/86516cd5e4fa79edc9c167ba437746fd7c2f5a27.png" alt="2x^3 - 2x^2 + x"/> and <img class="math" src="_images/math/26eeb5258ca5099acf8fe96b2a1049c48c89a5e6.png" alt="x"/>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">poly1d_2</span><span class="p">([[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+<span class="go">- x^7 + 2x^3 - 2x^2 + x</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly1d_2</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+<span class="go">+ x</span>
+</pre></div>
+</div>
+<p>This function is very useful when you need a polynomial with negative powers or with spread powers:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">poly1d_2</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">]])</span>
+<span class="go">+ 3x^5 + x^-1 + 2x^-3</span>
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">poly1d_2</span><span class="p">([[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]])</span>
+<span class="go">+ 2x^9 + x^2</span>
+</pre></div>
+</div>
+<p>in this case, if you want to use <a class="reference internal" href="#pypol.poly1d" title="pypol.poly1d"><tt class="xref py py-func docutils literal"><span class="pre">poly1d()</span></tt></a> or <a class="reference internal" href="#pypol.polynomial" title="pypol.polynomial"><tt class="xref py py-func docutils literal"><span class="pre">polynomial()</span></tt></a> you can do this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">poly1d</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="go">+ 2x^9 + x^2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly1d</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">right_hand_side</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="go">+ 2x^9 + x^2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">polynomial</span><span class="p">(</span><span class="s">&#39;2x^9 + x^2&#39;</span><span class="p">)</span>
+<span class="go">+ 2x^9 + x^2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">polynomial</span><span class="p">(</span><span class="s">&#39;2x9 x2&#39;</span><span class="p">)</span>
+<span class="go">+ 2x^9 + x^2</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pypol.polynomial">
+<tt class="descclassname">pypol.</tt><tt class="descname">polynomial</tt><big>(</big><em>string=None</em>, <em>simplify=True</em><big>)</big><a class="headerlink" href="#pypol.polynomial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a <a class="reference internal" href="classes.html#pypol.Polynomial" title="pypol.Polynomial"><tt class="xref py py-class docutils literal"><span class="pre">Polynomial</span></tt></a> object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>string</strong> (<em>string or None</em>) &#8211; a string that represent a polynomial, default is None.</li>
+<li><strong>simplify</strong> (<em>bool</em>) &#8211; if True, the polynomial will be simplified on __init__ and on update.</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="classes.html#pypol.Polynomial" title="pypol.Polynomial"><tt class="xref py py-class docutils literal"><span class="pre">Polynomial</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p>With this function you cannot make polynomials with negative powers. In case you want to use negative powers, use <a class="reference internal" href="#pypol.poly1d_2" title="pypol.poly1d_2"><tt class="xref py py-func docutils literal"><span class="pre">poly1d_2()</span></tt></a> instead.</p>
+<p><strong>Examples</strong></p>
+<p>We want to make the polynomial <img class="math" src="_images/math/1d60811dfc0181ce37915c71078f2e63a193202d.png" alt="2x^-1 + 2"/>:</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">polynomial</span><span class="p">(</span><span class="s">&#39;2x^-1 + 2&#39;</span><span class="p">)</span>
+<span class="go">+ 2x + 1 ## Wrong!</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="n">poly1d_2</span><span class="p">([[</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span>
+<span class="go">+ 2x^-1 + 2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">k</span><span class="o">.</span><span class="n">_key</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span>
+<span class="go">+ 2x^-1 + 2</span>
+</pre></div>
+</div>
+</div>
+</dd></dl>
+
+<div class="section" id="polynomial-s-syntax-rules">
+<span id="syntax-rules"></span><h2>2.1. <a class="reference internal" href="#pypol.polynomial" title="pypol.polynomial"><tt class="xref py py-func docutils literal"><span class="pre">polynomial()</span></tt></a>&#8216;s syntax rules<a class="headerlink" href="#polynomial-s-syntax-rules" title="Permalink to this headline">¶</a></h2>
+<p>Powers can be expressed using the <tt class="docutils literal"><span class="pre">^</span></tt> symbol. If a digit follows a letter then it is interpreted as an exponent. So the following expressions are equal:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">polynomial</span><span class="p">(</span><span class="s">&#39;2x^3y^2 + 1&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">polynomial</span><span class="p">(</span><span class="s">&#39;2x3y2 + 1&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>but if there is a white space after the letter then the digit is interpreted as a positive coefficient.
+So this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">polynomial</span><span class="p">(</span><span class="s">&#39;2x3y 2 + 1&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>represents this polynomial:</p>
+<div class="highlight-python"><pre>2x^3y + 3</pre>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">polynomial</span><span class="p">(</span><span class="s">&#39;2x3y 2 + 1&#39;</span><span class="p">)</span>
+<span class="go">+ 2x^3y + 3</span>
+</pre></div>
+</div>
+<dl class="function">
+<dt id="pypol.algebraic_fraction">
+<tt class="descclassname">pypol.</tt><tt class="descname">algebraic_fraction</tt><big>(</big><em>s1</em>, <em>s2='1'</em>, <em>simplify=True</em><big>)</big><a class="headerlink" href="#pypol.algebraic_fraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper function that returns an <a class="reference internal" href="classes.html#pypol.AlgebraicFraction" title="pypol.AlgebraicFraction"><tt class="xref py py-class docutils literal"><span class="pre">AlgebraicFraction</span></tt></a> object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name" colspan="2">Parameters s1, s2:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body">two strings that represent a polynomial</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">algebraic_fraction</span><span class="p">(</span><span class="s">&#39;3x^2 - 4xy&#39;</span><span class="p">,</span> <span class="s">&#39;x + y&#39;</span><span class="p">)</span>
+<span class="go">AlgebraicFraction(+ 3x² - 4xy, + x + y)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">algebraic_fraction</span><span class="p">(</span><span class="s">&#39;3x^2 - 4xy&#39;</span><span class="p">,</span> <span class="s">&#39;x + y&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">terms</span>
+<span class="go">(+ 3x^2 - 4xy, + x + y)</span>
+</pre></div>
+</div>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="classes.html#pypol.AlgebraicFraction" title="pypol.AlgebraicFraction"><tt class="xref py py-class docutils literal"><span class="pre">AlgebraicFraction</span></tt></a></p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pypol.monomial">
+<tt class="descclassname">pypol.</tt><tt class="descname">monomial</tt><big>(</big><em>coeff=1</em>, <em>**vars</em><big>)</big><a class="headerlink" href="#pypol.monomial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple function that returns a <a class="reference internal" href="classes.html#pypol.Polynomial" title="pypol.Polynomial"><tt class="xref py py-class docutils literal"><span class="pre">Polynomial</span></tt></a> object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>coeff</strong> &#8211; the coefficient of the polynomial</td>
+</tr>
+<tr class="field"><th class="field-name">Key **vars:</th><td class="field-body">the monomial&#8217;s letters</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">monomial</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">+ 5a^3b^4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">monomial</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span>
+<span class="go">+ 5a^3b^4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="go">&lt;class &#39;pypol.src.pypol.Polynomial&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="o">.</span><span class="n">monomials</span>
+<span class="go">((5, {&#39;a&#39;: 3, &#39;b&#39;: 4}),)</span>
+</pre></div>
+</div>
+<p>This function is useful when you need a monomial. Without it you should do:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(((</span><span class="mi">5</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}),))</span>
+<span class="go">+ 5a^3b^4</span>
+</pre></div>
+</div>
+<p>Either <em>coeff</em> or <em>**vars</em> is optional:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">monomial</span><span class="p">()</span>
+<span class="go">+ 1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">monomial</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">+ 1</span>
+</pre></div>
+</div>
+<p>Equivalent to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">monomial</span><span class="p">(</span><span class="n">coeff</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="nb">vars</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Polynomial</span><span class="p">(((</span><span class="n">coeff</span><span class="p">,</span> <span class="nb">vars</span><span class="p">),))</span>
+</pre></div>
+</div>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.4: </span>The <em>*var</em> parameter</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pypol.parse_polynomial">
+<tt class="descclassname">pypol.</tt><tt class="descname">parse_polynomial</tt><big>(</big><em>string</em>, <em>max_length=None</em><big>)</big><a class="headerlink" href="#pypol.parse_polynomial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a string that represent a polynomial.
+It can parse integer coefficients, float coefficient and fractional coefficient.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>string</strong> &#8211; a string that represent a polynomial</li>
+<li><strong>max_length</strong> (<em>integer or None</em>) &#8211; represents the maximum length that the polynomial can have.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>An example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;2x^3 - 3y + 2&#39;</span><span class="p">)</span>
+<span class="go">[(2, {&#39;x&#39;: 3}), (-3, {&#39;y&#39;: 1}), (2, {})]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;x3 - 3y2 + 2&#39;</span><span class="p">)</span>
+<span class="go">[(1, {&#39;x&#39;: 3}), (-3, {&#39;y&#39;: 2}), (2, {})]</span>
+</pre></div>
+</div>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#syntax-rules"><em>polynomial()&#8217;s syntax rules</em></a></p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pypol.gcd">
+<tt class="descclassname">pypol.</tt><tt class="descname">gcd</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#pypol.gcd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Greatest Common Divisor between two polynomials:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">gcd</span><span class="p">(</span><span class="n">polynomial</span><span class="p">(</span><span class="s">&#39;3x&#39;</span><span class="p">),</span> <span class="n">polynomial</span><span class="p">(</span><span class="s">&#39;6x^2&#39;</span><span class="p">))</span>
+<span class="go">+ 3x</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pypol.lcm">
+<tt class="descclassname">pypol.</tt><tt class="descname">lcm</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#pypol.lcm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Least Common Multiple between two polynomials:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">lcm</span><span class="p">(</span><span class="n">polynomial</span><span class="p">(</span><span class="s">&#39;3x&#39;</span><span class="p">),</span> <span class="n">polynomial</span><span class="p">(</span><span class="s">&#39;6x^2&#39;</span><span class="p">))</span>
+<span class="go">+ 6x^2</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="funcs.html#module-pypol.funcs" title="pypol.funcs: Utility functions to work with polynomials"><tt class="xref py py-mod docutils literal"><span class="pre">pypol.funcs</span></tt></a> for other utility functions.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">2. Global functions</a><ul>
+<li><a class="reference internal" href="#polynomial-s-syntax-rules">2.1. <tt class="docutils literal"><span class="pre">polynomial()</span></tt>&#8216;s syntax rules</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tutorial.html"
+                        title="previous chapter">1. Tutorial</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="classes.html"
+                        title="next chapter">3. Classes</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/functions.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="classes.html" title="3. Classes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="1. Tutorial"
+             >previous</a> |</li>
+        <li><a href="index.html">pypol v0.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Michele Lacchia.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

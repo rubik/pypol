@@ -1,0 +1,763 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>6. The roots module &mdash; pypol v0.4 documentation</title>
+    <link rel="stylesheet" href="_static/celery.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pypol v0.4 documentation" href="index.html" />
+    <link rel="next" title="7. The series module" href="series.html" />
+    <link rel="prev" title="5. The funcs module" href="funcs.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="series.html" title="7. The series module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="funcs.html" title="5. The funcs module"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">pypol v0.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="module-pypol.roots"></span><div class="section" id="the-roots-module">
+<h1>6. The <a class="reference internal" href="#module-pypol.roots" title="pypol.roots: A collection of some root-finding algorithms"><tt class="xref py py-mod docutils literal"><span class="pre">roots</span></tt></a> module<a class="headerlink" href="#the-roots-module" title="Permalink to this headline">¶</a></h1>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.4.</span></p>
+<p>Here are some root-finding algorithm, such as <a class="reference internal" href="#pypol.roots.ruffini" title="pypol.roots.ruffini"><tt class="xref py py-func docutils literal"><span class="pre">ruffini()</span></tt></a>&#8216;s method, <a class="reference internal" href="#pypol.roots.quadratic" title="pypol.roots.quadratic"><tt class="xref py py-func docutils literal"><span class="pre">quadratic()</span></tt></a> formula, <a class="reference internal" href="#pypol.roots.cubic" title="pypol.roots.cubic"><tt class="xref py py-func docutils literal"><span class="pre">cubic()</span></tt></a> formula, <a class="reference internal" href="#pypol.roots.newton" title="pypol.roots.newton"><tt class="xref py py-func docutils literal"><span class="pre">newton()</span></tt></a>&#8216;s method, <a class="reference internal" href="#pypol.roots.halley" title="pypol.roots.halley"><tt class="xref py py-func docutils literal"><span class="pre">halley()</span></tt></a>&#8216;s method, <a class="reference internal" href="#pypol.roots.householder" title="pypol.roots.householder"><tt class="xref py py-func docutils literal"><span class="pre">householder()</span></tt></a>&#8216;s method, <a class="reference internal" href="#pypol.roots.schroeder" title="pypol.roots.schroeder"><tt class="xref py py-func docutils literal"><span class="pre">schroeder()</span></tt></a>&#8216;s method, <a class="reference internal" href="#pypol.roots.brent" title="pypol.roots.brent"><tt class="xref py py-func docutils literal"><span class="pre">brent()</span></tt></a>&#8216;s method, and <a class="reference internal" href="#pypol.roots.bisection" title="pypol.roots.bisection"><tt class="xref py py-func docutils literal"><span class="pre">bisection()</span></tt></a>.</p>
+<div class="section" id="simple-algorithms-and-formulas">
+<h2>6.1. Simple algorithms and formulas<a class="headerlink" href="#simple-algorithms-and-formulas" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pypol.roots.ruffini">
+<tt class="descclassname">pypol.roots.</tt><tt class="descname">ruffini</tt><big>(</big><em>poly</em><big>)</big><a class="reference internal" href="_modules/pypol/roots.html#ruffini"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypol.roots.ruffini" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the real integer roots (if there are any) of the polynomial basing on the right-hand side. If the polynomial has not the right-hand side, returns an empty list.</p>
+<p><strong>Examples</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">poly1d</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">6</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ x^4 + 5x^3 + 5x^2 - 5x - 6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ruffini</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">[-1, 1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">(0, 0)</span>
+</pre></div>
+</div>
+<p>and we can go on:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span><span class="p">,</span> <span class="n">p3</span> <span class="o">=</span> <span class="n">p</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">p</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span><span class="p">,</span> <span class="n">p3</span>
+<span class="go">(+ x^3 + 6x^2 + 11x + 6, + x^3 + 4x^2 + x - 6)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ruffini</span><span class="p">(</span><span class="n">p2</span><span class="p">),</span> <span class="n">ruffini</span><span class="p">(</span><span class="n">p3</span><span class="p">)</span>
+<span class="go">([-1, -2, -3], [1])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">p2</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="n">p2</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">(0, 0, 0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p3</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p4</span><span class="p">,</span> <span class="n">p5</span><span class="p">,</span> <span class="n">p6</span> <span class="o">=</span> <span class="n">p2</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">p2</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">2</span><span class="p">),</span> <span class="n">p</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p4</span><span class="p">,</span> <span class="n">p5</span><span class="p">,</span> <span class="n">p6</span>
+<span class="go">(+ x^2 + 7x + 18, + x^2 + 8x + 27, + x^3 + 8x^2 + 29x + 82)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ruffini</span><span class="p">(</span><span class="n">p4</span><span class="p">),</span> <span class="n">ruffini</span><span class="p">(</span><span class="n">p5</span><span class="p">),</span> <span class="n">ruffini</span><span class="p">(</span><span class="n">p6</span><span class="p">)</span>
+<span class="go">([], [], [])</span>
+</pre></div>
+</div>
+<p>there are no more real roots, but if we try <a class="reference internal" href="#pypol.roots.quadratic" title="pypol.roots.quadratic"><tt class="xref py py-func docutils literal"><span class="pre">quadratic()</span></tt></a>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">quadratic</span><span class="p">(</span><span class="n">p4</span><span class="p">),</span> <span class="n">quadratic</span><span class="p">(</span><span class="n">p5</span><span class="p">)</span>
+<span class="go">(((-3.5+2.3979157616563596j), (-3.5-2.3979157616563596j)), ((-4+3.3166247903553998j), (-4-3.3166247903553998j)))</span>
+</pre></div>
+</div>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.3.</span></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pypol.roots.quadratic">
+<tt class="descclassname">pypol.roots.</tt><tt class="descname">quadratic</tt><big>(</big><em>poly</em><big>)</big><a class="reference internal" href="_modules/pypol/roots.html#quadratic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypol.roots.quadratic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the two roots of the polynomial <em>poly</em> solving the quadratic equation: <img class="math" src="_images/math/0561d206b22c2c257323a06ef53126f4e994d486.png" alt="ax^2 + bx + c = 0"/></p>
+<dl class="docutils">
+<dt>with the formula:</dt>
+<dd><img class="math" src="_images/math/af46c58eae92c87c73c76ae3443c49941d3cd3ec.png" alt="\frac{-b\pm \sqrt{b^2 - 4ac}}{2a}"/></dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Raises :</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></tt> if the polynomial&#8217;s degree is not 2.</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body">2 numbers (integer, float or complex) in a tuple</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">poly1d</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ x^2 - 4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">quadratic</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">(2.0, -2.0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">poly1d</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ 2x^2 + 3x + 1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">quadratic</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">(-0.5, -1.0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="go">0.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="go">0.0</span>
+</pre></div>
+</div>
+<p>this functions can return complex numbers too:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">poly1d</span><span class="p">([</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">- 4x^2 + 5x - 3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">quadratic</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">((0.625-0.59947894041408989j), (0.625+0.59947894041408989j))</span>
+</pre></div>
+</div>
+<p>but the precision is lower:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">poly1d</span><span class="p">([</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">- 4x^2 + 5x - 3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">quadratic</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">((0.625-0.59947894041408989j), (0.625+0.59947894041408989j))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r1</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.625</span><span class="o">-</span><span class="mf">0.59947894041408989</span><span class="n">j</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">(</span><span class="n">r1</span><span class="p">)</span>
+<span class="go">(-4.4408920985006262e-16+0j)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r2</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.625</span><span class="o">+</span><span class="mf">0.59947894041408989</span><span class="n">j</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">(</span><span class="n">r2</span><span class="p">)</span>
+<span class="go">(-4.4408920985006262e-16+0j)</span>
+</pre></div>
+</div>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.3.</span></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pypol.roots.cubic">
+<tt class="descclassname">pypol.roots.</tt><tt class="descname">cubic</tt><big>(</big><em>poly</em><big>)</big><a class="reference internal" href="_modules/pypol/roots.html#cubic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypol.roots.cubic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the three roots of the polynomial <em>poly</em> solving the equation: <img class="math" src="_images/math/422c6f3ffc66889e7d2cc06dcd5cb324e7dc42b6.png" alt="ax^3 + bx^2 + cx + d = 0"/>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Raises :</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></tt> if the polynomial&#8217;s degree is not 3.</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body">3 numbers (integer, float or complex) in a tuple</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="n">poly1d</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span>
+<span class="go">+ 3x^3 - 2x^2 + 45x - 1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cubic</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+<span class="go">(0.022243478406449024, (0.3222115941301088+3.8576995055778323j), (0.3222115941301088-3.8576995055778323j))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="n">poly1d</span><span class="p">([</span><span class="o">-</span><span class="mi">9</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">34</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span>
+<span class="go">- 9x^3 + 12x^2 - 2x - 34</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cubic</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+<span class="go">(-1.182116114781928, (1.2577247240576306+1.2703952413531459j), (1.2577247240576306-1.2703952413531459j))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="n">poly1d</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cubic</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+<span class="go">(-1.0, (5.551115123125783e-17+0.9999999999999999j), (5.551115123125783e-17-0.9999999999999999j))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span><span class="p">(</span><span class="o">-</span><span class="mf">1.</span><span class="p">)</span>
+<span class="go">0.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="n">poly1d</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cubic</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+<span class="go">(1.4655712318767669, (-0.23278561593838348+0.7925519925154489j), (-0.23278561593838348-0.7925519925154489j))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span><span class="p">(</span><span class="n">cubic</span><span class="p">(</span><span class="n">k</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="go">3.9968028886505635e-15</span>
+</pre></div>
+</div>
+<p><strong>References</strong></p>
+<p><a class="reference external" href="http://en.wikipedia.org/wiki/Cubic_function">Wikipedia</a> | <a class="reference external" href="http://mathworld.wolfram.com/CubicFormula.html">MathWorld</a> | <a class="reference external" href="http://www.1728.com/cubic.htm">1728</a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pypol.roots.quartic">
+<tt class="descclassname">pypol.roots.</tt><tt class="descname">quartic</tt><big>(</big><em>poly</em><big>)</big><a class="reference internal" href="_modules/pypol/roots.html#quartic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypol.roots.quartic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds all four roots of a fourth-degree polynomial <em>poly</em>:</p>
+<div class="highlight-python"><pre>:raises: :exc:`AssertionError` if the polynomial's degree is not 4
+:rtype: 4 numbers (integer, float or complex) in a tuple</pre>
+</div>
+<p><strong>Examples</strong></p>
+<p>When all the roots are real:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pypol.roots</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pypol.funcs</span> <span class="kn">import</span> <span class="n">from_roots</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">from_roots</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ x^4 - 2x^3 - 13x^2 + 38x - 24</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">quartic</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">[1, 3.0, -4.0, 2.0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">map</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">quartic</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+<span class="go">[0, 0.0, 0.0, 0.0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">from_roots</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">42</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">19239</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ x^4 + 19196x^3 - 827237x^2 + 769644x + 1616076</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">quartic</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">[-1, 42.0, -19239.0, 2.0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">map</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">quartic</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+<span class="go">[0, 0.0, 3.0, 0.0]</span>
+</pre></div>
+</div>
+<p>Otherwise, if there are complex roots it loses precision and this is due to floating point numbers:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pypol</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pypol.roots</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="gp">&gt;&gt;&gt; </span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">poly1d</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ x^4 - 3x^3 + 4x^2 + 2x + 1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">quartic</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">((1.7399843312651568+1.5686034407060976j), (1.7399843312651568-1.5686034407060976j), (-0.23998433126515695+0.35301727734776445j), (-0.23998433126515695-0.35301727734776445j))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">map</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">quartic</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+<span class="go">[(8.8817841970012523e-16+8.4376949871511897e-15j), (8.8817841970012523e-16-8.4376949871511897e-15j), (8.3266726846886741e-15-2.7755575615628914e-15j), (8.3266726846886741e-15+2.7755575615628914e-15j)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">poly1d</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ 4x^4 - 3x^3 + 4x^2 + 2x + 1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">quartic</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">((0.62277368382725595+1.0277469284099872j), (0.62277368382725595-1.0277469284099872j), (-0.24777368382725601+0.33425306402324328j), (-0.24777368382725601-0.33425306402324328j))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">map</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">quartic</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+<span class="go">[(-2.5313084961453569e-14+3.730349362740526e-14j), (-2.5313084961453569e-14-3.730349362740526e-14j), (1.354472090042691e-14-1.2101430968414206e-14j), (1.354472090042691e-14+1.2101430968414206e-14j)]</span>
+</pre></div>
+</div>
+<p><strong>References</strong></p>
+<p><a class="reference external" href="http://mathworld.wolfram.com/QuarticEquation.html">MathWorld</a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="newton-s-method-and-derived">
+<h2>6.2. Newton&#8217;s method and derived<a class="headerlink" href="#newton-s-method-and-derived" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pypol.roots.newton">
+<tt class="descclassname">pypol.roots.</tt><tt class="descname">newton</tt><big>(</big><em>poly</em>, <em>start</em>, <em>epsilon=-inf</em><big>)</big><a class="reference internal" href="_modules/pypol/roots.html#newton"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypol.roots.newton" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Finds one root of the polynomial <em>poly</em>, with this iteration formula:</dt>
+<dd><img class="math" src="_images/math/fd5fbbdafe86f498fab4ef4c151d89f8c04c4921.png" alt="x_{n + 1} = x_n - \frac{f(x_n)}{f'(x_n)}"/></dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>start</strong> (<em>integer, float or complex</em>) &#8211; the start value for evaluate <tt class="docutils literal"><span class="pre">poly(x)</span></tt>.</li>
+<li><strong>epsilon</strong> (<em>integer or float</em>) &#8211; the precision of the calculus (default to <tt class="docutils literal"><span class="pre">float('-inf')</span></tt>).</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer of float</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="n">poly1d</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span>
+<span class="go">+ 2x^2 + 5x + 3</span>
+</pre></div>
+</div>
+<p>the roots of this polynomial are <tt class="docutils literal"><span class="pre">-1</span></tt> and <tt class="docutils literal"><span class="pre">-1.5</span></tt>.
+We start with 10:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">newton</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="go">-1.0000000000000002</span>
+</pre></div>
+</div>
+<p>so we try <tt class="docutils literal"><span class="pre">-1</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">newton</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">-1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">0</span>
+</pre></div>
+</div>
+<p>We have one root! We continue:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">newton</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">-1.5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span><span class="p">(</span><span class="o">-</span><span class="mf">1.5</span><span class="p">)</span>
+<span class="go">0.0</span>
+</pre></div>
+</div>
+<p>This function can find complex roots too (if <em>start</em> is a complex number):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="n">poly1d</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span>
+<span class="go">+ x^2 - 3x + 6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">roots</span><span class="o">.</span><span class="n">quadratic</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+<span class="go">((1.5+1.9364916731037085j), (1.5-1.9364916731037085j))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">roots</span><span class="o">.</span><span class="n">newton</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">complex</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="go">(1.5+1.9364916731037085j)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">roots</span><span class="o">.</span><span class="n">newton</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">complex</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="go">(1.5-1.9364916731037085j)</span>
+</pre></div>
+</div>
+<p><strong>References</strong></p>
+<p><a class="reference external" href="http://en.wikipedia.org/wiki/Halley's_method">Wikipedia</a> |
+<a class="reference external" href="http://mathworld.wolfram.com/HalleysMethod.html">MathWorld</a></p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.3.</span></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pypol.roots.halley">
+<tt class="descclassname">pypol.roots.</tt><tt class="descname">halley</tt><big>(</big><em>poly</em>, <em>start</em>, <em>epsilon=-inf</em><big>)</big><a class="reference internal" href="_modules/pypol/roots.html#halley"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypol.roots.halley" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Finds one root of the polynomial <em>poly</em> using the Halley&#8217;s method, with this iteration formula:</dt>
+<dd><img class="math" src="_images/math/b3da0de47e4a97ce3c14186f428bd3efcb59058f.png" alt="x_{n + 1} = x_n - \frac{2f(x_n)f'(x_n)}{2[f'(x_n)]^2 - f(x_n)f''(x_n)}"/></dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>start</strong> (<em>integer, float or complex</em>) &#8211; the start value to evaluate <tt class="docutils literal"><span class="pre">poly(x)</span></tt></li>
+<li><strong>epsilon</strong> (<em>integer or float</em>) &#8211; the precision, default to <tt class="docutils literal"><span class="pre">float('-inf')</span></tt></li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer or float</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<p>We want to find the roots of the polynomial: <tt class="docutils literal"><span class="pre">x^3</span> <span class="pre">-</span> <span class="pre">4x^2</span> <span class="pre">-</span> <span class="pre">x</span> <span class="pre">-</span> <span class="pre">4</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">4</span><span class="p">)</span> <span class="c">## its roots are: -1, 1, -4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ x^3 + 4x^2 - x - 4</span>
+</pre></div>
+</div>
+<p>starting from an high number:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">halley</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
+<span class="go">1.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">(</span><span class="mf">1.</span><span class="p">)</span>
+<span class="go">0.0</span>
+</pre></div>
+</div>
+<p>then we get lower:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">halley</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">-1.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">(</span><span class="o">-</span><span class="mf">1.</span><span class="p">)</span>
+<span class="go">0.0</span>
+</pre></div>
+</div>
+<p>and lower:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">halley</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">)</span>
+<span class="go">-4.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">(</span><span class="o">-</span><span class="mf">4.</span><span class="p">)</span>
+<span class="go">0.0</span>
+</pre></div>
+</div>
+<p>so we can say that the roots are: <tt class="docutils literal"><span class="pre">1</span></tt>, <tt class="docutils literal"><span class="pre">-1</span></tt>, and <tt class="docutils literal"><span class="pre">-4</span></tt>.</p>
+<p><strong>References</strong></p>
+<p><a class="reference external" href="http://en.wikipedia.org/wiki/Halley's_method">Wikipedia</a> |
+<a class="reference external" href="http://mathworld.wolfram.com/HalleysMethod.html">MathWorld</a></p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.4.</span></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pypol.roots.householder">
+<tt class="descclassname">pypol.roots.</tt><tt class="descname">householder</tt><big>(</big><em>poly</em>, <em>start</em>, <em>epsilon=-inf</em><big>)</big><a class="reference internal" href="_modules/pypol/roots.html#householder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypol.roots.householder" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Finds one root of the polynomial <em>poly</em> using the Householder&#8217;s method, with this iteration formula:</dt>
+<dd><img class="math" src="_images/math/eab81214f463354ceccf3883d9ec5a38b56fb8be.png" alt="x_{n + 1} = x_n - \frac{f(x_n)}{f'(x_n)} \Big\{ 1 + \frac{f(x_n)f''(x_n)}{2[f'(x_n)]^2} \Big\}"/></dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>start</strong> (<em>integer, float or complex</em>) &#8211; the start value to evaluate <tt class="docutils literal"><span class="pre">poly(x)</span></tt></li>
+<li><strong>epsilon</strong> (<em>integer or float</em>) &#8211; the precision, default to <tt class="docutils literal"><span class="pre">float('-inf')</span></tt></li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer or float</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<p>Let&#8217;s find the roots of the polynomial <tt class="docutils literal"><span class="pre">x^4</span> <span class="pre">+</span> <span class="pre">x^3</span> <span class="pre">-</span> <span class="pre">5x^2</span> <span class="pre">+</span> <span class="pre">3x</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ x^4 + x^3 - 5x^2 + 3x</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">householder</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="go">1.0000000139750058</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">householder</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">1.0000000140746257</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">householder</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="go">0.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">householder</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">)</span>
+<span class="go">-3.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">householder</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="go">0.0</span>
+</pre></div>
+</div>
+<p>if the precision is lower, the result will be worse:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">householder</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+<span class="go">1.0623451865071678</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">householder</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mf">0.00001</span><span class="p">)</span>
+<span class="go">1.0000036436860307</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">householder</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mf">0.00000001</span><span class="p">)</span>
+<span class="go">1.0000000049370159</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">householder</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+<span class="go">-3.0000022501789867</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">householder</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">)</span>
+<span class="go">-3.0</span>
+</pre></div>
+</div>
+<p><strong>References</strong></p>
+<p><a class="reference external" href="http://en.wikipedia.org/wiki/Householder's_method">Wikipedia</a> |
+<a class="reference external" href="http://mathworld.wolfram.com/HouseholdersMethod.html">MathWorld</a></p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.4.</span></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pypol.roots.schroeder">
+<tt class="descclassname">pypol.roots.</tt><tt class="descname">schroeder</tt><big>(</big><em>poly</em>, <em>start</em>, <em>epsilon=-inf</em><big>)</big><a class="reference internal" href="_modules/pypol/roots.html#schroeder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypol.roots.schroeder" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Finds one root of the polynomial <em>poly</em> using the Schröder&#8217;s method, with the iteration formula:</dt>
+<dd><img class="math" src="_images/math/9cb83c00b1ac88261bcc7a1a204eb0f2ba17bc82.png" alt="x_{n + 1} = x_n - \frac{f(x_n)f'(x_n)}{[f'(x_n)]^2 - f(x_n)f''(x_n)}"/></dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>start</strong> (<em>integer, float or complex</em>) &#8211; the start value to evaluate <tt class="docutils literal"><span class="pre">poly(x)</span></tt></li>
+<li><strong>epsilon</strong> (<em>integer or float</em>) &#8211; the precision, default to <tt class="docutils literal"><span class="pre">float('-inf')</span></tt></li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer or float</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="n">poly1d</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span>
+<span class="go">+ 3x^3 - 4x^2 - x + 4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">schroeder</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="go">-0.859475828371609</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span><span class="p">(</span><span class="n">schroeder</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+<span class="go">0.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">schroeder</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">100</span><span class="n">j</span><span class="p">)</span>
+<span class="go">(1.0964045808524712-0.5909569632973221j)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span><span class="p">(</span><span class="n">schroeder</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+<span class="go">-1.1102230246251565e-16j</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">schroeder</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="n">j</span><span class="p">)</span>
+<span class="go">(1.0964045808524712+0.5909569632973221j)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span><span class="p">(</span><span class="n">schroeder</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+<span class="go">1.1102230246251565e-16j</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pypol.roots.laguerre">
+<tt class="descclassname">pypol.roots.</tt><tt class="descname">laguerre</tt><big>(</big><em>poly</em>, <em>start</em>, <em>epsilon=-inf</em><big>)</big><a class="reference internal" href="_modules/pypol/roots.html#laguerre"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypol.roots.laguerre" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Finds one root of the polynomial <em>poly</em> using the Laguerre&#8217;s method, with the iteration formula:</dt>
+<dd><img class="math" src="_images/math/6b86e4e1417153f72675c51656f1ae8e787f7483.png" alt="x_{k + 1} = x_k - \frac{n}{max[G \pm \sqrt{(n - 1)(nH - G^2)}]}"/></dd>
+</dl>
+<p>where:</p>
+<p><img class="math" src="_images/math/1063e0d2dc41c8366fbf3267a5737acca0c53319.png" alt="G = \frac{p'(x_k)}{p(x_k)}"/></p>
+<p><img class="math" src="_images/math/bafed89ab3b0ef2d6ebb188a8e84e92245a99b9e.png" alt="H = G^2 - \frac{p''(x_k)}{p(x_k)}"/></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>start</strong> (<em>integer, float or complex</em>) &#8211; the start value to evaluate <tt class="docutils literal"><span class="pre">poly(x)</span></tt></li>
+<li><strong>epsilon</strong> (<em>integer or float</em>) &#8211; the precision, default to <tt class="docutils literal"><span class="pre">float('-inf')</span></tt></li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">complex</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="n">poly1d</span><span class="p">([</span><span class="mi">32</span><span class="p">,</span> <span class="o">-</span><span class="mi">123</span><span class="p">,</span> <span class="mi">43</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span>
+<span class="go">+ 32x^3 - 123x^2 + 43x + 2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">laguerre</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="go">(3.448875873899064+0j)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span><span class="p">(</span><span class="n">laguerre</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+<span class="go">(2.5579538487363607e-13+0j)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">laguerre</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">(0.43639990661090833+0j)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span><span class="p">(</span><span class="n">laguerre</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="go">0j</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">laguerre</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">)</span>
+<span class="go">(-0.041525780509971674+0j)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span><span class="p">(</span><span class="n">laguerre</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">))</span>
+<span class="go">0j</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="other-methods">
+<h2>6.3. Other methods<a class="headerlink" href="#other-methods" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pypol.roots.durand_kerner">
+<tt class="descclassname">pypol.roots.</tt><tt class="descname">durand_kerner</tt><big>(</big><em>poly</em>, <em>start=(0.4 + 0.9j)</em>, <em>epsilon=1.12e-16</em><big>)</big><a class="reference internal" href="_modules/pypol/roots.html#durand_kerner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypol.roots.durand_kerner" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Durand-Kerner method. It finds all the roots of the polynomials <em>poly</em> simultaneously.
+With some polynomials it works quite well:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pypol.funcs</span> <span class="kn">import</span> <span class="n">from_roots</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">from_roots</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ x^5 + 83x^4 - 1671x^3 + 3097x^2 + 19490x - 21000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">durand_kerner</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">((1+0j), (5+0j), (-100+0j), (-3+0j), (13.999999999999998+0j))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">map</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">durand_kerner</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+<span class="go">[0j, 0j, 0j, 0j, (-7.5669959187507629e-10+0j)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">from_roots</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4242</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ x^6 - 4249x^5 + 29553x^4 + 598609x^3 - 2064094x^2 - 7468020x + 8908200</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">durand_kerner</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">((1+0j), (-3+0j), (-10+0j), (5+0j), (4242-1.2727475858741762e-49j), (14+0j))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">map</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">durand_kerner</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+<span class="go">[0j, 0j, 0j, 0j, (60112-1.7453195261352414e-31j), 0j]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">poly1d</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">durand_kerner</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">((1.3407787867177585-9.656744866722633e-34j), (-0.084897978584602823-0.96623889223617843j), (-3.1709828295485529+8.2085042293591779e-34j), (-0.084897978584602823+0.96623889223617843j))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">map</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">durand_kerner</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+<span class="go">[(-8.8817841970012523e-16-1.2923293554560813e-32j), (-4.4408920985006262e-16-2.2204460492503131e-16j), (3.5527136788005009e-15-3.8729295219100667e-32j), (-4.4408920985006262e-16+2.2204460492503131e-16j)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">durand_kerner</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">((1+0j), (-2424+6.2230152778611417e-61j), (14+1.2446030555722283e-60j), (381.99999999999994+4.6672614583958563e-61j), (133-7.0008921875937844e-61j), (5-2.4892061111444567e-60j), (-100+3.3735033418337674e-80j), (-3+4.9784122222889134e-60j))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">map</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">durand_kerner</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+<span class="go">[0j, (116436291584-3.6076395061767809e-37j), 3.0129989385594897e-47j, (-110296.125+3.1986819282098692e-42j), (212+2.8399399457319209e-44j), 8.8231056584250621e-48j, 1.032541429306196e-63j, -3.3300895740082056e-47j]</span>
+</pre></div>
+</div>
+<p>But with other polynomials it could raise an <tt class="xref py py-exc docutils literal"><span class="pre">OverflowError</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">poly1d</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">- x^4 + 2x^3 - 3x^2 + x + 4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">durand_kerner</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;pyshell#20&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+    <span class="n">durand_kerner</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+  File <span class="nb">&quot;roots.py&quot;</span>, line <span class="m">641</span>, in <span class="n">durand_kerner</span>
+    <span class="o">&gt;&gt;&gt;</span> <span class="nb">map</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">durand_kerner</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+  File <span class="nb">&quot;core.py&quot;</span>, line <span class="m">1429</span>, in <span class="n">__call__</span>
+    <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eval_form</span><span class="p">,</span> <span class="n">letters</span><span class="p">)</span>
+  File <span class="nb">&quot;&lt;string&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+<span class="gr">OverflowError</span>: <span class="n">complex exponentiation</span>
+</pre></div>
+</div>
+<p>In this cases you can use other root-finding algorithms, like <a class="reference internal" href="#pypol.roots.laguerre" title="pypol.roots.laguerre"><tt class="xref py py-func docutils literal"><span class="pre">laguerre()</span></tt></a> or <a class="reference internal" href="#pypol.roots.halley" title="pypol.roots.halley"><tt class="xref py py-func docutils literal"><span class="pre">halley()</span></tt></a>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">laguerre</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="go">(5.0000000000018261+0j)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">laguerre</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="go">(5+0j)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">((</span><span class="mi">5</span><span class="o">+</span><span class="mi">0</span><span class="n">j</span><span class="p">))</span>
+<span class="go">0j</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">halley</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="go">5.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">halley</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="go">14.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">halley</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="go">382.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">halley</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="o">-</span><span class="mi">1000</span><span class="p">)</span>
+<span class="go">-100.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">halley</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">)</span>
+<span class="go">-100.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">halley</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">)</span>
+<span class="go">-3.0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pypol.roots.brent">
+<tt class="descclassname">pypol.roots.</tt><tt class="descname">brent</tt><big>(</big><em>poly</em>, <em>a</em>, <em>b</em>, <em>epsilon=-inf</em><big>)</big><a class="reference internal" href="_modules/pypol/roots.html#brent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypol.roots.brent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds a root of the polynomial <em>poly</em>, with the Brent&#8217;s method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>a,b</strong> &#8211; The limits of the interval, where the root is searched</li>
+<li><strong>epsilon</strong> &#8211; The precision, default to float(&#8216;-inf&#8217;)</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer or float</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">poly1d</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ x^3 - 4x^2 + 3x - 4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">brent</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">)</span>
+<span class="go">3.4675038570565078</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">brent</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="go">-1.1723955140041653e-13</span>
+</pre></div>
+</div>
+<p>If we start closer:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">brent</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="go">-1.7763568394002505e-15</span>
+</pre></div>
+</div>
+<p>the precision is greater.</p>
+<p><strong>References</strong></p>
+<p>Pseudocode from <a class="reference external" href="http://en.wikipedia.org/wiki/Brent's_method#Algorithm">Wikipedia</a></p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Doesn&#8217;t seem to work in some cases.</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pypol.roots.bisection">
+<tt class="descclassname">pypol.roots.</tt><tt class="descname">bisection</tt><big>(</big><em>poly</em>, <em>k=0.5</em>, <em>epsilon=-inf</em><big>)</big><a class="reference internal" href="_modules/pypol/roots.html#bisection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypol.roots.bisection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the root of the polynomial <em>poly</em> using the <em>bisection method</em>.
+When it finds the root, it checks if <tt class="docutils literal"><span class="pre">-root</span></tt> is one root too. If so, it returns a two-length tuple, else a tuple
+with one root.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>k</strong> (<em>float</em>) &#8211; the increment of the two extreme point. The increment is calculated with the formula <tt class="docutils literal"><span class="pre">a</span> <span class="pre">+</span> <span class="pre">ak</span></tt>.</td>
+</tr>
+</tbody>
+</table>
+<p>So, if <em>a</em> is 50, after the increment <tt class="docutils literal"><span class="pre">50</span> <span class="pre">+</span> <span class="pre">50*0.5</span></tt> <em>a</em> will be 75.
+<em>epsilon</em> sets the precision of the calculation. Smaller it is, greater is the precision.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Raises :</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">ValueError</span></tt> if <em>epsilon</em> is bigger than 5 or <em>k</em> is negative</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body">integer or float or NotImplemented when:<ul class="simple">
+<li><em>poly</em> has more than one letter</li>
+<li>or the root is a complex number</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>References</strong></p>
+<p><a class="reference external" href="http://en.wikipedia.org/wiki/Bisection_method">Wikipedia</a></p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">In some case this function may not work!</p>
+</div>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+<p class="versionchanged">
+<span class="versionmodified">Changed in version 0.3.</span></p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">6. The <tt class="docutils literal"><span class="pre">roots</span></tt> module</a><ul>
+<li><a class="reference internal" href="#simple-algorithms-and-formulas">6.1. Simple algorithms and formulas</a></li>
+<li><a class="reference internal" href="#newton-s-method-and-derived">6.2. Newton&#8217;s method and derived</a></li>
+<li><a class="reference internal" href="#other-methods">6.3. Other methods</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="funcs.html"
+                        title="previous chapter">5. The <tt class="docutils literal docutils literal docutils literal"><span class="pre">funcs</span></tt> module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="series.html"
+                        title="next chapter">7. The <tt class="docutils literal docutils literal"><span class="pre">series</span></tt> module</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/roots.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="series.html" title="7. The series module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="funcs.html" title="5. The funcs module"
+             >previous</a> |</li>
+        <li><a href="index.html">pypol v0.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Michele Lacchia.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

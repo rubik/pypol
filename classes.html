@@ -1,0 +1,910 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>3. Classes &mdash; pypol v0.4 documentation</title>
+    <link rel="stylesheet" href="_static/celery.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pypol v0.4 documentation" href="index.html" />
+    <link rel="next" title="4. Operators" href="operations.html" />
+    <link rel="prev" title="2. Global functions" href="functions.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="operations.html" title="4. Operators"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="functions.html" title="2. Global functions"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">pypol v0.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="classes">
+<h1>3. Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h1>
+<p>pypol&#8217;s classes are two: <a class="reference internal" href="#pypol.Polynomial" title="pypol.Polynomial"><tt class="xref py py-class docutils literal"><span class="pre">Polynomial</span></tt></a> and <a class="reference internal" href="#pypol.AlgebraicFraction" title="pypol.AlgebraicFraction"><tt class="xref py py-class docutils literal"><span class="pre">AlgebraicFraction</span></tt></a>.</p>
+<div class="section" id="polynomial-class-reference">
+<h2>3.1. <a class="reference internal" href="#pypol.Polynomial" title="pypol.Polynomial"><tt class="xref py py-class docutils literal"><span class="pre">Polynomial</span></tt></a> class reference<a class="headerlink" href="#polynomial-class-reference" title="Permalink to this headline">¶</a></h2>
+<p>In all these examples we use this method to make a polynomial:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^2 - 3&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>but, for convenience we, can also use this method:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">polynomial</span><span class="p">(</span><span class="s">&#39;3x^2 - 3&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>which gives the same result.
+Where <em>polynomial</em> is the function <a class="reference internal" href="functions.html#pypol.polynomial" title="pypol.polynomial"><tt class="xref py py-func docutils literal"><span class="pre">polynomial()</span></tt></a> of the pypol module.</p>
+<p>The main class in pypol is <a class="reference internal" href="#pypol.Polynomial" title="pypol.Polynomial"><tt class="xref py py-class docutils literal"><span class="pre">Polynomial</span></tt></a>:</p>
+<dl class="class">
+<dt id="pypol.Polynomial">
+<em class="property">class </em><tt class="descclassname">pypol.</tt><tt class="descname">Polynomial</tt><big>(</big><span class="optional">[</span><em>monomials=()</em><span class="optional">[</span>, <em>simplify=True</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#pypol.Polynomial" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="pypol.Polynomial.monomials">
+<tt class="descname">monomials</tt><a class="headerlink" href="#pypol.Polynomial.monomials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the polynomial&#8217;s monomials.
+Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;2x^3 + 4xy&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">monomials</span>
+<span class="go">((2, {&#39;x&#39;: 3}), (4, {&#39;y&#39;: 1, &#39;x&#39;: 1}))</span>
+</pre></div>
+</div>
+<p>You can also set the monomials:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;2x^3 + 4xy&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">monomials</span> <span class="o">=</span> <span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="p">{}),)</span> <span class="c"># The comma!</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ 2</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypol.Polynomial.ordered_monomials">
+<tt class="descname">ordered_monomials</tt><big>(</big><em>cmp=None</em>, <em>key=None</em>, <em>reverse=False</em><big>)</big><a class="headerlink" href="#pypol.Polynomial.ordered_monomials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies <tt class="xref py py-func docutils literal"><span class="pre">sorted()</span></tt> to the polynomial&#8217;s monomials, with <em>cmp</em>, <em>key</em> and <em>reverse</em> arguments.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypol.Polynomial.sort">
+<tt class="descname">sort</tt><big>(</big><em>cmp=None</em>, <em>key=None</em>, <em>reverse=False</em><big>)</big><a class="headerlink" href="#pypol.Polynomial.sort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sort the polynomial&#8217;s monomials in-place:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;x2 -y2 xy&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span>
+<span class="go">- y^2 + x^2 + xy</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">k</span><span class="o">.</span><span class="n">_key</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">),</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span>
+<span class="go">+ x^2 + xy - y^2</span>
+</pre></div>
+</div>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+<p class="versionchanged">
+<span class="versionmodified">Changed in version 0.4: </span>Now the <em>key</em> parameter is for default to <tt class="docutils literal"><span class="pre">self._key(self.max_letter())</span></tt></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pypol.Polynomial.coefficients">
+<tt class="descname">coefficients</tt><a class="headerlink" href="#pypol.Polynomial.coefficients" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the polynomial&#8217;s coefficients:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;2x^3 + 4xy - 5&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">coefficients</span>
+<span class="go">[2, 4, -5]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypol.Polynomial.gcd">
+<tt class="descname">gcd</tt><big>(</big><big>)</big><a class="headerlink" href="#pypol.Polynomial.gcd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Greatest Common Divisor of the polynomial&#8217;s monomials:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^4 - 9x&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">gcd</span><span class="p">()</span>
+<span class="go">- 3x</span>
+</pre></div>
+</div>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+<p class="versionchanged">
+<span class="versionmodified">Changed in version 0.4: </span>Become a method</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypol.Polynomial.lcm">
+<tt class="descname">lcm</tt><big>(</big><big>)</big><a class="headerlink" href="#pypol.Polynomial.lcm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Least Common Multiple of the polynomial&#8217;s monomials:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^4 - 9x&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">lcm</span><span class="p">()</span>
+<span class="go">+ 9x^4</span>
+</pre></div>
+</div>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+<p class="versionchanged">
+<span class="versionmodified">Changed in version 0.4: </span>Become a method</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pypol.Polynomial.degree">
+<tt class="descname">degree</tt><a class="headerlink" href="#pypol.Polynomial.degree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the degree of the polynomial, i.e. the maximum degree of its monomials.
+An example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;2x^3 + 4xy&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">degree</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">degree</span>
+<span class="go">-inf</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pypol.Polynomial.letters">
+<tt class="descname">letters</tt><a class="headerlink" href="#pypol.Polynomial.letters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a tuple of all the letters that appear in the polynomial.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;2x^3 + 4xy&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">letters</span>
+<span class="go">(&#39;x&#39;, &#39;y&#39;)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pypol.Polynomial.joint_letters">
+<tt class="descname">joint_letters</tt><a class="headerlink" href="#pypol.Polynomial.joint_letters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a tuple of the letters that appear in all the polynomial&#8217;s monomials:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;2x^3 + 4xy - 16&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">joint_letters</span>
+<span class="go">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;2x^3 + 4xy - 16ax&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">joint_letters</span>
+<span class="go">(&#39;x&#39;,)</span>
+</pre></div>
+</div>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypol.Polynomial.max_letter">
+<tt class="descname">max_letter</tt><big>(</big><em>alphabetically=True</em><big>)</big><a class="headerlink" href="#pypol.Polynomial.max_letter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the letter with the maximum power in the polynomial.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>alphabetically</strong> (<em>bool</em>) &#8211; if True and if there is more than one letter with the same exponent, will be chosen the first letter in alphabetical order, the last otherwise (when <tt class="docutils literal"><span class="pre">alphabetically=False</span></tt>).</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body">string or False, when <a class="reference internal" href="#pypol.Polynomial.letters" title="pypol.Polynomial.letters"><tt class="xref py py-meth docutils literal"><span class="pre">letters()</span></tt></a> is an empty tuple</td>
+</tr>
+</tbody>
+</table>
+<p>Some examples:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">polynomial</span><span class="p">(</span><span class="s">&#39;2x^3 + 4xy - 16&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">max_letter</span><span class="p">()</span>
+<span class="go">&#39;x&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">polynomial</span><span class="p">(</span><span class="s">&#39;2x^3 + 4x2y2 - 16&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">max_letter</span><span class="p">()</span>
+<span class="go">&#39;x&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">polynomial</span><span class="p">(</span><span class="s">&#39;2x^3 + 4x2y3 - 16&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">max_letter</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+<span class="go">&#39;y&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">polynomial</span><span class="p">(</span><span class="s">&#39;2x^3 + 4x2y3 - 16&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">max_letter</span><span class="p">()</span>
+<span class="go">&#39;x&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">polynomial</span><span class="p">(</span><span class="s">&#39;2x^3 + 4x2y4 - 16&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">max_letter</span><span class="p">()</span>
+<span class="go">&#39;y&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">polynomial</span><span class="p">(</span><span class="s">&#39;2x^3 + 4x2y3 - 16&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">max_letter</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+<span class="go">&#39;y&#39;</span>
+</pre></div>
+</div>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pypol.Polynomial.eval_form">
+<tt class="descname">eval_form</tt><a class="headerlink" href="#pypol.Polynomial.eval_form" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a string form of the polynomial that can be used with eval:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;2x^2 - 4x + 4&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">eval_form</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span>
+<span class="go">&#39;2*x**2-4*x+4&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">eval</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;x&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>
+<span class="go">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;2x^2y^4 - 4xabc + 4z^2y^5&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">eval_form</span>
+<span class="go">&#39;4*y**5*z**2+2*y**4*x**2-4*a*x*c*b&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pypol.Polynomial.right_hand_side">
+<tt class="descname">right_hand_side</tt><a class="headerlink" href="#pypol.Polynomial.right_hand_side" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the right-hand side, if it exist, False otherwise.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;2x^3 + 4xy&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">right_hand_side</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;2x^3 + 4xy - 3&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">right_hand_side</span>
+<span class="go">-3</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypol.Polynomial.get">
+<tt class="descname">get</tt><big>(</big><em>power</em>, <em>letter=None</em><big>)</big><a class="headerlink" href="#pypol.Polynomial.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the coefficients of the term <tt class="docutils literal"><span class="pre">letter^power</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>power</strong> (<em>integer</em>) &#8211; the power of the term</li>
+<li><strong>letter</strong> (<em>string</em>) &#8211; the variable (default to <tt class="docutils literal"><span class="pre">x</span></tt>)</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer, float, or <tt class="xref py py-class docutils literal"><span class="pre">fractions.Fraction</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">x</span><span class="o">**</span><span class="mi">3</span> <span class="o">-</span> <span class="n">y</span><span class="o">**</span><span class="mi">3</span><span class="o">*</span><span class="n">x</span><span class="o">**</span><span class="mi">4</span> <span class="o">-.</span><span class="mi">4</span><span class="o">*</span><span class="n">z</span><span class="o">**</span><span class="mi">5</span><span class="o">*</span><span class="n">y</span><span class="o">**</span><span class="mi">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">- 2/5y^5z^5 - x^4y^3 + x^3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">)</span>
+<span class="go">-1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">)</span>
+<span class="go">Fraction(-2, 5)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s">&#39;z&#39;</span><span class="p">)</span>
+<span class="go">Fraction(-2, 5)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s">&#39;x&#39;</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">)</span>
+<span class="go">0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypol.Polynomial.raw_powers">
+<tt class="descname">raw_powers</tt><big>(</big><em>letter=None</em><big>)</big><a class="headerlink" href="#pypol.Polynomial.raw_powers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list with the same length of the polynomial with all the degrees of <em>letter</em>.
+Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - 2a^2 + x - 2&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">raw_powers</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">)</span>
+<span class="go">[3, 0, 1, 0] ## In -2a^2 and -2 there isn&#39;t the letter `x`, so there are two zeros</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - 2a^2 + x - 2&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">raw_powers</span><span class="p">(</span><span class="s">&#39;q&#39;</span><span class="p">)</span>
+<span class="go">[0, 0, 0, 0]</span>
+</pre></div>
+</div>
+<p>If letter is None, it returns a dictionary with all the degrees of all the letters in the polynomial:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - 2a^2 + x - 2&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">raw_powers</span><span class="p">()</span>
+<span class="go">{&#39;a&#39;: [0, 2, 0, 0],</span>
+<span class="go"> &#39;x&#39;: [3, 0, 1, 0],</span>
+<span class="go"> }</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypol.Polynomial.max_power">
+<tt class="descname">max_power</tt><big>(</big><em>letter</em><big>)</big><a class="headerlink" href="#pypol.Polynomial.max_power" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the maximum degree of a letter:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - 2a^2 + x - 2&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">max_power</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">)</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - 2a^2 + x - 2&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">max_power</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">)</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - 2a^2 + x - 2&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">max_power</span><span class="p">(</span><span class="s">&#39;q&#39;</span><span class="p">)</span>
+
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;pyshell#7&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+    <span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - 2a^2 + x - 2&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">max_power</span><span class="p">(</span><span class="s">&#39;q&#39;</span><span class="p">)</span>
+  File <span class="nb">&quot;core.py&quot;</span>, line <span class="m">316</span>, in <span class="n">max_power</span>
+    <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s">&#39;letter not in polynomial&#39;</span><span class="p">)</span>
+<span class="gr">KeyError</span>: <span class="n">&#39;letter not in polynomial&#39;</span>
+</pre></div>
+</div>
+<p>It raises KeyError if the letter is not in the polynomial.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypol.Polynomial.min_power">
+<tt class="descname">min_power</tt><big>(</big><em>letter</em><big>)</big><a class="headerlink" href="#pypol.Polynomial.min_power" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the maximum degree of a letter:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - 2a^2 + x - 2&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">min_power</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - 2a^2 + x - 2&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">min_power</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - 2a^2 + x - 2&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">min_power</span><span class="p">(</span><span class="s">&#39;q&#39;</span><span class="p">)</span>
+
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;pyshell#3&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+    <span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - 2a^2 + x - 2&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">min_power</span><span class="p">(</span><span class="s">&#39;q&#39;</span><span class="p">)</span>
+  File <span class="nb">&quot;core.py&quot;</span>, line <span class="m">325</span>, in <span class="n">min_power</span>
+    <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s">&#39;letter not in polynomial&#39;</span><span class="p">)</span>
+<span class="gr">KeyError</span>: <span class="n">&#39;letter not in polynomial&#39;</span>
+</pre></div>
+</div>
+<p>It raises KeyError if the letter is not in the polynomial.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypol.Polynomial.powers">
+<tt class="descname">powers</tt><big>(</big><em>letter=None</em><big>)</big><a class="headerlink" href="#pypol.Polynomial.powers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Like <a class="reference internal" href="#pypol.Polynomial.raw_powers" title="pypol.Polynomial.raw_powers"><tt class="xref py py-meth docutils literal"><span class="pre">raw_powers()</span></tt></a>, but eliminates all the zeros except the trailing one.
+If <em>letter</em> is None, it returns a dictionary:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - a^2 + x - 5&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">powers</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">)</span>
+<span class="go">[3, 1, 0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - a^2 + x - 5&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">powers</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">)</span>
+<span class="go">[2, 0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - a^2 + x - 5&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">powers</span><span class="p">()</span>
+<span class="go">{&#39;a&#39;: [2, 0],</span>
+<span class="go">&#39;x&#39;: [3, 1, 0],</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypol.Polynomial.islinear">
+<tt class="descname">islinear</tt><big>(</big><big>)</big><a class="headerlink" href="#pypol.Polynomial.islinear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the polynomial is linear, i.e. all the expoenents are &lt;= 1, False otherwise.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - a^2 + x - 5&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">islinear</span><span class="p">()</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;-5&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">islinear</span><span class="p">()</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - a^2 + x - 5&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">powers</span><span class="p">(</span><span class="s">&#39;q&#39;</span><span class="p">)</span>
+<span class="go">[0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">powers</span><span class="p">(</span><span class="s">&#39;q&#39;</span><span class="p">)</span>
+<span class="go">[]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypol.Polynomial.is_square_diff">
+<tt class="descname">is_square_diff</tt><big>(</big><big>)</big><a class="headerlink" href="#pypol.Polynomial.is_square_diff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True whether the polynomial is a difference of two squares, False otherwise:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;2x^4 - 6&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">is_square_diff</span><span class="p">()</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;2x^4 + 9&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">is_square_diff</span><span class="p">()</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;2x^4 - 9&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">is_square_diff</span><span class="p">()</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;x^4 - 9&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">is_square_diff</span><span class="p">()</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;25x^4 - 9&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">is_square_diff</span><span class="p">()</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypol.Polynomial.isordered">
+<tt class="descname">isordered</tt><big>(</big><em>letter=None</em><big>)</big><a class="headerlink" href="#pypol.Polynomial.isordered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True whether the polynomial is ordered, False otherwise.
+If letter is None, it checks for all letters; if the polynomial is ordered for all letters, it returns True, False otherwise.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - a^2 + x - 5&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">isordered</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - a^2 + a - 5&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">isordered</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#pypol.Polynomial.iscomplete" title="pypol.Polynomial.iscomplete"><tt class="xref py py-meth docutils literal"><span class="pre">iscomplete()</span></tt></a>.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypol.Polynomial.iscomplete">
+<tt class="descname">iscomplete</tt><big>(</big><em>letter=None</em><big>)</big><a class="headerlink" href="#pypol.Polynomial.iscomplete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True whether the polynomial is complete, False otherwise.
+If letter is None it checks for all the letters of the polynomial.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - a^2 + a - 5&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">iscomplete</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - a^2 + a - 5&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">iscomplete</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - a^2 + a - 5&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">iscomplete</span><span class="p">()</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#pypol.Polynomial.isordered" title="pypol.Polynomial.isordered"><tt class="xref py py-meth docutils literal"><span class="pre">isordered()</span></tt></a>.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypol.Polynomial.invert">
+<tt class="descname">invert</tt><big>(</big><em>v=1</em><big>)</big><a class="headerlink" href="#pypol.Polynomial.invert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an <a class="reference internal" href="#pypol.AlgebraicFraction" title="pypol.AlgebraicFraction"><tt class="xref py py-class docutils literal"><span class="pre">AlgebraicFraction</span></tt></a> object with <em>v</em> as <a class="reference internal" href="#pypol.AlgebraicFraction.numerator" title="pypol.AlgebraicFraction.numerator"><tt class="xref py py-meth docutils literal"><span class="pre">AlgebraicFraction.numerator()</span></tt></a> and the polynomial as <a class="reference internal" href="#pypol.AlgebraicFraction.denominator" title="pypol.AlgebraicFraction.denominator"><tt class="xref py py-meth docutils literal"><span class="pre">AlgebraicFraction.denominator()</span></tt></a>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - a^2 + a - 5&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">invert</span><span class="p">()</span>
+<span class="go">AlgebraicFraction(+ 1, + 3x³ - a² + a - 5)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - a^2 + a - 5&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">invert</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">        + 3         </span>
+<span class="go">−−−−−−−−−−−−−−−−−−−−</span>
+<span class="go">+ 3x³ - a² + a - 5</span>
+</pre></div>
+</div>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#pypol.AlgebraicFraction.invert" title="pypol.AlgebraicFraction.invert"><tt class="xref py py-meth docutils literal"><span class="pre">AlgebraicFraction.invert()</span></tt></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypol.Polynomial.filter">
+<tt class="descname">filter</tt><big>(</big><big>)</big><a class="headerlink" href="#pypol.Polynomial.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a new Polynomial instance, with <a class="reference internal" href="#pypol.Polynomial.monomials" title="pypol.Polynomial.monomials"><tt class="xref py py-meth docutils literal"><span class="pre">monomials()</span></tt></a> filtered, i.e. with no null term (with 0 coefficient).</p>
+<p><strong>Examples</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;0x3 + 0x2 - 1x - 4&#39;</span><span class="p">)</span> <span class="c">## pypol.parse_polynomial</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span>
+<span class="go">[(0, {&#39;x&#39;: 3}), (0, {&#39;x&#39;: 2}), (-1, {&#39;x&#39;: 1}), (-4, {})]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Polynomial</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">- x - 4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">monomials</span>
+<span class="go">((0, {&#39;x&#39;: 3}), (0, {&#39;x&#39;: 2}), (-1, {&#39;x&#39;: 1}), (-4, {}))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">q</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">filter</span><span class="p">()</span> <span class="c">## Polynomial object is immutable</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">q</span>
+<span class="go">- x - 4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">q</span> <span class="o">==</span> <span class="n">p</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">monomials</span>
+<span class="go">((0, {&#39;x&#39;: 3}), (0, {&#39;x&#39;: 2}), (-1, {&#39;x&#39;: 1}), (-4, {}))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">q</span><span class="o">.</span><span class="n">monomials</span>
+<span class="go">((-1, {&#39;x&#39;: 1}), (-4, {}))</span>
+</pre></div>
+</div>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.4.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypol.Polynomial.update">
+<tt class="descname">update</tt><big>(</big><span class="optional">[</span><em>pol_or_monomials</em><span class="optional">[</span>, <em>simplify=None</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#pypol.Polynomial.update" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Updates the polynomial with another polynomial.
+This does not create a new instance, but replaces self.monomials with others monomials, then it simplifies.</p>
+<dl class="docutils">
+<dt><em>pol_or_monomials</em> can be:</dt>
+<dd><ul class="first last simple">
+<li>a polynomial</li>
+<li>a tuple of monomials</li>
+<li>a string that will be passed to <a class="reference internal" href="functions.html#pypol.parse_polynomial" title="pypol.parse_polynomial"><tt class="xref py py-func docutils literal"><span class="pre">parse_polynomial()</span></tt></a></li>
+<li>an integer</li>
+</ul>
+</dd>
+</dl>
+<p>default is None. In this case self.monomials will be updated with an empty tuple.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^3 - a^2 + a - 5&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ 3x^3 - a^2 + a - 5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^2 - 2&#39;</span><span class="p">)))</span>
+<span class="go">+ 3x^2 - 2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ 3x^2 - 2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">update</span><span class="p">(((</span><span class="mi">3</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;x&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}),</span> <span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="p">{})))</span>
+<span class="go">+ 3x - 5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ 3x - 5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="s">&#39;30j + q - y&#39;</span><span class="p">)</span>
+<span class="go">+ 30j + q - y</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ 30j + q - y</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">+ 3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ 3</span>
+</pre></div>
+</div>
+<p>If <em>simplify</em>, the polynomial will be simplified. Default is None, in this case <em>simplify</em> will be equal to self._simplify.</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">The __init__ method: <a class="reference internal" href="#pypol.Polynomial" title="pypol.Polynomial"><tt class="xref py py-class docutils literal"><span class="pre">Polynomial</span></tt></a></p>
+</div>
+<p>This method returns the instance, so we can use it:</p>
+<div class="highlight-python"><pre> &gt;&gt;&gt; p.update('2c - 4a').raw_powers()
+ {'a': [0, 1], 'c': [1, 0]}
+&gt;&gt;&gt; p
++ 2c - 4a
+&gt;&gt;&gt; p.update('3x^2 - x + 5').iscomplete()
+True
+&gt;&gt;&gt; p
++ 3x^2 - x + 5</pre>
+</div>
+</div></blockquote>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#pypol.Polynomial.append" title="pypol.Polynomial.append"><tt class="xref py py-meth docutils literal"><span class="pre">append()</span></tt></a>.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypol.Polynomial.append">
+<tt class="descname">append</tt><big>(</big><em>pol_or_monomials</em><big>)</big><a class="headerlink" href="#pypol.Polynomial.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Appends the given monomials to self.monomials, then simplifies.</p>
+<dl class="docutils">
+<dt><em>pol_or_monomials</em> can be:</dt>
+<dd><ul class="first last simple">
+<li>a polynomial</li>
+<li>a string</li>
+<li>a tuple of monomials</li>
+<li>an integer</li>
+</ul>
+</dd>
+</dl>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^2 - ax + 5&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ 3x^2 - ax + 5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;x^3&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ x^3 + 3x^2 - ax + 5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ x^3 + 3x^2 - ax + 1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">append</span><span class="p">(((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;x&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}),))</span> <span class="c">## The comma!</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ x^3 + 3x^2 - 2ax + 1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;-x^3 + ax + 4&#39;</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ 3x^2 - ax + 5</span>
+</pre></div>
+</div>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#pypol.Polynomial.update" title="pypol.Polynomial.update"><tt class="xref py py-meth docutils literal"><span class="pre">update()</span></tt></a>.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypol.Polynomial.div_all">
+<tt class="descname">div_all</tt><big>(</big><em>poly</em>, <em>int=False</em><big>)</big><a class="headerlink" href="#pypol.Polynomial.div_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Divide all polynomial&#8217;s monomials by <em>poly</em>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^4 - 9x&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">gcd</span>
+<span class="go">- 3x</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">div_all</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">gcd</span><span class="p">)</span>
+<span class="go">- x^3 + 3</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>poly</strong> (<a class="reference internal" href="#pypol.Polynomial" title="pypol.Polynomial"><tt class="xref py py-class docutils literal"><span class="pre">Polynomial</span></tt></a> or integer) &#8211; the polynomial or the integer</li>
+<li><strong>int</strong> (<em>bool</em>) &#8211; when True, the <em>poly</em> parameter will be interpreted as an integer, and the division will be between each coefficient and <em>poly</em></li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pypol.Polynomial" title="pypol.Polynomial"><tt class="xref py py-class docutils literal"><span class="pre">Polynomial</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.4: </span>The <em>int</em> parameter</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypol.Polynomial.simplify">
+<tt class="descname">simplify</tt><big>(</big><big>)</big><a class="headerlink" href="#pypol.Polynomial.simplify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simplifies the polynomial. This is done automatically on the __init__ and on the <a class="reference internal" href="#pypol.Polynomial.update" title="pypol.Polynomial.update"><tt class="xref py py-meth docutils literal"><span class="pre">update()</span></tt></a> methods if self._simplify is True.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^2 - ax + 5 - 4 + 4ax&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ 3x^2 + 3ax + 1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^2 - ax + 5 - 4 + 4ax&#39;</span><span class="p">),</span> <span class="n">simplify</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ 3x^2 - ax + 4ax + 5 - 4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">simplify</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ 3x^2 + 3ax + 1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypol.Polynomial._key">
+<tt class="descname">_key</tt><big>(</big><em>letter=None</em><big>)</big><a class="headerlink" href="#pypol.Polynomial._key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Comparator function used to sort the polynomial&#8217;s monomials. You should neither change it nor overload it.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypol.Polynomial._make_complete">
+<tt class="descname">_make_complete</tt><big>(</big><em>letter</em><big>)</big><a class="headerlink" href="#pypol.Polynomial._make_complete" title="Permalink to this definition">¶</a></dt>
+<dd><p>If the polynomial is already complete for the letter <em>letter</em> returns False, otherwise makes it complete and returns True.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3x^2 + 2&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">+ 3x^2 + 2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">monomials</span>
+<span class="go">((3, {&#39;x&#39;: 2}), (2, {}))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">iscomplete</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">_make_complete</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">iscomplete</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">monomials</span>
+<span class="go">((3, {&#39;x&#39;: 2}), (0, {&#39;x&#39;: 1}), (2, {}))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypol.Polynomial.__call__">
+<tt class="descname">__call__</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pypol.Polynomial.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>It&#8217;s also possible to call the polynomial.
+You can pass the arguments in two ways:</p>
+<blockquote>
+<div><ul class="simple">
+<li>positional way, using <em>args</em></li>
+<li>keyword way, using <em>kwargs</em></li>
+</ul>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Raises :</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">NameError</span></tt> if you do not pass any argument.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;x^3 - 4x^2 + 3&#39;</span><span class="p">))()</span>
+
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;pyshell#3&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+    <span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;x^3 - 4x^2 + 3&#39;</span><span class="p">))()</span>
+  File <span class="nb">&quot;core.py&quot;</span>, line <span class="m">1466</span>, in <span class="n">__call__</span>
+    <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eval_form</span><span class="p">,</span> <span class="n">letters</span><span class="p">)</span>
+  File <span class="nb">&quot;&lt;string&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+<span class="gr">NameError</span>: <span class="n">name &#39;x&#39; is not defined</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;x^3 - 4x^2 + 3&#39;</span><span class="p">))(</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">-5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3xy + x^2 - 4&#39;</span><span class="p">))(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c">## Positional way, x=2, y=3</span>
+<span class="go">18</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3xy + x^2 - 4&#39;</span><span class="p">))(</span><span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>  <span class="c">## Keyword way: y=2, x=3</span>
+<span class="go">23</span>
+</pre></div>
+</div>
+<p>When you use <em>args</em>, the dictionary is built in this way:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">letters</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)],</span> <span class="n">args</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><em>args</em> has a major priority of <em>kwargs</em>, so if you try them both at the same time you will see:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polynomial</span><span class="p">(</span><span class="n">parse_polynomial</span><span class="p">(</span><span class="s">&#39;3xy + x^2 - 4&#39;</span><span class="p">))(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">78</span><span class="p">)</span> <span class="c"># args is predominant</span>
+<span class="go">18</span>
+</pre></div>
+</div>
+<p>If no argument is supplied, set automatically all the letters to 1, with:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">letters</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">letters</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>so:</p>
+<div class="highlight-python"><pre>p = poly1d([3, -2, 4, .53, -2, 5, .3])
+&gt;&gt;&gt; q = poly1d([4, -2, 4, .4], 'y')
+&gt;&gt;&gt; p
++ 3x^6 - 2x^5 + 4x^4 + 0.53x^3 - 2x^2 + 5x + 3/10
+&gt;&gt;&gt; q
++ 4y^3 - 2y^2 + 4y + 2/5
+&gt;&gt;&gt; k = p*q
+&gt;&gt;&gt; k
++ 12x^6y^3 - 6x^6y^2 + 12x^6y + 6/5x^6 - 8x^5y^3 + 4x^5y^2 - 8x^5y - 4/5x^5 + 16x^4y^3 - 8x^4y^2 + 16x^4y + 8/5x^4 + 2.12x^3y^3 - 1.06x^3y^2 + 2.12x^3y + 0.212x^3 - 8x^2y^3 + 4x^2y^2 - 8x^2y - 4/5x^2 + 20xy^3 - 10xy^2 + 20xy + 2x + 6/5y^3 - 3/5y^2 + 6/5y + 3/25
+&gt;&gt;&gt; k()
+56.512
+&gt;&gt;&gt; k() == k(1, 1)
+True
+&gt;&gt;&gt; k() == k(x=1, y=1)
+True
+&gt;&gt;&gt; k() == k(y=1, x=1)
+True</pre>
+</div>
+<p class="versionchanged">
+<span class="versionmodified">Changed in version 0.2: </span>Added the support for positional and keyword arguments.</p>
+<p class="versionchanged">
+<span class="versionmodified">Changed in version 0.4: </span>Added the support for no arguments</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="algebraicfraction-class-reference">
+<h2>3.2. <a class="reference internal" href="#pypol.AlgebraicFraction" title="pypol.AlgebraicFraction"><tt class="xref py py-class docutils literal"><span class="pre">AlgebraicFraction</span></tt></a> class reference<a class="headerlink" href="#algebraicfraction-class-reference" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This class is still in development and could have some bugs.</p>
+</div>
+<p>pypol supports the algebraic fractions, although now it is very limited. It supports all the four basic operation but at the moment it does not simplify the fraction.</p>
+<p>In all these examples we assume:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">polynomial</span><span class="p">(</span><span class="s">&#39;3x - 5&#39;</span><span class="p">),</span> <span class="n">polynomial</span><span class="p">(</span><span class="s">&#39;2a&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="class">
+<dt id="pypol.AlgebraicFraction">
+<em class="property">class </em><tt class="descclassname">pypol.</tt><tt class="descname">AlgebraicFraction</tt><big>(</big><em>numerator</em>, <em>denominator</em><big>)</big><a class="headerlink" href="#pypol.AlgebraicFraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class represent an algebraic fraction.
+It accepts two arguments: <em>numerator</em> and <em>denominator</em>.
+<em>numerator</em> is the numerator of the algebraic fraction, and <em>denominator</em> its denominator. Both the terms have to be two polynomials.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">AlgebraicFraction</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="go">AlgebraicFraction(+ 3x - 5, + 2a)</span>
+</pre></div>
+</div>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="functions.html#pypol.algebraic_fraction" title="pypol.algebraic_fraction"><tt class="xref py py-func docutils literal"><span class="pre">algebraic_fraction()</span></tt></a></p>
+</div>
+<dl class="attribute">
+<dt id="pypol.AlgebraicFraction.numerator">
+<tt class="descname">numerator</tt><a class="headerlink" href="#pypol.AlgebraicFraction.numerator" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>property</strong></p>
+<p>Returns the numerator of the <a class="reference internal" href="#pypol.AlgebraicFraction" title="pypol.AlgebraicFraction"><tt class="xref py py-class docutils literal"><span class="pre">AlgebraicFraction</span></tt></a>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">AlgebraicFraction</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">numerator</span>
+<span class="go">+ 3x - 5</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pypol.AlgebraicFraction.denominator">
+<tt class="descname">denominator</tt><a class="headerlink" href="#pypol.AlgebraicFraction.denominator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the denominator of the <a class="reference internal" href="#pypol.AlgebraicFraction" title="pypol.AlgebraicFraction"><tt class="xref py py-class docutils literal"><span class="pre">AlgebraicFraction</span></tt></a>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">AlgebraicFraction</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">denominator</span>
+<span class="go">+ 2a</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pypol.AlgebraicFraction.terms">
+<tt class="descname">terms</tt><a class="headerlink" href="#pypol.AlgebraicFraction.terms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns both the <a class="reference internal" href="#pypol.AlgebraicFraction.numerator" title="pypol.AlgebraicFraction.numerator"><tt class="xref py py-meth docutils literal"><span class="pre">numerator()</span></tt></a> and the <a class="reference internal" href="#pypol.AlgebraicFraction.denominator" title="pypol.AlgebraicFraction.denominator"><tt class="xref py py-meth docutils literal"><span class="pre">denominator()</span></tt></a>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">AlgebraicFraction</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">terms</span>
+<span class="go">(+ 3x - 5, + 2a)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypol.AlgebraicFraction.invert">
+<tt class="descname">invert</tt><big>(</big><big>)</big><a class="headerlink" href="#pypol.AlgebraicFraction.invert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a new <a class="reference internal" href="#pypol.AlgebraicFraction" title="pypol.AlgebraicFraction"><tt class="xref py py-class docutils literal"><span class="pre">AlgebraicFraction</span></tt></a> object with the numerator and the denominator swapped:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">AlgebraicFraction</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span>
+<span class="go">AlgebraicFraction(+ 3x - 5, + 2a)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">swap</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span>
+<span class="go">AlgebraicFraction(+ 2a, + 3x - 5)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="o">.</span><span class="n">swap</span><span class="p">()</span> <span class="o">==</span> <span class="n">AlgebraicFraction</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#pypol.Polynomial.invert" title="pypol.Polynomial.invert"><tt class="xref py py-meth docutils literal"><span class="pre">Polynomial.invert()</span></tt></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypol.AlgebraicFraction.update">
+<tt class="descname">update</tt><big>(</big><em>other</em><big>)</big><a class="headerlink" href="#pypol.AlgebraicFraction.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pypol.AlgebraicFraction.simplify">
+<tt class="descname">simplify</tt><big>(</big><big>)</big><a class="headerlink" href="#pypol.AlgebraicFraction.simplify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simplifies the algebraic fraction. This is done automatically on the __init__ and on the <a class="reference internal" href="#pypol.AlgebraicFraction.update" title="pypol.AlgebraicFraction.update"><tt class="xref py py-meth docutils literal"><span class="pre">update()</span></tt></a> methods if self._simplify is True.
+Actually we can simplify some algebraic fractions only.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">polynomial</span><span class="p">(</span><span class="s">&#39;12a - 6a^3&#39;</span><span class="p">),</span> <span class="n">polynomial</span><span class="p">(</span><span class="s">&#39;2a - 4a^2&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">AlgebraicFraction</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span>
+<span class="go">AlgebraicFraction(- 3a² + 6, - 2a + 1)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">AlgebraicFraction</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">simplify</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span>
+<span class="go">AlgebraicFraction(- 6a³ + 12a, - 4a² + 2a)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">simplify</span><span class="p">()</span>
+<span class="go">AlgebraicFraction(- 3a² + 6, - 2a + 1)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">3. Classes</a><ul>
+<li><a class="reference internal" href="#polynomial-class-reference">3.1. <tt class="docutils literal"><span class="pre">Polynomial</span></tt> class reference</a></li>
+<li><a class="reference internal" href="#algebraicfraction-class-reference">3.2. <tt class="docutils literal"><span class="pre">AlgebraicFraction</span></tt> class reference</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="functions.html"
+                        title="previous chapter">2. Global functions</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="operations.html"
+                        title="next chapter">4. Operators</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/classes.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="operations.html" title="4. Operators"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="functions.html" title="2. Global functions"
+             >previous</a> |</li>
+        <li><a href="index.html">pypol v0.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Michele Lacchia.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,279 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>9. CHANGELOG &mdash; pypol v0.4 documentation</title>
+    <link rel="stylesheet" href="_static/celery.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pypol v0.4 documentation" href="index.html" />
+    <link rel="prev" title="8. Contacts" href="contacts.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="contacts.html" title="8. Contacts"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">pypol v0.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="changelog">
+<h1>9. CHANGELOG<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="release-0-5-planning">
+<h2>9.1. Release 0.5 (planning)<a class="headerlink" href="#release-0-5-planning" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>New in <a class="reference internal" href="funcs.html#module-pypol.funcs" title="pypol.funcs: Utility functions to work with polynomials"><tt class="xref py py-mod docutils literal"><span class="pre">pypol.funcs</span></tt></a>:</dt>
+<dd><ul class="first last simple">
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.entringer()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.lucas_num()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.pell_num()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.jacobsthal_num()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.fermat_num()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.pell_lucas_num()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.jacobshtal_lucas_num()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.fermat_lucas_num()</span></tt></li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="release-0-4-23-01-2011">
+<h2>9.2. Release 0.4 (23/01/2011)<a class="headerlink" href="#release-0-4-23-01-2011" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>New modules:</dt>
+<dd><ul class="first last simple">
+<li>New module: <a class="reference internal" href="roots.html#module-pypol.roots" title="pypol.roots: A collection of some root-finding algorithms"><tt class="xref py py-mod docutils literal"><span class="pre">pypol.roots</span></tt></a></li>
+<li>New module: <a class="reference internal" href="series.html#module-pypol.series" title="pypol.series: Generator functions for common sequences"><tt class="xref py py-mod docutils literal"><span class="pre">pypol.series</span></tt></a></li>
+</ul>
+</dd>
+<dt>Changes:</dt>
+<dd><ul class="first last simple">
+<li>Moved <tt class="xref py py-func docutils literal"><span class="pre">gcd()</span></tt> and <tt class="xref py py-func docutils literal"><span class="pre">lcm()</span></tt> from <a class="reference internal" href="funcs.html#module-pypol.funcs" title="pypol.funcs: Utility functions to work with polynomials"><tt class="xref py py-mod docutils literal"><span class="pre">pypol.funcs</span></tt></a> to <tt class="xref py py-mod docutils literal"><span class="pre">pypol</span></tt> (core)</li>
+<li>Moved <tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.newton()</span></tt> to <a class="reference internal" href="roots.html#pypol.roots.newton" title="pypol.roots.newton"><tt class="xref py py-func docutils literal"><span class="pre">pypol.roots.newton()</span></tt></a></li>
+<li>Moved <tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.ruffini()</span></tt> to <a class="reference internal" href="roots.html#pypol.roots.ruffini" title="pypol.roots.ruffini"><tt class="xref py py-func docutils literal"><span class="pre">pypol.roots.ruffini()</span></tt></a></li>
+<li>Moved <tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.bisection()</span></tt> to <a class="reference internal" href="roots.html#pypol.roots.bisection" title="pypol.roots.bisection"><tt class="xref py py-func docutils literal"><span class="pre">pypol.roots.bisection()</span></tt></a></li>
+<li>Renamed <tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.fib_poly()</span></tt> to <tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.fibonacci()</span></tt></li>
+<li>Changed: <a class="reference internal" href="funcs.html#pypol.funcs.bin_coeff" title="pypol.funcs.bin_coeff"><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.bin_coeff()</span></tt></a> now returns integers</li>
+</ul>
+</dd>
+<dt>New in <a class="reference internal" href="roots.html#module-pypol.roots" title="pypol.roots: A collection of some root-finding algorithms"><tt class="xref py py-mod docutils literal"><span class="pre">pypol.roots</span></tt></a>:</dt>
+<dd><ul class="first last simple">
+<li><a class="reference internal" href="roots.html#pypol.roots.halley" title="pypol.roots.halley"><tt class="xref py py-func docutils literal"><span class="pre">pypol.roots.halley()</span></tt></a></li>
+<li><a class="reference internal" href="roots.html#pypol.roots.householder" title="pypol.roots.householder"><tt class="xref py py-func docutils literal"><span class="pre">pypol.roots.householder()</span></tt></a></li>
+<li><a class="reference internal" href="roots.html#pypol.roots.brent" title="pypol.roots.brent"><tt class="xref py py-func docutils literal"><span class="pre">pypol.roots.brent()</span></tt></a></li>
+</ul>
+</dd>
+<dt>New in <a class="reference internal" href="series.html#module-pypol.series" title="pypol.series: Generator functions for common sequences"><tt class="xref py py-mod docutils literal"><span class="pre">pypol.series</span></tt></a>:</dt>
+<dd><ul class="first last simple">
+<li><a class="reference internal" href="series.html#pypol.series.LucasSeq" title="pypol.series.LucasSeq"><tt class="xref py py-class docutils literal"><span class="pre">pypol.series.LucasSeq</span></tt></a></li>
+<li><a class="reference internal" href="series.html#pypol.series.gegenbauer" title="pypol.series.gegenbauer"><tt class="xref py py-func docutils literal"><span class="pre">pypol.series.gegenbauer()</span></tt></a></li>
+<li><a class="reference internal" href="series.html#pypol.series.laguerre" title="pypol.series.laguerre"><tt class="xref py py-func docutils literal"><span class="pre">pypol.series.laguerre()</span></tt></a></li>
+<li><a class="reference internal" href="series.html#pypol.series.laguerre_g" title="pypol.series.laguerre_g"><tt class="xref py py-func docutils literal"><span class="pre">pypol.series.laguerre_g()</span></tt></a></li>
+<li><a class="reference internal" href="series.html#pypol.series.touchard" title="pypol.series.touchard"><tt class="xref py py-func docutils literal"><span class="pre">pypol.series.touchard()</span></tt></a></li>
+<li><a class="reference internal" href="series.html#pypol.series.lucas" title="pypol.series.lucas"><tt class="xref py py-func docutils literal"><span class="pre">pypol.series.lucas()</span></tt></a></li>
+<li><a class="reference internal" href="series.html#pypol.series.pell" title="pypol.series.pell"><tt class="xref py py-func docutils literal"><span class="pre">pypol.series.pell()</span></tt></a></li>
+<li><a class="reference internal" href="series.html#pypol.series.pell_lucas" title="pypol.series.pell_lucas"><tt class="xref py py-func docutils literal"><span class="pre">pypol.series.pell_lucas()</span></tt></a></li>
+<li><a class="reference internal" href="series.html#pypol.series.jacobsthal" title="pypol.series.jacobsthal"><tt class="xref py py-func docutils literal"><span class="pre">pypol.series.jacobsthal()</span></tt></a></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.series.jacobshtal_lucas()</span></tt></li>
+<li><a class="reference internal" href="series.html#pypol.series.fermat" title="pypol.series.fermat"><tt class="xref py py-func docutils literal"><span class="pre">pypol.series.fermat()</span></tt></a></li>
+<li><a class="reference internal" href="series.html#pypol.series.fermat_lucas" title="pypol.series.fermat_lucas"><tt class="xref py py-func docutils literal"><span class="pre">pypol.series.fermat_lucas()</span></tt></a></li>
+</ul>
+</dd>
+<dt>Added in <a class="reference internal" href="funcs.html#module-pypol.funcs" title="pypol.funcs: Utility functions to work with polynomials"><tt class="xref py py-mod docutils literal"><span class="pre">pypol.funcs</span></tt></a>:</dt>
+<dd><ul class="first last simple">
+<li><a class="reference internal" href="funcs.html#pypol.funcs.polyint_" title="pypol.funcs.polyint_"><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.polyint_()</span></tt></a></li>
+<li><a class="reference internal" href="funcs.html#pypol.funcs.divided_diff" title="pypol.funcs.divided_diff"><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.divided_diff()</span></tt></a></li>
+<li><a class="reference internal" href="funcs.html#pypol.funcs.bin_coeff" title="pypol.funcs.bin_coeff"><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.bin_coeff()</span></tt></a></li>
+<li><a class="reference internal" href="funcs.html#pypol.funcs.harmonic" title="pypol.funcs.harmonic"><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.harmonic()</span></tt></a></li>
+<li><a class="reference internal" href="funcs.html#pypol.funcs.harmonic_g" title="pypol.funcs.harmonic_g"><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.harmonic_g()</span></tt></a></li>
+<li><a class="reference internal" href="funcs.html#pypol.funcs.stirling" title="pypol.funcs.stirling"><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.stirling()</span></tt></a></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.stirling2()</span></tt></li>
+<li><a class="reference internal" href="funcs.html#pypol.funcs.bell_num" title="pypol.funcs.bell_num"><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.bell_num()</span></tt></a></li>
+</ul>
+</dd>
+<dt>New <a class="reference internal" href="classes.html#pypol.Polynomial" title="pypol.Polynomial"><tt class="xref py py-class docutils literal"><span class="pre">pypol.Polynomial</span></tt></a> methods:</dt>
+<dd><ul class="first last simple">
+<li><a class="reference internal" href="classes.html#pypol.Polynomial.get" title="pypol.Polynomial.get"><tt class="xref py py-meth docutils literal"><span class="pre">pypol.Polynomial.get()</span></tt></a></li>
+<li><a class="reference internal" href="classes.html#pypol.Polynomial.filter" title="pypol.Polynomial.filter"><tt class="xref py py-meth docutils literal"><span class="pre">pypol.Polynomial.filter()</span></tt></a></li>
+</ul>
+</dd>
+<dt>Removed:</dt>
+<dd><ul class="first last simple">
+<li><tt class="xref py py-meth docutils literal"><span class="pre">Polynomial.zeros()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.fib_poly_r()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.hermite_prob_r()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.hermite_phys_r()</span></tt></li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="release-0-3">
+<h2>9.3. Release 0.3<a class="headerlink" href="#release-0-3" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>Added:</dt>
+<dd><ul class="first last simple">
+<li>new module: <a class="reference internal" href="funcs.html#module-pypol.funcs" title="pypol.funcs: Utility functions to work with polynomials"><tt class="xref py py-mod docutils literal"><span class="pre">pypol.funcs</span></tt></a></li>
+<li><a class="reference internal" href="funcs.html#pypol.funcs.random_poly" title="pypol.funcs.random_poly"><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.random_poly()</span></tt></a> :: not_null</li>
+<li><a class="reference internal" href="functions.html#pypol.poly1d" title="pypol.poly1d"><tt class="xref py py-func docutils literal"><span class="pre">pypol.poly1d()</span></tt></a></li>
+<li><a class="reference internal" href="functions.html#pypol.poly1d_2" title="pypol.poly1d_2"><tt class="xref py py-func docutils literal"><span class="pre">pypol.poly1d_2()</span></tt></a></li>
+<li><a class="reference internal" href="funcs.html#pypol.funcs.divisible" title="pypol.funcs.divisible"><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.divisible()</span></tt></a></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.gcd()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.lcm()</span></tt></li>
+<li><a class="reference internal" href="funcs.html#pypol.funcs.random_poly" title="pypol.funcs.random_poly"><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.random_poly()</span></tt></a></li>
+<li><a class="reference internal" href="funcs.html#pypol.funcs.polyder" title="pypol.funcs.polyder"><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.polyder()</span></tt></a></li>
+<li><a class="reference internal" href="funcs.html#pypol.funcs.polyint" title="pypol.funcs.polyint"><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.polyint()</span></tt></a></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.fib_poly()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.fib_poly_r()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.hermite_prob()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.hermite_prob_r()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.hermite_phys()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.hermite_phys_r()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.chebyshev_t()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.chebyshev_u()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.abel()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.quadratic()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.bisection()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.ruffini()</span></tt></li>
+</ul>
+</dd>
+<dt>Removed:</dt>
+<dd><ul class="first last simple">
+<li><tt class="xref py py-func docutils literal"><span class="pre">testpypol.run()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.root()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">pypol.make_polynomial()</span></tt></li>
+<li><tt class="xref py py-meth docutils literal"><span class="pre">pypol.Polynomial.insert()</span></tt></li>
+<li><tt class="xref py py-attr docutils literal"><span class="pre">pypol.Polynomial.coeff_gcd</span></tt></li>
+<li><tt class="xref py py-attr docutils literal"><span class="pre">pypol.Polynomial.coeff_lcm</span></tt></li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="release-0-2">
+<h2>9.4. Release 0.2<a class="headerlink" href="#release-0-2" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>Added:</dt>
+<dd><ul class="first last simple">
+<li><tt class="xref py py-func docutils literal"><span class="pre">testpypol.run()</span></tt></li>
+<li><a class="reference internal" href="functions.html#pypol.monomial" title="pypol.monomial"><tt class="xref py py-func docutils literal"><span class="pre">pypol.monomial()</span></tt></a></li>
+<li><a class="reference internal" href="funcs.html#pypol.funcs.random_poly" title="pypol.funcs.random_poly"><tt class="xref py py-func docutils literal"><span class="pre">pypol.funcs.random_poly()</span></tt></a> :: unique</li>
+<li><a class="reference internal" href="classes.html#pypol.Polynomial.sort" title="pypol.Polynomial.sort"><tt class="xref py py-meth docutils literal"><span class="pre">pypol.Polynomial.sort()</span></tt></a></li>
+<li><tt class="xref py py-meth docutils literal"><span class="pre">pypol.Polynomial.coeff_gcd()</span></tt></li>
+<li><tt class="xref py py-meth docutils literal"><span class="pre">pypol.Polynomial.coeff_lcm()</span></tt></li>
+<li><a class="reference internal" href="classes.html#pypol.Polynomial.gcd" title="pypol.Polynomial.gcd"><tt class="xref py py-meth docutils literal"><span class="pre">pypol.Polynomial.gcd()</span></tt></a></li>
+<li><a class="reference internal" href="classes.html#pypol.Polynomial.lcm" title="pypol.Polynomial.lcm"><tt class="xref py py-meth docutils literal"><span class="pre">pypol.Polynomial.lcm()</span></tt></a></li>
+<li><a class="reference internal" href="classes.html#pypol.Polynomial.joint_letters" title="pypol.Polynomial.joint_letters"><tt class="xref py py-meth docutils literal"><span class="pre">pypol.Polynomial.joint_letters()</span></tt></a></li>
+<li><a class="reference internal" href="classes.html#pypol.Polynomial.max_letter" title="pypol.Polynomial.max_letter"><tt class="xref py py-meth docutils literal"><span class="pre">pypol.Polynomial.max_letter()</span></tt></a></li>
+<li><a class="reference internal" href="classes.html#pypol.Polynomial.is_square_diff" title="pypol.Polynomial.is_square_diff"><tt class="xref py py-meth docutils literal"><span class="pre">pypol.Polynomial.is_square_diff()</span></tt></a></li>
+<li><a class="reference internal" href="classes.html#pypol.Polynomial.div_all" title="pypol.Polynomial.div_all"><tt class="xref py py-meth docutils literal"><span class="pre">pypol.Polynomial.div_all()</span></tt></a></li>
+<li><a class="reference internal" href="classes.html#pypol.Polynomial._key" title="pypol.Polynomial._key"><tt class="xref py py-meth docutils literal"><span class="pre">pypol.Polynomial._key()</span></tt></a></li>
+</ul>
+</dd>
+<dt>Removed:</dt>
+<dd><ul class="first last simple">
+<li><tt class="xref py py-meth docutils literal"><span class="pre">pypol.Polynomial._cmp()</span></tt></li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="release-0-1">
+<h2>9.5. Release 0.1<a class="headerlink" href="#release-0-1" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li>Initial release</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">9. CHANGELOG</a><ul>
+<li><a class="reference internal" href="#release-0-5-planning">9.1. Release 0.5 (planning)</a></li>
+<li><a class="reference internal" href="#release-0-4-23-01-2011">9.2. Release 0.4 (23/01/2011)</a></li>
+<li><a class="reference internal" href="#release-0-3">9.3. Release 0.3</a></li>
+<li><a class="reference internal" href="#release-0-2">9.4. Release 0.2</a></li>
+<li><a class="reference internal" href="#release-0-1">9.5. Release 0.1</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="contacts.html"
+                        title="previous chapter">8. Contacts</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/changelog.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="contacts.html" title="8. Contacts"
+             >previous</a> |</li>
+        <li><a href="index.html">pypol v0.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Michele Lacchia.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>
