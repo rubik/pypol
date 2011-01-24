@@ -11,8 +11,8 @@ New in :mod:`pypol.funcs`:
     + :func:`pypol.funcs.jacobshtal_lucas_num`
     + :func:`pypol.funcs.fermat_lucas_num`
 
-Release 0.4 (23/01/2011)
-------------------------
+Release 0.4 (Jan 23, 2011)
+--------------------------
 
 New modules:
     + New module: :mod:`pypol.roots`
