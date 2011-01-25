@@ -7,10 +7,10 @@ class PyTest(Command):
     def finalize_options(self):
         pass
     def run(self):
-        import subprocess
-        # Verify py.test is installed
+        import sys, subprocess
+        # Verify that py.test is installed
         subprocess.call(['easy_install', '-U', 'pytest'])
-        subprocess.call(['py.test', 'tests/', '-v'])
+        subprocess.call(['py.test', 'tests/'] + sys.argv[2:])
 
 setup(name='pypol_',
       version='0.4',
