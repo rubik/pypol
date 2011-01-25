@@ -680,6 +680,19 @@ def muller(poly, x_k, x_k2=None, x_k3=None, epsilon=float('-inf')):
             return x_k1
         x_k = x_k1
 
+def muller1(poly, x1, x2, x3, epsilon=float('-inf')):
+    while True:
+        q = (x3 - x2) / (x2 - x1)
+        f1, f2, f3 = poly(x1), poly(x2), poly(x3)
+        A = q * f3 - q * (1 - q) * f2 + q ** 2 * f1
+        B = (2*q + 1) * f3 - (1 + q) ** 2 * f2 + q**2 * f1
+        C = (1 + q) * f3
+        d = (B + cmath.sqrt(B**2 - 4*A*C), B - cmath.sqrt(B**2 - 4*A*C))
+        x_k1 = x3 - (x3 - x2) * (2*C / max(d, key=lambda i: i.real))
+        if x_k1 == x3 or abs(x_k1 - x3) < epsilon:
+            return x_k1
+        x1, x2, x3 = x2, x3, x_k1
+
 def durand_kerner(poly, start=complex(.4, .9), epsilon=1.12e-16):
     '''
     The Durand-Kerner method. It finds all the roots of the polynomials *poly* simultaneously.

@@ -1,6 +1,9 @@
 Release 0.5 (planning)
 ----------------------
 
+New in :class:`pypol.Polynomial`:
+    + :classmethod:`pypol.Polynomial.from_roots`
+
 New in :mod:`pypol.funcs`:
     + :func:`pypol.funcs.entringer`
     + :func:`pypol.funcs.lucas_num`
@@ -10,6 +13,9 @@ New in :mod:`pypol.funcs`:
     + :func:`pypol.funcs.pell_lucas_num`
     + :func:`pypol.funcs.jacobshtal_lucas_num`
     + :func:`pypol.funcs.fermat_lucas_num`
+
+Removed from :class:`pypol.Polynomial`:
+    - :meth:`pypol.Polynomial.__str__`
 
 Release 0.4 (Jan 23, 2011)
 --------------------------
