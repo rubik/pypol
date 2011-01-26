@@ -1,4 +1,4 @@
-from core import *
+from .core import *
 
 x = monomial(x=1)
 y = monomial(y=1)

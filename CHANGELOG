@@ -1,5 +1,5 @@
-Release 0.5 (planning)
-----------------------
+Release 0.5 (in development)
+----------------------------
 
 New in :class:`pypol.Polynomial`:
     + :classmethod:`pypol.Polynomial.from_roots`
@@ -13,6 +13,9 @@ New in :mod:`pypol.funcs`:
     + :func:`pypol.funcs.pell_lucas_num`
     + :func:`pypol.funcs.jacobshtal_lucas_num`
     + :func:`pypol.funcs.fermat_lucas_num`
+
+New in :mod:`pypol.roots`:
+    + :func:`pypol.roots.muller`
 
 Removed from :class:`pypol.Polynomial`:
     - :meth:`pypol.Polynomial.__str__`

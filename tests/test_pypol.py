@@ -164,7 +164,6 @@ class TestPolynomial(object):
 
     def testLen(self):
         assert 4 == len(self.a)
-        print len(self.d)
         assert 1 == len(self.d)
         assert 0 == len(pypol.NULL)
 
