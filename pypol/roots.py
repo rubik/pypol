@@ -659,10 +659,11 @@ def laguerre(poly, start, epsilon=float('-inf')):
         start = x_n
 
 def muller(poly, x_k, x_k2=None, x_k3=None, epsilon=float('-inf')):
+    s = (-1 if x_k < 0 else 1)
     if not x_k2:
-        x_k2 = x_k + .25
+        x_k2 = x_k + s * .25
     if not x_k3:
-        x_k3 = x_k2 + .25
+        x_k3 = x_k2 + s * .25
 
     x = monomial(x=1)
     while True:
@@ -679,6 +680,38 @@ def muller(poly, x_k, x_k2=None, x_k3=None, epsilon=float('-inf')):
         if x_k1 == x_k or abs(x_k1 - x_k) < epsilon:
             return x_k1
         x_k, x_k2, x_k3 = x_k1, x_k, x_k2
+
+
+def ridder(poly, x0, x1, epsilon=1e-9):
+    p0, p1 = poly(x0), poly(x1)
+    if p0 * p1 > 0: raise ValueError('root is not bracketed')
+    if p0 == 0: return x0
+    if p1 == 0: return x1
+
+    l = 0
+    while True:
+        ## Compute the closer root
+        x2 = 0.5 * (x0 + x1)
+        p2 = poly(x2)
+        s = math.sqrt(p2 ** 2 - p0 * p1)
+        if s == 0: raise ValueError('cannot find the root')
+        dx = (x2 - x0) * p2 / s
+        if p0 - p1 < 0: dx *= -1
+        x_k = x2 + dx
+        pk = poly(x_k)
+        # Test for convergence
+        if l > 0:
+            if abs(x_k - oldx) < epsilon * max(abs(x_k), 1):
+                return x_k
+        oldx = x_k
+        if p2 * pk > 0:
+            if p0 * pk < 0:
+                x1, p1 = x_k, pk
+            else:
+                x0, p0 = x_k, pk
+        else:
+            x0, x1, p0, p1 = x2, x_k, p2, pk
+        l += 1
 
 def durand_kerner(poly, start=complex(.4, .9), epsilon=1.12e-16):
     '''
@@ -913,35 +946,13 @@ def bisection(poly, k=0.5, epsilon=float('-inf')):
 ##                            Still in development                            ##
 ################################################################################
 
-
-def ridder(poly, x0, x1, x2, epsilon=float('-inf')):
-    def closest(k):
-        a1 = [abs(x0 - k), abs(x1 - k), abs(x2 - k)]
-        return [x0, x1, x2][a1.index(min(a1))]
-
-    assert abs(x0 - x1) == abs(x1 - x2), 'The three points x0, x1 and x2 must be equally distanced'
-
-    while True:
-        d0 = abs(x0 - x1)
-        y0, y1, y2 = poly(x0), poly(x1), poly(x2)
-        a = (y0 - y1) / (y1 - y2)
-        b = (y0 - y1) / (y0 - a*y1)
-        u = (b - 1) / (b + 1)
-        v = (a - 1) / (a + 1)
-        x3 = x1 - d0 * (u*(3 + u**2) / (v*(3 + v**2)))
-        x0 = closest(x3)
-        if x0 == x3 or abs(x0 - x3) < epsilon:
-            return x3
-        x1 = x3
-        x2 = x1 + (x1 - x0)
-
 def lambert(poly, start, epsilon=float('-inf')):
     def _hg(n):
         return (((d - 1) * n ** d + (d + 1) * r) / ((d + 1) * n ** d + (d - 1) * r)) * n
 
     assert len(poly) == 2 and poly.right_hand_side, 'poly must be on the form x^d - r'
 
-    d, r = poly[0][1].values()[0], poly.right_hand_side
+    d, r = poly[0][1].values()[0], -poly.right_hand_side
     while True:
         x_n = start - _hg(start)
         if x_n == start or abs(x_n - start) < epsilon:
