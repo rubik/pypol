@@ -34,6 +34,11 @@ import math
 
 from core import Polynomial, AlgebraicFraction, poly1d, poly1d_2, polynomial, monomial
 
+__all__ = ['divisible', 'from_roots', 'polyder', 'polyint', 'polyint_',
+           'random_poly', 'interpolate', 'divided_diff', 'bin_coeff',
+           'harmonic', 'harmonic_g', 'stirling', 'stirling_2', 'bell_num'
+           ]
+
 NULL = Polynomial()
 ONE = monomial()
 TWO = monomial(2)
@@ -568,6 +573,47 @@ def interpolate_newton(x_values, y_values):
     k = len(x_values)
     return sum(_basis(j) * divided_diff(y_values[j]) for j in xrange(k))
 
+## {{{ http://code.activestate.com/recipes/466320/ (r3)
+from cPickle import dumps, PicklingError # for memoize
+
+
+class _Memoize(object):
+    """Decorator that caches a function's return value each time it is called.
+    If called later with the same arguments, the cached value is returned, and
+    not re-evaluated. Slow for mutable types."""
+    # Ideas from MemoizeMutable class of Recipe 52201 by Paul Moore and
+    # from memoized decorator of http://wiki.python.org/moin/PythonDecoratorLibrary
+    # For a version with timeout see Recipe 325905
+    # For a self cleaning version see Recipe 440678
+    # Weak references (a dict with weak values) can be used, like this:
+    #   self._cache = weakref.WeakValueDictionary()
+    #   but the keys of such dict can't be int
+    def __init__(self, func):
+        self.func = func
+        self._cache = {}
+
+    def __call__(self, *args, **kwargs):
+        key = args
+        if kwargs:
+            key += tuple(sorted(kwargs.iteritems()))
+        try:
+            if key in self._cache:
+                return self._cache[key]
+            self._cache[key] = result = self.func(*args, **kwargs)
+            return result
+        except TypeError:
+            try:
+                dump = dumps(key)
+            except PicklingError:
+                return self.func(*args, **kwargs)
+            else:
+                if dump in self._cache:
+                    return self._cache[dump]
+                self._cache[dump] = result = self.func(*args, **kwargs)
+                return result
+## end of http://code.activestate.com/recipes/466320/ }}}
+
+
 def bin_coeff(n, k):
     '''
     Returns the binomial coefficient :math:`\\binom{n}{k}`, i.e. the coefficient of the :math:`x^k` term of the binomial power :math:`(1 + x)^n`.
@@ -865,11 +911,8 @@ def bell_num(n):
         return 1
     return sum(stirling_2(n, k) for k in xrange(n + 1))
 
-################################################################################
-##                            Still in development                            ##
-################################################################################
-
-def __entringer(n, k): ## very very slow
+@ _Memoize
+def entringer(n, k):
     if n < 0 or k < 0:
         raise ValueError('Entringer numbers only defined for n >= 0 and k >= 0')
     if k > n:
@@ -878,36 +921,61 @@ def __entringer(n, k): ## very very slow
         return 1
     if k == 0:
         return 0
-    return __entringer(n, k - 1) + __entringer(n - 1, n - k)
+    return entringer(n, k - 1) + entringer(n - 1, n - k)
 
 def lucas_num(n):
     if n <= 0:
         raise ValueError('Lucas numbers only defined for n > 0')
     if n == 1:
-        return 1.
+        return 1
+    if n == 2:
+        return 3
     n -= 1
-    return sum(int((n + 1) * bin_coeff(n - k + 1, k) / (n - k + 1)) for k in xrange(int((n + 1) / 2) + 1))
+    #return int(sum(int((n + 1) * bin_coeff(n - k + 1, k) / (n - k + 1)) for k in xrange(int((n + 1) / 2) + 1)))
+    s5 = math.sqrt(5)
+    return int((1 / s5) * (2.5 + 0.5 * s5) * (0.5 + 0.5 * s5) ** n + (1 / s5) * (-2.5 + 0.5 * s5) * (0.5 - 0.5 * s5) ** n)
 
 def pell_num(n):
     if n < 0:
         raise ValueError('Pell numbers only defined for n >= 0')
     if n == 0:
-        return 0.
+        return 0
     if n == 1:
-        return 1.
-    return math.ceil(((1 + math.sqrt(2)) ** n - (1 - math.sqrt(2)) ** n) / (2 * math.sqrt(2)))
+        return 1
+    s2 = math.sqrt(2)
+    return int(math.ceil(((1 + s2) ** n - (1 - s2) ** n) / (2 * s2)))
 
 def pell_lucas_num(n):
     if n < 0:
         raise ValueError('Pell numbers only defined for n >= 0')
     if n == 0:
-        return 0.
+        return 2
     if n == 1:
-        return 1.
-    return math.ceil((1 + s2)**n + (1 - s2)**n)
+        return 2
+    s2 = math.sqrt(2)
+    return int(math.ceil((1 + s2)**n + (1 - s2)**n))
 
 def jacobsthal_num(n):
-    return (2 ** n + (-1) ** (n - 1)) / 3
+    return int((2 ** n + (-1) ** (n - 1)) / 3)
+
+@ _Memoize
+def jacobsthal_lucas_num(n):
+    if n == 0:
+        return 2
+    if n == 1:
+        return 1
+    return 2 * jacobsthal_lucas_num(n - 1) - (-1) ** (n - 1) * 3
 
 def fermat_num(n):
     return 2 ** (2 ** n) + 1
+
+def fermat_lucas_num(n):
+    if n == 0:
+        return 0
+    if n == 1:
+        return 1
+    return 2 ** n - 1
+
+################################################################################
+##                            Still in development                            ##
+################################################################################

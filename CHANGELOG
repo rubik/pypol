@@ -16,6 +16,7 @@ New in :mod:`pypol.funcs`:
 
 New in :mod:`pypol.roots`:
     + :func:`pypol.roots.muller`
+    + :func:`pypol.roots.ridder`
 
 Removed from :class:`pypol.Polynomial`:
     - :meth:`pypol.Polynomial.__str__`
@@ -75,8 +76,8 @@ Removed:
     - :func:`pypol.funcs.hermite_phys_r`
 
 
-Release 0.3
------------
+Release 0.3 (Sep 29, 2010)
+--------------------------
 
 Added:
     + new module: :mod:`pypol.funcs`
@@ -111,8 +112,8 @@ Removed:
     - :attr:`pypol.Polynomial.coeff_lcm`
 
 
-Release 0.2
------------
+Release 0.2 (Sep 20, 2010)
+--------------------------
 
 Added:
     + :func:`testpypol.run`
@@ -133,7 +134,7 @@ Removed:
     - :meth:`pypol.Polynomial._cmp`
 
 
-Release 0.1
------------
+Release 0.1 (Sep 3, 2010)
+-------------------------
 
     * Initial release

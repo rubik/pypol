@@ -694,7 +694,7 @@ def ridder(poly, x0, x1, epsilon=1e-9):
         x2 = 0.5 * (x0 + x1)
         p2 = poly(x2)
         s = math.sqrt(p2 ** 2 - p0 * p1)
-        if s == 0: raise ValueError('cannot find the root')
+        if s == 0: raise ValueError('cannot find the real root')
         dx = (x2 - x0) * p2 / s
         if p0 - p1 < 0: dx *= -1
         x_k = x2 + dx
