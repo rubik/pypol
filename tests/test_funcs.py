@@ -35,6 +35,11 @@ class TestFuncs(object):
         p = pypol.poly1d([2, 6, -4, 8]) * x
         assert funcs.divisible(p, p.gcd())
 
+    def testFromRoots(self):
+        p = funcs.from_roots([1, -3, 44, 45245, -2332])
+        assert map(p, [1, -3, 44, 45245, -2332]) == [0, 0, 0, 0, 0]
+        assert funcs.from_roots([1, -2, 3], 'o').letters == ('o',)
+
     def testRandomPoly(self):
         for _ in xrange(1000):
             assert type(funcs.random_poly()) == pypol.Polynomial

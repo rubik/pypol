@@ -74,7 +74,7 @@ def divisible(a, b):
 
     return a % b == polynomial()
 
-def from_roots(roots):
+def from_roots(roots, var='x'):
     '''
     Make a polynomial from its roots. These can be integer, float or :class:`fractions.Fraction` objects but the **complex** type is not supported.
 
@@ -103,7 +103,8 @@ def from_roots(roots):
         -52.0
     '''
 
-    return reduce(operator.mul, ((x - (fractions.Fraction.from_float(r) if isinstance(r, float) else r)) for r in roots))
+    v = monomial(**{var: 1})
+    return reduce(operator.mul, ((v - (fractions.Fraction.from_float(r) if isinstance(r, float) else r)) for r in roots))
 
 def random_poly(coeff_range=xrange(-10, 11), len_=None, len_range=xrange(-10, 11),
                 letters='xyz', max_letters=3, unique=False, exp_range=xrange(1, 6),

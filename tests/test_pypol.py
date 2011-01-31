@@ -145,6 +145,11 @@ class TestPolynomial(object):
         assert self.c.iscomplete('x')
         assert not self.b.iscomplete('x')
 
+    def testFromRoots(self):
+        p = pypol.Polynomial.from_roots([1, -3, 44, 45245, -2332])
+        assert map(p, [1, -3, 44, 45245, -2332]) == [0, 0, 0, 0, 0]
+        assert pypol.Polynomial.from_roots([1, -2, 3], 'o').letters == ('o',)
+
     def testUpdate(self):
         self.d.update('3x - y + 2')
         assert pypol.polynomial('3x - y + 2') == self.d

@@ -1157,6 +1157,11 @@ class Polynomial(object):
 
         return Polynomial(self._filter())
 
+    @ classmethod
+    def from_roots(cls, roots, var='x'):
+        x = monomial(**{var: 1})
+        return reduce(operator.mul, (x - (fractions.Fraction.from_float(r) if isinstance(r, float) else r) for r in roots))
+
     def to_float(self):
         tmp = list(copy.deepcopy(self._monomials))
         tmp_ = copy.deepcopy(tmp)
@@ -1244,16 +1249,17 @@ class Polynomial(object):
     def _filter(self):
         return [copy.deepcopy(m) for m in self._monomials if m[0]]
 
-    def _format(self, print_format=False):
+    def _format(self):
         '''
         Format the polynomial for __repr__.
         '''
 
-        return ' '.join(filter(None, [self._m_format(monomial, print_format).replace('-', '- ') if monomial[0] < 0 \
-                    else ('+ ' + self._m_format(monomial, print_format) if self._m_format(monomial, print_format) \
-                    else '') for monomial in self._monomials])).strip()
+        return ' '.join(filter(None, [self._m_format(monomial).replace('-', '- ') if monomial[0] < 0 \
+                                      else ('+ ' + self._m_format(monomial) if self._m_format(monomial) \
+                                                                            else '') \
+                                    for monomial in self._monomials])).strip()
 
-    def _m_format(self, monomial, print_format):
+    def _m_format(self, monomial):
         '''
         Format a single monomial.
         '''
@@ -1277,21 +1283,21 @@ class Polynomial(object):
             else:
                 var_list.append('%s^%s' % (var, exp))
 
-        if print_format:
-            return tmp_coefficient + ''.join(var_list).replace('^', '') \
-                .replace('0', unichr(8304)).replace('1', unichr(8305)) \
-                .replace('2', unichr(178)).replace('3', unichr(179)) \
-                .replace('4', unichr(8308)).replace('5', unichr(8309)) \
-                .replace('6', unichr(8310)).replace('7', unichr(8311)) \
-                .replace('8', unichr(8312)).replace('9', unichr(8313)) \
-                .encode('utf-8')
+        #if print_format: ## Older versions
+        #    return tmp_coefficient + ''.join(var_list).replace('^', '') \
+        #        .replace('0', unichr(8304)).replace('1', unichr(8305)) \
+        #        .replace('2', unichr(178)).replace('3', unichr(179)) \
+        #        .replace('4', unichr(8308)).replace('5', unichr(8309)) \
+        #        .replace('6', unichr(8310)).replace('7', unichr(8311)) \
+        #        .replace('8', unichr(8312)).replace('9', unichr(8313)) \
+        #        .encode('utf-8')
         return tmp_coefficient + ''.join(var_list)
 
     def __repr__(self):
         return self._format()
 
-    def __str__(self):
-        return self._format(True)
+    #def __str__(self): ## Older versions
+    #    raise NotImplementedError('Use Polynomial.__repr__')
 
     @ coerce_poly
     def __eq__(self, other):

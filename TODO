@@ -2,4 +2,15 @@
 TODO
 ====
 
-None
+Complete the documentation => pypol 0.5:
+    + :meth:`pypol.Polynomial.from_roots`
+    + :func:`pypol.funcs.entringer`
+    + :func:`pypol.funcs.lucas_num`
+    + :func:`pypol.funcs.pell_num`
+    + :func:`pypol.funcs.jacobsthal_num`
+    + :func:`pypol.funcs.fermat_num`
+    + :func:`pypol.funcs.pell_lucas_num`
+    + :func:`pypol.funcs.jacobshtal_lucas_num`
+    + :func:`pypol.funcs.fermat_lucas_num`
+    + :func:`pypol.roots.muller`
+    + :func:`pypol.roots.ridder`

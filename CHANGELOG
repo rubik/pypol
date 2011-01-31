@@ -18,6 +18,9 @@ New in :mod:`pypol.roots`:
     + :func:`pypol.roots.muller`
     + :func:`pypol.roots.ridder`
 
+Changed in :meth:`pypol.Polynomial.from_roots` and in :func:`pypol.funcs.from_roots`:
+    + Added argument *var*
+
 Removed from :class:`pypol.Polynomial`:
     - :meth:`pypol.Polynomial.__str__`
 
