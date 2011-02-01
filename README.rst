@@ -2,7 +2,7 @@
 pypol - A Python library for manupulate polynomials
 ===================================================
 
-© Copyrigth 2010 Michele Lacchia alias (rubik, Python, python, Pythoner, x-reynik-x)
+© Copyrigth 2010-2011 Michele Lacchia alias (rubik, Python, python, Pythoner, x-reynik-x)
     See LICENSE file too
 
 How to use it
