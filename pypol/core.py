@@ -53,7 +53,7 @@ def polynomial(string=None, simplify=True):
 
         **Examples**
 
-        We want to make the polynomial :math:`2x^-1 + 2`::
+        We want to make the polynomial :math:`2x^{-1} + 2`::
 
             >>> polynomial('2x^-1 + 2')
             + 2x + 1 ## Wrong!

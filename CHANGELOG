@@ -2,7 +2,7 @@ Release 0.5 (in development)
 ----------------------------
 
 New in :class:`pypol.Polynomial`:
-    + :classmethod:`pypol.Polynomial.from_roots`
+    + :meth:`pypol.Polynomial.from_roots`
 
 New in :mod:`pypol.funcs`:
     + :func:`pypol.funcs.entringer`
