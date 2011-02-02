@@ -10,8 +10,6 @@
 The :mod:`~pypol.series` module
 =================================
 
-.. contents:: Table of contents
-
 This module implements the most common polynomial sequences, like Fibonacci's sequence (:func:`fibonacci`)
 
 Lucas polynomials sequences
