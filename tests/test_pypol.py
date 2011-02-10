@@ -54,17 +54,18 @@ class TestPolynomial(object):
         assert (pypol.polynomial('- x^2 + x'), pypol.polynomial('- 5')) == divmod(self.a, self.c)
 
     def testDiv(self):
-        assert pypol.polynomial('- x^2 + x'), self.a / self.c
+        assert (2 * pypol.x + 1) / 2 == pypol.polynomial('x + 1/2')
+        assert pypol.polynomial('- x^2 + x') == self.a / self.c
 
     def testMod(self):
         p = pypol.polynomial('x^2 + 3')
-        assert pypol.polynomial('4'), p % self.c
+        assert pypol.polynomial('4') == p % self.c
 
     def testTruediv(self):
         pass
 
     def testPow(self):
-        assert pypol.polynomial('x^2 -2x + 1'), self.c ** 2
+        assert pypol.polynomial('x^2 -2x + 1') == self.c ** 2
 
     def testOrderedMonomials(self):
         assert [(-2, {'x': 2}), (1, {'a': 3}), (-1, {'b': 1}), (3, {})] == \
@@ -92,7 +93,7 @@ class TestPolynomial(object):
         assert not self.a.is_square_diff()
 
     def testDivAll(self):
-        assert pypol.polynomial('2x^3 + 4xy - 16').div_all(-2), pypol.polynomial('- x^3 - 2xy + 8')
+        assert pypol.polynomial('2x^3 + 4xy - 16').div_all(-2) == pypol.polynomial('- x^3 - 2xy + 8')
 
     def testLetters(self):
         assert ('a', 'b', 'x') == self.b.letters
@@ -103,7 +104,7 @@ class TestPolynomial(object):
         assert () == self.a.joint_letters
 
     def testEvalForm(self):
-        assert '2*y**5*x**3-4*x**2+2', pypol.polynomial('2x^3y^5 - 4x^2 +2').eval_form
+        assert '2*y**5*x**3-4*x**2+2' == pypol.polynomial('2x^3y^5 - 4x^2 +2').eval_form
 
     @ py.test.mark.skipif('__import__("pypol").__version__ >= (0, 4)')
     def testZeros(self):  ## DEPRECATED
@@ -112,23 +113,23 @@ class TestPolynomial(object):
         assert NotImplemented == self.b.zeros
 
     def testRawPowers(self):
-        assert [3, 0, 0, 0], self.b.raw_powers('a')
-        assert [0, 2, 0, 0], self.b.raw_powers('x')
-        assert [0, 0, 1, 0], self.b.raw_powers('b')
-        assert {'a': [3, 0, 0, 0], 'x': [0, 2, 0, 0], 'b': [0, 0, 1, 0]}, self.b.raw_powers()
+        assert [3, 0, 0, 0] == self.b.raw_powers('a')
+        assert [0, 2, 0, 0] == self.b.raw_powers('x')
+        assert [0, 0, 1, 0] == self.b.raw_powers('b')
+        assert {'a': [3, 0, 0, 0], 'x': [0, 2, 0, 0], 'b': [0, 0, 1, 0]} == self.b.raw_powers()
         self.b.append('-3x^3')
-        assert {'a': [3, 0, 0, 0, 0], 'x': [0, 3, 2, 0, 0], 'b': [0, 0, 0, 1, 0]}, self.b.raw_powers()
+        assert {'a': [3, 0, 0, 0, 0], 'x': [0, 3, 2, 0, 0], 'b': [0, 0, 0, 1, 0]} == self.b.raw_powers()
         del self.b[-1]
-        assert {'a': [3, 0, 0, 0], 'x': [0, 3, 2, 0], 'b': [0, 0, 0, 1]}, self.b.raw_powers()
+        assert {'a': [3, 0, 0, 0], 'x': [0, 3, 2, 0], 'b': [0, 0, 0, 1]} == self.b.raw_powers()
 
     def testPowers(self):
-        assert [3, 0], self.b.powers('a')
-        assert [2, 0], self.b.powers('x')
-        assert [1, 0], self.b.powers('b')
+        assert [3, 0] == self.b.powers('a')
+        assert [2, 0] == self.b.powers('x')
+        assert [1, 0] == self.b.powers('b')
         self.b.append('-3x^3')
-        assert {'a': [3, 0], 'x': [3, 2, 0], 'b': [1, 0]}, self.b.powers()
+        assert {'a': [3, 0], 'x': [3, 2, 0], 'b': [1, 0]} == self.b.powers()
         del self.b[-1]
-        assert {'a': [3, 0], 'x': [3, 2, 0], 'b': [1]}, self.b.powers()
+        assert {'a': [3, 0], 'x': [3, 2, 0], 'b': [1]} == self.b.powers()
 
     def testLinear(self):
         assert not self.a.islinear()

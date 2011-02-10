@@ -21,57 +21,96 @@ Now run the setup.py script::
 
     $ python setup.py install
 
-.. note::
-    Sometimes (particularly on Unix systems) you have to allow :file:`setup.py` to run with root security privileges::
+Sometimes (particularly on Unix systems) you have to allow :file:`setup.py` to run with root security privileges::
 
-        $ python setup.py install
-            running install
-            error: can't create or remove files in install directory
-            
-            The following error occurred while trying to add or remove files in the
-            installation directory:
-            
-                [Errno 13] Permission denied: '/usr/local/lib/python2.6/dist-packages/test-easy-install-9562.write-test'
-            
-            The installation directory you specified (via --install-dir, --prefix, or
-            the distutils default setting) was:
-            
-                /usr/local/lib/python2.6/dist-packages/
-            
-            Perhaps your account does not have write access to this directory?  If the
-            installation directory is a system-owned directory, you may need to sign in
-            as the administrator or "root" account.  If you do not have administrative
-            access to this machine, you may wish to choose a different installation
-            directory, preferably one that is listed in your PYTHONPATH environment
-            variable.
-            
-            For information on other options, you may wish to consult the
-            documentation at:
-            
-              http://peak.telecommunity.com/EasyInstall.html
-            
-            Please make the appropriate changes for your system and try again.
+    $ python setup.py install
+    running install
+    install_dir /usr/local/lib/python2.7/dist-packages/
+    Checking .pth file support in /usr/local/lib/python2.7/dist-packages/
+    error: can't create or remove files in install directory
+    
+    The following error occurred while trying to add or remove files in the
+    installation directory:
+    
+        [Errno 13] Permission denied: '/usr/local/lib/python2.7/dist-packages/test-easy-install-4687.pth'
+    
+    The installation directory you specified (via --install-dir, --prefix, or
+    the distutils default setting) was:
+    
+        /usr/local/lib/python2.7/dist-packages/
+    
+    Perhaps your account does not have write access to this directory?  If the
+    installation directory is a system-owned directory, you may need to sign in
+    as the administrator or "root" account.  If you do not have administrative
+    access to this machine, you may wish to choose a different installation
+    directory, preferably one that is listed in your PYTHONPATH environment
+    variable.
+    
+    For information on other options, you may wish to consult the
+    documentation at:
+    
+      http://packages.python.org/distribute/easy_install.html
+    
+    Please make the appropriate changes for your system and try again.
 
-    So try::
+So try::
 
-        $ sudo python setup.py install
-            [sudo] password for ~~~~~: 
-            running install
-            running bdist_egg
-            running egg_info
-            writing pypol_.egg-info/PKG-INFO
-            writing top-level names to pypol_.egg-info/top_level.txt
-
-            ... cut ...
-
-            Processing pypol_-0.3-py2.6.egg
-            creating /usr/local/lib/python2.6/dist-packages/pypol_-0.3-py2.6.egg
-            Extracting pypol_-0.3-py2.6.egg to /usr/local/lib/python2.6/dist-packages
-            Adding pypol- 0.3 to easy-install.pth file
-            
-            Installed /usr/local/lib/python2.6/dist-packages/pypol_-0.3-py2.6.egg
-            Processing dependencies for pypol-==0.3
-            Finished processing dependencies for pypol-==0.3
+    $ sudo python setup.py install
+    [sudo] password for user: 
+    running install
+    install_dir /usr/local/lib/python2.7/dist-packages/
+    Checking .pth file support in /usr/local/lib/python2.7/dist-packages/
+    /usr/bin/python -E -c pass
+    TEST PASSED: /usr/local/lib/python2.7/dist-packages/ appears to support .pth files
+    running bdist_egg
+    running egg_info
+    writing pypol_.egg-info/PKG-INFO
+    writing top-level names to pypol_.egg-info/top_level.txt
+    writing dependency_links to pypol_.egg-info/dependency_links.txt
+    reading manifest file 'pypol_.egg-info/SOURCES.txt'
+    reading manifest template 'MANIFEST.in'
+    warning: no files found matching 'README.textile'
+    writing manifest file 'pypol_.egg-info/SOURCES.txt'
+    installing library code to build/bdist.linux-i686/egg
+    running install_lib
+    running build_py
+    creating build
+    creating build/lib.linux-i686-2.7
+    creating build/lib.linux-i686-2.7/pypol
+    copying pypol/__init__.py -> build/lib.linux-i686-2.7/pypol
+    copying pypol/core.py -> build/lib.linux-i686-2.7/pypol
+    copying pypol/series.py -> build/lib.linux-i686-2.7/pypol
+    copying pypol/funcs.py -> build/lib.linux-i686-2.7/pypol
+    copying pypol/roots.py -> build/lib.linux-i686-2.7/pypol
+    creating build/bdist.linux-i686
+    creating build/bdist.linux-i686/egg
+    creating build/bdist.linux-i686/egg/pypol
+    copying build/lib.linux-i686-2.7/pypol/__init__.py -> build/bdist.linux-i686/egg/pypol
+    copying build/lib.linux-i686-2.7/pypol/core.py -> build/bdist.linux-i686/egg/pypol
+    copying build/lib.linux-i686-2.7/pypol/series.py -> build/bdist.linux-i686/egg/pypol
+    copying build/lib.linux-i686-2.7/pypol/funcs.py -> build/bdist.linux-i686/egg/pypol
+    copying build/lib.linux-i686-2.7/pypol/roots.py -> build/bdist.linux-i686/egg/pypol
+    byte-compiling build/bdist.linux-i686/egg/pypol/__init__.py to __init__.pyc
+    byte-compiling build/bdist.linux-i686/egg/pypol/core.py to core.pyc
+    byte-compiling build/bdist.linux-i686/egg/pypol/series.py to series.pyc
+    byte-compiling build/bdist.linux-i686/egg/pypol/funcs.py to funcs.pyc
+    byte-compiling build/bdist.linux-i686/egg/pypol/roots.py to roots.pyc
+    creating build/bdist.linux-i686/egg/EGG-INFO
+    copying pypol_.egg-info/PKG-INFO -> build/bdist.linux-i686/egg/EGG-INFO
+    copying pypol_.egg-info/SOURCES.txt -> build/bdist.linux-i686/egg/EGG-INFO
+    copying pypol_.egg-info/dependency_links.txt -> build/bdist.linux-i686/egg/EGG-INFO
+    copying pypol_.egg-info/top_level.txt -> build/bdist.linux-i686/egg/EGG-INFO
+    zip_safe flag not set; analyzing archive contents...
+    creating 'dist/pypol_-0.4-py2.7.egg' and adding 'build/bdist.linux-i686/egg' to it
+    removing 'build/bdist.linux-i686/egg' (and everything under it)
+    Processing pypol_-0.4-py2.7.egg
+    creating /usr/local/lib/python2.7/dist-packages/pypol_-0.4-py2.7.egg
+    Extracting pypol_-0.4-py2.7.egg to /usr/local/lib/python2.7/dist-packages
+    Adding pypol- 0.4 to easy-install.pth file
+    
+    Installed /usr/local/lib/python2.7/dist-packages/pypol_-0.4-py2.7.egg
+    Processing dependencies for pypol-==0.4
+    Finished processing dependencies for pypol-==0.4
 
 Running the tests
 +++++++++++++++++
@@ -159,7 +198,7 @@ Building this documentation
 
 To build the documentation, change directory and go to :file:`pypol/doc`::
 
-    $ cd pypol_-0.3/doc
+    $ cd pypol_-0.4/doc
 
 * On **Windows**
     Run :command:`make.bat <target>`
@@ -169,33 +208,40 @@ To build the documentation, change directory and go to :file:`pypol/doc`::
 
 Where *<target>* is one of: 
 
-        +----------------+------------------------------------------------------------+
-        | **html**       |  to make standalone HTML files                             |
-        +----------------+------------------------------------------------------------+
-        | **singlehtml** |  to make a single large HTML file                          |
-        +----------------+------------------------------------------------------------+
-        | **dirhtml**    |  to make HTML files named index.html in directories        |
-        +----------------+------------------------------------------------------------+
-        | **pickle**     |  to make pickle files                                      |
-        +----------------+------------------------------------------------------------+
-        | **json**       |  to make JSON files                                        |
-        +----------------+------------------------------------------------------------+
-        | **htmlhelp**   |  to make HTML files and a HTML help project                |
-        +----------------+------------------------------------------------------------+
-        | **qthelp**     |  to make HTML files and a qthelp project                   |
-        +----------------+------------------------------------------------------------+
-        | **devhelp**    |  to make HTML files and a Devhelp project                  |
-        +----------------+------------------------------------------------------------+
-        |  **epub**      |  to make an epub                                           |
-        +----------------+------------------------------------------------------------+
-        | **latex**      |  to make LaTeX files, you can set PAPER=a4 or PAPER=letter |
-        +----------------+------------------------------------------------------------+
-        | **latexpdf**   |  to make LaTeX files and run them through pdflatex         |
-        +----------------+------------------------------------------------------------+
-        |  **text**      |  to make text files                                        |
-        +----------------+------------------------------------------------------------+
-        |  **man**       |  to make manual pages                                      |
-        +----------------+------------------------------------------------------------+
+        +----------------+-----------------------------------------------------------------+
+        | **html**       |  to make standalone HTML files                                  |
+        +----------------+-----------------------------------------------------------------+
+        | **singlehtml** |  to make a single large HTML file                               |
+        +----------------+-----------------------------------------------------------------+
+        | **dirhtml**    |  to make HTML files named index.html in directories             |
+        +----------------+-----------------------------------------------------------------+
+        | **pickle**     |  to make pickle files                                           |
+        +----------------+-----------------------------------------------------------------+
+        | **json**       |  to make JSON files                                             |
+        +----------------+-----------------------------------------------------------------+
+        | **htmlhelp**   |  to make HTML files and a HTML help project                     |
+        +----------------+-----------------------------------------------------------------+
+        | **qthelp**     |  to make HTML files and a qthelp project                        |
+        +----------------+-----------------------------------------------------------------+
+        | **devhelp**    |  to make HTML files and a Devhelp project                       |
+        +----------------+-----------------------------------------------------------------+
+        |  **epub**      |  to make an epub                                                |
+        +----------------+-----------------------------------------------------------------+
+        | **latex**      |  to make LaTeX files, you can set PAPER=a4 or PAPER=letter      |
+        +----------------+-----------------------------------------------------------------+
+        | **latexpdf**   |  to make LaTeX files and run them through pdflatex              |
+        +----------------+-----------------------------------------------------------------+
+        |  **text**      |  to make text files                                             |
+        +----------------+-----------------------------------------------------------------+
+        |  **man**       |  to make manual pages                                           |
+        +----------------+-----------------------------------------------------------------+
+        |  **changes**   |  to make an overview of all changed/added/deprecated items      |
+        +----------------+-----------------------------------------------------------------+
+        | **linkcheck**  |  to check all external links for integrity                      |
+        +----------------+-----------------------------------------------------------------+
+        |  **doctest**   |  to run all doctests embedded in the documentation (if enabled) |
+        +----------------+-----------------------------------------------------------------+
+
 
 Cookbook
 --------

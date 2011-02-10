@@ -661,6 +661,14 @@ class Polynomial(object):
             return self._monomials[-1][0]
         return False
 
+    @ property
+    def rhs(self):
+        '''
+        A shorthand for :meth:`right_hand_side`
+        '''
+
+        return self.right_hand_side
+
     # DEPRECATED since 0.3
     #@ property
     #def zeros(self):
@@ -1128,6 +1136,25 @@ class Polynomial(object):
             return poly1d([c / poly for c in self.coefficients])
         return sum((Polynomial((monomial,)) / poly for monomial in self._monomials), Polynomial())
 
+    def isnum(self):
+        '''
+        Returns True whether the polynomial represents a number, False otherwise::
+
+            >>> from pypol import *
+            >>> x.isnum()
+            False
+            >>> (x + 1).isnum()
+            False
+            >>> ONE.isnum()
+            True
+            >>> NULL.isnum()
+            True
+
+        '''
+        if self == Polynomial():
+            return True
+        return self.right_hand_side and len(self) == 1
+
     def filter(self):
         '''
         Returns a new Polynomial instance, with :meth:`monomials` filtered, i.e. with no null term (with 0 coefficient).
@@ -1511,12 +1538,9 @@ class Polynomial(object):
         while A.degree >= B.degree:
             if not A:
                 return Q, Polynomial()
-            if (len(A) == 1 and A.right_hand_side) and (len(B) == 1 and B.right_hand_side):
-                a, b = A.right_hand_side, B.right_hand_side
-                if not a % b:
-                    Q.append(a / b)
-                    return Q, Polynomial()
-                return Q, A.filter()
+            if A.isnum() and B.isnum():
+                Q.append(A.right_hand_side / B.right_hand_side)
+                return Q, Polynomial()
 
             A.sort(key=self._key(letter), reverse=True)
             try:

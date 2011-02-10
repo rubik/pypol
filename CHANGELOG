@@ -2,7 +2,9 @@ Release 0.5 (in development)
 ----------------------------
 
 New in :class:`pypol.Polynomial`:
+    + :attr:`pypol.Polynomial.rhs`
     + :meth:`pypol.Polynomial.from_roots`
+    + :meth:`pypol.Polynomial.isnum`
 
 New in :mod:`pypol.funcs`:
     + :func:`pypol.funcs.entringer`
