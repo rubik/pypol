@@ -4,6 +4,10 @@
 '''
 pypol - a Python library to manipulate polynomials and algebraic fractions.
 
+Author: Michele Lacchia <michelelacchia@gmail.com>
+Copyright: 2010-2011 Michele Lacchia
+License: GNU GPL
+
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
 the Free Software Foundation; either version 3 of the License, or
@@ -22,7 +26,7 @@ Requirements:
 
 This module implements some root-finding algorithms, like the Newton's methods, or the Durand-Kerner method
 
-(C) Copyright 2010 Michele Lacchia
+Copyright (C) 2010-2011 Michele Lacchia
 '''
 
 from __future__ import division

@@ -4,6 +4,10 @@
 '''
 pypol - a Python library to manipulate polynomials and algebraic fractions.
 
+Author: Michele Lacchia <michelelacchia@gmail.com>
+Copyright: 2010-2011 Michele Lacchia
+License: GNU GPL
+
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
 the Free Software Foundation; either version 3 of the License, or
@@ -19,6 +23,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Requirements:
 - Python 2.6 (or 2.7)
+
+This module implements some polynomial series, such as the Lucas Sequence or the Bernoulli polynomials.
+
+Copyright (C) 2010-2011 Michele Lacchia
 '''
 
 import fractions
