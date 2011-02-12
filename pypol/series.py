@@ -32,7 +32,7 @@ Copyright (C) 2010-2011 Michele Lacchia
 import fractions
 
 from pypol import poly1d, polynomial, monomial, NULL, ONE, TWO, x
-from pypol.funcs import polyder, bin_coeff, stirling_2, harmonic, harmonic_g
+from pypol.funcs import polyder, bin_coeff, stirling2, harmonic, harmonic_g
 
 
 class LucasSeq(object):
@@ -933,7 +933,7 @@ def touchard(n):
         return NULL
     if n == 0:
         return ONE    
-    return sum(stirling_2(n, k) * x ** k for k in xrange(n + 1))
+    return sum(stirling2(n, k) * x ** k for k in xrange(n + 1))
 
 def bell(n):
     if n < 0:
@@ -942,7 +942,7 @@ def bell(n):
         return ONE
     if n == 1:
         return x
-    return sum(stirling_2(n, k) * x ** k for k in xrange(n + 1))
+    return sum(stirling2(n, k) * x ** k for k in xrange(n + 1))
 
 def gegenbauer(n, a='a'):
     '''

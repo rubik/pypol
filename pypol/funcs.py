@@ -32,6 +32,7 @@ Copyright (C) 2010-2011 Michele Lacchia
 from __future__ import division
 import copy
 import random
+import functools
 import operator
 import fractions
 import math
@@ -40,7 +41,10 @@ from core import Polynomial, AlgebraicFraction, poly1d, poly1d_2, polynomial, mo
 
 __all__ = ['divisible', 'from_roots', 'polyder', 'polyint', 'polyint_',
            'random_poly', 'interpolate', 'divided_diff', 'bin_coeff',
-           'harmonic', 'harmonic_g', 'stirling', 'stirling_2', 'bell_num'
+           'harmonic', 'harmonic_g', 'stirling', 'stirling2', 'bell_num',
+           'entringer', 'lucas_num', 'pell_num', 'pell_lucas_num',
+           'jacobsthal_num', 'jacobsthal_lucas_num', 'fermat_num',
+           'fermat_lucas_num',
            ]
 
 NULL = Polynomial()
@@ -599,8 +603,10 @@ class _Memoize(object):
     # Weak references (a dict with weak values) can be used, like this:
     #   self._cache = weakref.WeakValueDictionary()
     #   but the keys of such dict can't be int
+
     def __init__(self, func):
         self.func = func
+        functools.update_wrapper(self, func)
         self._cache = {}
 
     def __call__(self, *args, **kwargs):
@@ -843,27 +849,27 @@ def stirling(n, k):
 
     return float(stirling(n - 1, k - 1) - (n - 1) * stirling(n - 1, k))
 
-def stirling_2(n, k):
+def stirling2(n, k):
     '''
-    Returns the Stirling numbers of the second kind :math:`stirling_2(n, k)`::
+    Returns the Stirling numbers of the second kind :math:`stirling2(n, k)`::
 
-        >>> stirling_2(0, 0)
+        >>> stirling2(0, 0)
         1
-        >>> stirling_2(0, 1)
+        >>> stirling2(0, 1)
         0
-        >>> stirling_2(1, 1)
+        >>> stirling2(1, 1)
         1
-        >>> stirling_2(2, 1)
+        >>> stirling2(2, 1)
         1
-        >>> stirling_2(3, 1)
+        >>> stirling2(3, 1)
         1
-        >>> stirling_2(3, 2)
+        >>> stirling2(3, 2)
         3
-        >>> stirling_2(6, 4)
+        >>> stirling2(6, 4)
         65
-        >>> stirling_2(96, 56)
+        >>> stirling2(96, 56)
         601077471204201702246363542619610633289432609630600146569048337999099263354225431674880L
-        >>> stirling_2(961, 2)
+        >>> stirling2(961, 2)
         9745314011399999080353382387875188310876226857595007526867906457212948690766426102465615065882010259225304916231408668183459169865203094046577987296312653419531277699956473029870789655490053648352799593479218378873685597925394874945746363615468965612827738803104277547081828589991914110975L
 
     **References**
@@ -920,10 +926,42 @@ def bell_num(n):
         return 1
     if n == 1:
         return 1
-    return sum(stirling_2(n, k) for k in xrange(n + 1))
+    return sum(stirling2(n, k) for k in xrange(n + 1))
 
 @ _Memoize
 def entringer(n, k):
+    '''
+    Returns the Entringer number :math:`E(n, k)`.
+
+    :raises: :exc:`ValueError` if either *n* or *k* is negative or when *k* is greater than n
+    :rtype: int
+
+    ::
+
+        >>> e(0, 0)
+        1
+        >>> e(1, 0)
+        0
+        >>> e(2, 0)
+        0
+        >>> e(2, 1)
+        1
+        >>> e(4, 1)
+        2
+        >>> e(4, 4)
+        5
+        >>> e(9, 4)
+        5296
+        >>> e(9, 8)
+        7936
+        >>> e(19, 8)
+        18164255316224L
+        >>> e(19, 18)
+        29088885112832L
+
+    .. versionadded:: 0.5
+    '''
+
     if n < 0 or k < 0:
         raise ValueError('Entringer numbers only defined for n >= 0 and k >= 0')
     if k > n:
@@ -935,6 +973,27 @@ def entringer(n, k):
     return entringer(n, k - 1) + entringer(n - 1, n - k)
 
 def lucas_num(n):
+    '''
+    Returns the Lucas number :math:`L_n`::
+
+        >>> lucas_num(1)
+        1
+        >>> lucas_num(2)
+        3
+        >>> lucas_num(3)
+        4
+        >>> lucas_num(4)
+        7
+        >>> lucas_num(5)
+        11
+        >>> lucas_num(15)
+        1364
+        >>> lucas_num(152)
+        58360810951903342376540834889728L
+        >>> lucas_num(524)
+        32323880385391491573521580616521303413074220353619291180174372332058562230682094134384498459616996023833985024L
+    '''
+
     if n <= 0:
         raise ValueError('Lucas numbers only defined for n > 0')
     if n == 1:
@@ -947,6 +1006,25 @@ def lucas_num(n):
     return int((1 / s5) * (2.5 + 0.5 * s5) * (0.5 + 0.5 * s5) ** n + (1 / s5) * (-2.5 + 0.5 * s5) * (0.5 - 0.5 * s5) ** n)
 
 def pell_num(n):
+    '''
+    Returns the Pell number :math:`P_n`::
+
+        >>> pell_num(0)
+        0
+        >>> pell_num(1)
+        1
+        >>> pell_num(2)
+        2
+        >>> pell_num(3)
+        5
+        >>> pell_num(4)
+        12
+        >>> pell_num(14)
+        80782
+        >>> pell_num(144)
+        4657508918199769652922062468973916916612976254692360192L
+    '''
+
     if n < 0:
         raise ValueError('Pell numbers only defined for n >= 0')
     if n == 0:
@@ -957,6 +1035,27 @@ def pell_num(n):
     return int(math.ceil(((1 + s2) ** n - (1 - s2) ** n) / (2 * s2)))
 
 def pell_lucas_num(n):
+    '''
+    Returns the Pell-Lucas number :math:`Q_n`::
+
+        >>> pell_lucas_num(0)
+        2
+        >>> pell_lucas_num(1)
+        2
+        >>> pell_lucas_num(2)
+        6
+        >>> pell_lucas_num(3)
+        14
+        >>> pell_lucas_num(4)
+        34
+        >>> pell_lucas_num(5)
+        82
+        >>> pell_lucas_num(6)
+        198
+        >>> pell_lucas_num(64)
+        3145168096065826821505024L
+    '''
+
     if n < 0:
         raise ValueError('Pell numbers only defined for n >= 0')
     if n == 0:
@@ -967,10 +1066,52 @@ def pell_lucas_num(n):
     return int(math.ceil((1 + s2)**n + (1 - s2)**n))
 
 def jacobsthal_num(n):
+    '''
+    Returns the Jacobsthal number :math:`J_n`::
+
+        >>> jacobsthal_num(0)
+        0
+        >>> jacobsthal_num(1)
+        1
+        >>> jacobsthal_num(2)
+        1
+        >>> jacobsthal_num(3)
+        3
+        >>> jacobsthal_num(4)
+        5
+        >>> jacobsthal_num(5)
+        11
+        >>> jacobsthal_num(6)
+        21
+        >>> jacobsthal_num(7)
+        43
+        >>> jacobsthal_num(71)
+        787061080478274158592L
+    '''
+
     return int((2 ** n + (-1) ** (n - 1)) / 3)
 
 @ _Memoize
 def jacobsthal_lucas_num(n):
+    '''
+    Returns the Jacobsthal-Lucas number :math:`j_n`::
+
+        >>> jacobsthal_lucas_num(0)
+        2
+        >>> jacobsthal_lucas_num(1)
+        1
+        >>> jacobsthal_lucas_num(2)
+        5
+        >>> jacobsthal_lucas_num(3)
+        7
+        >>> jacobsthal_lucas_num(4)
+        17
+        >>> jacobsthal_lucas_num(42)
+        4398046511105L
+        >>> jacobsthal_lucas_num(142)
+        5575186299632655785383929568162090376495105L
+    '''
+
     if n == 0:
         return 2
     if n == 1:
@@ -978,9 +1119,53 @@ def jacobsthal_lucas_num(n):
     return 2 * jacobsthal_lucas_num(n - 1) - (-1) ** (n - 1) * 3
 
 def fermat_num(n):
+    '''
+    Returns the Fermat number :math:`F_n`::
+
+        >>> fermat_num(0)
+        3
+        >>> fermat_num(1)
+        5
+        >>> fermat_num(2)
+        17
+        >>> fermat_num(3)
+        257
+        >>> fermat_num(4)
+        65537
+        >>> fermat_num(5)
+        4294967297L
+        >>> fermat_num(6)
+        18446744073709551617L
+        >>> fermat_num(7)
+        340282366920938463463374607431768211457L
+    '''
+
     return 2 ** (2 ** n) + 1
 
 def fermat_lucas_num(n):
+    '''
+    Returns the Fermat-Lucas number :math:`f_n`::
+
+        >>> fermat_lucas_num(0)
+        0
+        >>> fermat_lucas_num(1)
+        1
+        >>> fermat_lucas_num(2)
+        3
+        >>> fermat_lucas_num(3)
+        7
+        >>> fermat_lucas_num(4)
+        15
+        >>> fermat_lucas_num(5)
+        31
+        >>> fermat_lucas_num(6)
+        63
+        >>> fermat_lucas_num(16)
+        65535
+        >>> fermat_lucas_num(162)
+        5846006549323611672814739330865132078623730171903L
+    '''
+
     if n == 0:
         return 0
     if n == 1:

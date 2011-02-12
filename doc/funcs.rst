@@ -19,19 +19,7 @@ This module add some utility function to pypol.
 Basic functions
 ---------------
 
-The :mod:`pypol.funcs` module offers these basic functions:
-
-.. hlist::
-    :columns: 2
-
-    * :func:`divisible`
-    * :func:`from_roots`
-    * :func:`random_poly`
-    * :func:`polyder`
-    * :func:`polyint`
-    * :func:`polyint_`
-    * :func:`interpolate`
-    * :func:`divided_diff`
+The :mod:`pypol.funcs` module offers some basic functions for derivation, integration, interpolation and others.
 
 .. autofunction:: divisible
 
@@ -52,6 +40,8 @@ The :mod:`pypol.funcs` module offers these basic functions:
 Numbers
 -------
 
+Also, this module provides some functions to generate integer series, or numbers. Some of them are used in :mod:`pypol.series`: the :func:`stirling2` function is used in :func:`pypol.series.touchard` and :func:`pypol.series.bell`.
+
 .. autofunction:: bin_coeff
 
 .. autofunction:: harmonic
@@ -60,6 +50,22 @@ Numbers
 
 .. autofunction:: stirling
 
-.. autofunction:: stirling_2
+.. autofunction:: stirling2
 
 .. autofunction:: bell_num
+
+.. autofunction:: entringer
+
+.. autofunction:: lucas_num
+
+.. autofunction:: pell_num
+
+.. autofunction:: pell_lucas_num
+
+.. autofunction:: jacobsthal_num
+
+.. autofunction:: jacobsthal_lucas_num
+
+.. autofunction:: fermat_num
+
+.. autofunction:: fermat_lucas_num

@@ -2,12 +2,4 @@
 TODO
 ====
 
-Complete the documentation => pypol 0.5:
-    + :func:`pypol.funcs.entringer`
-    + :func:`pypol.funcs.lucas_num`
-    + :func:`pypol.funcs.pell_num`
-    + :func:`pypol.funcs.jacobsthal_num`
-    + :func:`pypol.funcs.fermat_num`
-    + :func:`pypol.funcs.pell_lucas_num`
-    + :func:`pypol.funcs.jacobshtal_lucas_num`
-    + :func:`pypol.funcs.fermat_lucas_num`
+Complete the documentation => pypol 0.5: DONE

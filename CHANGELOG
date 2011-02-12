@@ -1,6 +1,8 @@
 Release 0.5 (in development)
 ----------------------------
 
+Renamed :func:`pypol.funcs.striling_2` to :func:`pypol.funcs.striling2`
+
 New in :class:`pypol.Polynomial`:
     + :attr:`pypol.Polynomial.rhs`
     + :meth:`pypol.Polynomial.from_roots`
