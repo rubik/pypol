@@ -16,7 +16,7 @@ pypol is on PyPI too, so you can install it with *easy_install*::
     easy_install -U pypol_
 
 WARNING
-#######
+#########
 
 Don't forget the underscore after pypol, because with::
 
@@ -57,3 +57,11 @@ and build the documentation files:
         $ make html
 
 the files are in _build/html directory.
+
+WARNING
+#########
+
+You must have `Sphinx <http://sphinx.pocoo.org/>`_ installed to build the documentation.
+You can install it with this simple command::
+
+    $ easy_install sphinx
