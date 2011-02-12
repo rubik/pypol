@@ -5,6 +5,11 @@ New in :class:`pypol.Polynomial`:
     + :attr:`pypol.Polynomial.rhs`
     + :meth:`pypol.Polynomial.from_roots`
     + :meth:`pypol.Polynomial.isnum`
+    + :meth:`pypol.Polynomial.to_float`
+
+New in :mod:`pypol.roots`:
+    + :func:`pypol.roots.muller`
+    + :func:`pypol.roots.ridder`
 
 New in :mod:`pypol.funcs`:
     + :func:`pypol.funcs.entringer`
@@ -14,11 +19,7 @@ New in :mod:`pypol.funcs`:
     + :func:`pypol.funcs.fermat_num`
     + :func:`pypol.funcs.pell_lucas_num`
     + :func:`pypol.funcs.jacobshtal_lucas_num`
-    + :func:`pypol.funcs.fermat_lucas_num`
-
-New in :mod:`pypol.roots`:
-    + :func:`pypol.roots.muller`
-    + :func:`pypol.roots.ridder`
+    + :func:`pypol.funcs.fermat_lucas_num``
 
 Changed in :meth:`pypol.Polynomial.from_roots` and in :func:`pypol.funcs.from_roots`:
     + Added argument *var*

@@ -663,6 +663,59 @@ def laguerre(poly, start, epsilon=float('-inf')):
         start = x_n
 
 def muller(poly, x_k, x_k2=None, x_k3=None, epsilon=float('-inf')):
+    '''
+    Finds the roots of the polynomial *poly* starting from *x_k*.
+
+    :param x_k2: an optional starting value
+    :type x_k2: number (integer, float or complex)
+    :param x_k3: another optional starting value
+    :type x_k3: number (integer, float or complex)
+    :param float epsilon: the precision. Default to `float('-inf')`, which means it will be as accurate as possible
+    :rtype: number
+
+    **Examples**
+
+    ::
+
+        >>> a = x.from_roots([1, -23, 2424, -2])
+        >>> a
+        + x^4 - 2400x^3 - 58155x^2 - 50950x + 111504
+        >>> muller(a, 100)
+        -2.0
+        >>> muller(a, -1000)
+        2424.0
+
+    Muller's method is the most suitable for a function that finds all the roots of a polynomial::
+
+        >>> def find_roots(poly):
+            r = []
+            for _ in xrange(poly.degree):
+                next_root = muller(poly, 100)
+                r.append(next_root)
+                poly /= (x - next_root)
+            return r
+        
+        >>> find_roots(a)
+        [-2.0, -23.0, 2424.0, 1.0]
+        >>> roots.quartic(a)
+        [1, 2424.0, -23.0, -2.0]
+        >>> a = x.from_roots([1, -1, 2323, -229, 24])
+        >>> a
+        + x^5 - 2118x^4 - 481712x^3 + 12769326x^2 + 481711x - 12767208
+        >>> find_roots(a)
+        [1.0, -1.0, -229.0, 2323.0, 24.0]
+
+    With this function you can find the roots of polynomials of higher degrees::
+
+        >>> a = x.from_roots([1, -1, 2323, -229, 24, -22])
+        >>> a
+        + x^6 - 2096x^5 - 528308x^4 + 2171662x^3 + 281406883x^2 - 2169566x - 280878576
+        >>> find_roots(a)
+        [-22.0, 1.0, -1.0, -229.0, 2323.0, 24.0]
+
+    .. versionadded:: 0.5
+    '''
+
     s = (-1 if x_k < 0 else 1)
     if not x_k2:
         x_k2 = x_k + s * .25
@@ -687,6 +740,46 @@ def muller(poly, x_k, x_k2=None, x_k3=None, epsilon=float('-inf')):
 
 
 def ridder(poly, x0, x1, epsilon=1e-9):
+    '''
+    Finds the roots  of the polynomial *poly*. Requires two starting points: *x0* and *x1*.
+
+    :param epsilon: the precision. Default to `1e-9`. The smaller *epsilon* is, the more accurate the calculus.
+    :raises: :exc:`ValueError` is the root is not bracketed in the interval :math:`[x0, x1]`
+    :rtype: number (integer or float)
+
+    **Examples**
+
+    ::
+
+        >>> a = x.from_roots([1, -232, 42])
+        >>> ridder(a, 100, -1)
+        Traceback (most recent call last):
+          File "<pyshell#49>", line 1, in <module>
+            ridder(a, 100, -1)
+          File "roots.py", line 691, in ridder
+            r = []
+        ValueError: root is not bracketed
+
+    We have to choose the two starting values so that the root is bracketed::
+
+        >>> ridder(a, 100, 1)
+        1
+        >>> a /= (x - 1)
+        >>> a
+        + x^2 + 190x - 9744
+        >>> ridder(a, 100, 1)
+        41.99999999999998
+        >>> ridder(a, 42, 1)
+        42
+        >>> a /= (x - 42)
+        >>> a
+        + x + 232
+        >>> ridder(a, 100, -1000)
+        -232.0
+
+    .. versionadded:: 0.5
+    '''
+
     p0, p1 = poly(x0), poly(x1)
     if p0 * p1 > 0: raise ValueError('root is not bracketed')
     if p0 == 0: return x0

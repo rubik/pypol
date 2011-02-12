@@ -35,6 +35,10 @@ Newton's method and derived
 
 .. autofunction:: laguerre
 
+.. autofunction:: muller
+
+.. autofunction:: ridder
+
 Other methods
 +++++++++++++
 

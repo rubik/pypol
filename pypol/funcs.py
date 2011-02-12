@@ -105,6 +105,9 @@ def from_roots(roots, var='x'):
         4.0
         >>> roots.newton(p, -10000)
         -52.0
+
+    .. note::
+        From pypol 0.5 onwards, you can also construct a Polynomial using the classmethod :meth:`~pypol.Polynomial.from_roots`.
     '''
 
     v = monomial(**{var: 1})
@@ -568,7 +571,10 @@ def divided_diff(p, x_values):
     if len(x_values) == 2:
         return (p(x_values[0]) - p(x_values[1])) / (x_values[0] - x_values[1])
     q = polyder(reduce(operator.mul, ((x - x_i) for x_i in x_values)))
-    return sum(p(x_values[j]) / q(x_values[j]) for j in xrange(len(x_values)))
+    try:
+        return sum(p(x_values[j]) / q(x_values[j]) for j in xrange(len(x_values)))
+    except ZeroDivisionError:
+        return 0
 
 def interpolate_newton(x_values, y_values):
     def _basis(j):

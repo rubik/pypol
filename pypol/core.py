@@ -29,6 +29,7 @@ Copyright (C) 2010-2011 Michele Lacchia
 
 from __future__ import division
 import random
+import functools
 import fractions
 import operator
 import copy
@@ -279,6 +280,7 @@ def coerce_poly(wrapped):
     '''
     If the second term is not a polynomial, it is coerced.
     '''
+    @ functools.wraps(wrapped)
     def wrapper(self, other):
         if isinstance(other, int) or isinstance(other, long):
             other = monomial(other)
@@ -606,7 +608,7 @@ class Polynomial(object):
         Returns the letter with the maximum power in the polynomial.
 
         :param bool alphabetically: if True and if there is more than one letter with the same exponent, will be chosen the first letter in alphabetical order, the last otherwise (when ``alphabetically=False``).
-        :rtype: string or False, when :meth:`letters` is an empty tuple
+        :rtype: string or False, when :attr:`letters` is an empty tuple
 
         Some examples::
 
@@ -670,7 +672,9 @@ class Polynomial(object):
     @ property
     def rhs(self):
         '''
-        A shorthand for :meth:`right_hand_side`
+        A shorthand for :attr:`right_hand_side`.
+
+        .. versionadded:: 0.5
         '''
 
         return self.right_hand_side
@@ -1010,10 +1014,10 @@ class Polynomial(object):
         return AlgebraicFraction(monomial(v), self)
 
     @ coerce_poly
-    def update(self, pol_or_monomials=None, simplify=None):
+    def update(self, pol_or_monomials, simplify=None):
         '''
         Updates the polynomial with another polynomial.
-        This does not create a new instance, but replaces :meth:`monomials` with others monomials, then it simplifies.
+        This does not create a new instance, but replaces :attr:`monomials` with others monomials, then it simplifies.
 
         *pol_or_monomials* can be:
             * a polynomial
@@ -1021,7 +1025,6 @@ class Polynomial(object):
             * a string that will be passed to :func:`parse_polynomial`
             * an integer
 
-        default is None. In this case :meth:`monomials` will be updated with an empty tuple.
         ::
 
             >>> p = Polynomial(parse_polynomial('3x^3 - a^2 + a - 5'))
@@ -1044,10 +1047,7 @@ class Polynomial(object):
             >>> p
             + 3
 
-        If *simplify*, the polynomial will be simplified. Default is None, in this case *simplify* will be equal to self._simplify.
-
-        .. seealso::
-            The __init__ method: :class:`Polynomial`
+        If *simplify*, the polynomial will be simplified. Default is None, in this case *simplify* will be equal to :attr:`self._simplify`.
 
         This method returns the instance, so we can use it::
 
@@ -1059,9 +1059,6 @@ class Polynomial(object):
             True
             >>> p
             + 3x^2 - x + 5
-
-        .. seealso::
-            :meth:`append`.
         '''
 
         if simplify is None:
@@ -1085,7 +1082,7 @@ class Polynomial(object):
     @ coerce_poly
     def append(self, pol_or_monomials):
         '''
-        Appends the given monomials to :meth:`monomials`, then simplifies.
+        Appends the given monomials to :attr:`monomials`, then simplifies.
 
         pol_or_monomials can be:
           * a polynomial
@@ -1110,9 +1107,6 @@ class Polynomial(object):
             >>> p.append(Polynomial(parse_polynomial('-x^3 + ax + 4')))
             >>> p
             + 3x^2 - ax + 5
-
-        .. seealso::
-            :meth:`update`.
         '''
 
         self._monomials = tuple(list(pol_or_monomials._monomials) + list(self._monomials))
@@ -1156,6 +1150,7 @@ class Polynomial(object):
             >>> NULL.isnum()
             True
 
+        .. versionadded:: 0.5
         '''
         if self == Polynomial():
             return True
@@ -1163,7 +1158,7 @@ class Polynomial(object):
 
     def filter(self):
         '''
-        Returns a new Polynomial instance, with :meth:`monomials` filtered, i.e. with no null term (with 0 coefficient).
+        Returns a new Polynomial instance, with :attr:`monomials` filtered, i.e. with no null term (with 0 coefficient).
 
         **Examples**
 
@@ -1192,10 +1187,72 @@ class Polynomial(object):
 
     @ classmethod
     def from_roots(cls, roots, var='x'):
+        '''
+        This classmethod constructs a :class:`~pypol.Polynomial` from its roots.
+
+        :param roots: the roots of the polynomial to be constructed
+        :param string var: the polynomial's letter (default to :math:`x`)
+        :rtype: :class:`~pypol.Polynomial`
+
+        It does exactly the same as :func:`pypol.funcs.from_roots`::
+
+            >>> from pypol import *
+            >>> from pypol import funcs
+            >>> 
+            >>> p = Polynomial.from_roots([4, -23, 42424, 2])
+            >>> p
+            + x^4 - 42407x^3 - 721338x^2 + 5515304x - 7806016
+            >>> map(p, (4, 2, -23, 42424))
+            [0, 0, 0, 0L]
+            >>> p = Polynomial.from_roots([14, -3, 42, -22], 'y')
+            >>> p
+            + y^4 - 31y^3 - 746y^2 + 11004y + 38808
+            >>> p(14)
+            0
+            >>> p(-3)
+            0
+            >>> funcs.from_roots([2, -3, 42])
+            + x^3 - 41x^2 - 48x + 252
+
+        You can call :meth:`from_roots` from any polynomial::
+
+            >>> x.from_roots([1, -1, 2, -2])
+            + x^4 - 5x^2 + 4
+            >>> NULL.from_roots([1, -2, 2442, 2])
+            + x^4 - 2443x^3 + 2438x^2 + 9772x - 9768
+            >>> ONE.from_roots([1, -23])
+            + x^2 + 22x - 23
+            >>> (x - 2 + y**2).from_roots([1, -2])
+            + x^2 + x - 2
+
+        .. versionadded:: 0.5
+        '''
+
         x = monomial(**{var: 1})
         return reduce(operator.mul, (x - (fractions.Fraction.from_float(r) if isinstance(r, float) else r) for r in roots))
 
     def to_float(self):
+        '''
+        Converts the polynomial coefficients into floats and creates a new polynomial::
+
+            >>> p = polynomial('3/2x^2 - 3x + 1/2')
+            >>> p
+            + 3/2x^2 - 3x + 1/2
+            >>> p.to_float()
+            + 1.5x^2 - 3.0x + 0.5
+
+        `p` has not changed::
+
+            >>> p
+            + 3/2x^2 - 3x + 1/2
+            >>> p.update(p.to_float())
+            + 1.5x^2 - 3.0x + 0.5
+            >>> p
+            + 1.5x^2 - 3.0x + 0.5
+
+        .. versionadded:: 0.5
+        '''
+
         tmp = list(copy.deepcopy(self._monomials))
         tmp_ = copy.deepcopy(tmp)
         for i, m in enumerate(tmp_):
@@ -1206,7 +1263,7 @@ class Polynomial(object):
 
     def simplify(self):
         '''
-        Simplifies the polynomial. This is done automatically on the __init__ and on the :meth:`update` methods if self._simplify is True.
+        Simplifies the polynomial. This is done automatically on the __init__ and on the :meth:`update` methods if :attr:`self._simplify` is True.
         ::
 
             >>> p = Polynomial(parse_polynomial('3x^2 - ax + 5 - 4 + 4ax'))
@@ -1426,7 +1483,7 @@ class Polynomial(object):
 
         so::
 
-            p = poly1d([3, -2, 4, .53, -2, 5, .3])
+            >>> p = poly1d([3, -2, 4, .53, -2, 5, .3])
             >>> q = poly1d([4, -2, 4, .4], 'y')
             >>> p
             + 3x^6 - 2x^5 + 4x^4 + 0.53x^3 - 2x^2 + 5x + 3/10
@@ -1462,7 +1519,7 @@ class Polynomial(object):
             for l in self.letters:
                 if l not in letters:
                     letters[l] = monomial(**{l: 1})
-        return eval(self.eval_form, letters)
+        return eval(self.eval_form, {'__builtins__': None}, letters)
 
     @ coerce_poly
     def __add__(self, other):
@@ -1729,7 +1786,7 @@ class AlgebraicFraction(object):
 
     def simplify(self):
         '''
-        Simplifies the algebraic fraction. This is done automatically on the __init__ and on the :meth:`update` methods if self._simplify is True.
+        Simplifies the algebraic fraction. This is done automatically on the __init__ and on the :meth:`update` methods if :attr:`self._simplify` is True.
         Actually we can simplify some algebraic fractions only.
         ::
 
