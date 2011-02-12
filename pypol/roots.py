@@ -664,12 +664,12 @@ def laguerre(poly, start, epsilon=float('-inf')):
 
 def muller(poly, x_k, x_k2=None, x_k3=None, epsilon=float('-inf')):
     '''
-    Finds the roots of the polynomial *poly* starting from *x_k*.
+    Finds the real roots of the polynomial *poly* starting from *x_k*.
 
     :param x_k2: an optional starting value
-    :type x_k2: number (integer, float or complex)
+    :type x_k2: number (integer or float)
     :param x_k3: another optional starting value
-    :type x_k3: number (integer, float or complex)
+    :type x_k3: number (integer or float)
     :param float epsilon: the precision. Default to `float('-inf')`, which means it will be as accurate as possible
     :rtype: number
 

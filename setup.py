@@ -13,7 +13,7 @@ class PyTest(Command):
         subprocess.call(['py.test', 'tests/'] + sys.argv[2:])
 
 setup(name='pypol_',
-      version='0.4',
+      version='0.5',
       description='Python polynomial library',
       author='Michele Lacchia',
       author_email='michelelacchia@gmail.com',
@@ -30,5 +30,6 @@ setup(name='pypol_',
                    'Natural Language :: English',
                    'Operating System :: OS Independent',
                    'Programming Language :: Python :: 2.6',
+                   'Programming Language :: Python :: 2.7',
                    ],
       )

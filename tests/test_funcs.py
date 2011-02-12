@@ -127,12 +127,12 @@ class TestFuncs(object):
         assert funcs.stirling(9, 4) == -67284
 
     def testStirling2(self):
-        py.test.raises(ValueError, lambda: funcs.stirling_2(1, -1))
-        assert funcs.stirling_2(0, 0) == 1
-        assert funcs.stirling_2(2, 1) == 1
-        assert funcs.stirling_2(12, 3) == 86526
-        assert funcs.stirling_2(13, 13) == 1
-        assert funcs.stirling_2(13, 12) == 78
+        py.test.raises(ValueError, lambda: funcs.stirling2(1, -1))
+        assert funcs.stirling2(0, 0) == 1
+        assert funcs.stirling2(2, 1) == 1
+        assert funcs.stirling2(12, 3) == 86526
+        assert funcs.stirling2(13, 13) == 1
+        assert funcs.stirling2(13, 12) == 78
 
     def testBellNumbers(self):
         assert funcs.bell_num(-1) == 0
