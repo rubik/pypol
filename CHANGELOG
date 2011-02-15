@@ -1,5 +1,5 @@
-Release 0.5 (in development)
-----------------------------
+Release 0.5 (Feb 12, 2011)
+--------------------------
 
 Renamed :func:`pypol.funcs.striling_2` to :func:`pypol.funcs.striling2`
 

@@ -64,6 +64,14 @@ class TestPolynomial(object):
     def testTruediv(self):
         pass
 
+    def testDegree(self):
+        assert self.a.degree == 3
+        assert self.b.degree == 3
+        assert self.c.degree == 1
+        assert self.d.degree == 1
+        assert pypol.NULL.degree == float('-inf')
+        assert pypol.ONE.degree == 0
+
     def testPow(self):
         assert pypol.polynomial('x^2 -2x + 1') == self.c ** 2
 
