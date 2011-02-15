@@ -37,8 +37,8 @@ import re
 
 
 __author__ = 'Michele Lacchia'
-__version__ = (0, 4)
-__version_str__ = '0.4'
+__version__ = (0, 5)
+__version_str__ = '0.5'
 
 __all__ = ['polynomial', 'algebraic_fraction', 'monomial','poly1d', 'poly1d_2',
            'coerce_poly', 'coerce_frac', 'gcd', 'lcm', 'are_similar', 'parse_polynomial',
@@ -536,7 +536,7 @@ class Polynomial(object):
 
         if not self:
             return float('-inf')
-        return max([sum(monomial[1].values()) for monomial in self._monomials] + [0])
+        return max(sum(monomial[1].values(), 0) for monomial in self._monomials)
 
     @ property
     def eval_form(self):
@@ -760,14 +760,13 @@ class Polynomial(object):
             return self.right_hand_side or 0
         plist = self.to_plist(letter)
         c = [None] + plist[::-1]
-        try:
+        try: ## Fast way
             if c[power][1] == power:
                 return c[power][0]
         except IndexError:
-            pass
-        for t in plist:
-            if t[1] == power:
-                return t[0]
+            for t in plist:
+                if t[1] == power:
+                    return t[0]
         return 0
 
     def raw_powers(self, letter=None):
